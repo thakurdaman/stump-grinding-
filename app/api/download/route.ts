@@ -64,18 +64,22 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Check rate limit per order (max 10 downloads per file per token)
-    const specificFileDownloads = await db.downloadLog.count({
-      where: { orderId: order.id, filename: safeFilename },
-    });
+    // Check rate limit per order (max 10 downloads per file per token) if db is accessible
+    try {
+      const specificFileDownloads = await db.downloadLog.count({
+        where: { orderId: order.id, filename: safeFilename },
+      });
 
-    if (specificFileDownloads >= 10) {
-      return NextResponse.json(
-        {
-          error: 'Download limit exceeded for this link (maximum 10 downloads per file). Please visit /resend-links to issue a fresh link.',
-        },
-        { status: 429 }
-      );
+      if (specificFileDownloads >= 10) {
+        return NextResponse.json(
+          {
+            error: 'Download limit exceeded for this link (maximum 10 downloads per file). Please visit /resend-links to issue a fresh link.',
+          },
+          { status: 429 }
+        );
+      }
+    } catch (e) {
+      console.warn('DB rate check bypassed:', e);
     }
 
     // Locate physical file in private-files
@@ -91,19 +95,23 @@ export async function GET(req: NextRequest) {
 
     // Log the download event
     const clientIp = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
-    await db.$transaction([
-      db.order.update({
-        where: { id: order.id },
-        data: { downloadCount: { increment: 1 } },
-      }),
-      db.downloadLog.create({
-        data: {
-          orderId: order.id,
-          filename: safeFilename,
-          ipAddress: clientIp,
-        },
-      }),
-    ]);
+    try {
+      await db.$transaction([
+        db.order.update({
+          where: { id: order.id },
+          data: { downloadCount: { increment: 1 } },
+        }),
+        db.downloadLog.create({
+          data: {
+            orderId: order.id,
+            filename: safeFilename,
+            ipAddress: clientIp,
+          },
+        }),
+      ]);
+    } catch (logErr) {
+      console.warn('DB log download bypassed:', logErr);
+    }
 
     const ext = path.extname(safeFilename).toLowerCase();
     const contentType = MIME_MAP[ext] || 'application/octet-stream';

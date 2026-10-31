@@ -15,6 +15,30 @@ export interface ValidatedOrder {
   allowedFiles: ProductFile[];
 }
 
+const TOKEN_SECRET =
+  process.env.ADMIN_SECRET_KEY ||
+  process.env.PAYPAL_CLIENT_SECRET ||
+  'stump-grinding-secret-salt-key-2025';
+
+export function generateSignedToken(payload: {
+  id: string;
+  email: string;
+  versionId: string;
+  expiresInDays?: number;
+}) {
+  const expiresAt = new Date();
+  expiresAt.setDate(expiresAt.getDate() + (payload.expiresInDays || 7));
+  const data = {
+    id: payload.id,
+    email: payload.email.trim().toLowerCase(),
+    versionId: payload.versionId,
+    exp: expiresAt.getTime(),
+  };
+  const payloadB64 = Buffer.from(JSON.stringify(data)).toString('base64url');
+  const signature = crypto.createHmac('sha256', TOKEN_SECRET).update(payloadB64).digest('hex');
+  return { token: `${payloadB64}.${signature}`, expiresAt };
+}
+
 export async function createOrFulfillOrder({
   email,
   versionId,
@@ -37,20 +61,47 @@ export async function createOrFulfillOrder({
 
   // Check if already processed by providerOrderId to prevent duplicate credits
   if (providerOrderId) {
-    const existing = await db.order.findFirst({
-      where: { providerOrderId, status: 'completed' },
-    });
-    if (existing) {
-      return existing;
+    try {
+      const existing = await db.order.findFirst({
+        where: { providerOrderId, status: 'completed' },
+      });
+      if (existing) {
+        return existing;
+      }
+    } catch (e) {
+      console.warn('DB check existing order skipped:', e);
     }
   }
 
-  const downloadToken = crypto.randomBytes(24).toString('hex');
-  const tokenExpiresAt = new Date();
-  tokenExpiresAt.setDate(tokenExpiresAt.getDate() + 7); // 7-day validity
+  const generatedOrderId = 'ord_' + crypto.randomBytes(12).toString('hex');
+  const { token: downloadToken, expiresAt: tokenExpiresAt } = generateSignedToken({
+    id: generatedOrderId,
+    email,
+    versionId,
+    expiresInDays: 7,
+  });
 
-  const order = await db.order.create({
-    data: {
+  let order: any = null;
+  try {
+    order = await db.order.create({
+      data: {
+        id: generatedOrderId,
+        email: email.trim().toLowerCase(),
+        versionId,
+        amount,
+        currency,
+        provider,
+        providerOrderId,
+        status: 'completed',
+        downloadToken,
+        tokenExpiresAt,
+        downloadCount: 0,
+      },
+    });
+  } catch (dbErr) {
+    console.warn('Could not persist order to local DB (stateless mode active):', dbErr);
+    order = {
+      id: generatedOrderId,
       email: email.trim().toLowerCase(),
       versionId,
       amount,
@@ -61,8 +112,8 @@ export async function createOrFulfillOrder({
       downloadToken,
       tokenExpiresAt,
       downloadCount: 0,
-    },
-  });
+    };
+  }
 
   const downloadUrl = `${SITE_CONFIG.url}/download/${downloadToken}`;
 
@@ -82,38 +133,89 @@ export async function validateToken(token: string): Promise<
   | { success: true; order: ValidatedOrder }
   | { success: false; error: 'not_found' | 'expired' | 'revoked' }
 > {
-  const order = await db.order.findUnique({
-    where: { downloadToken: token },
-  });
+  // 1. Try stateless cryptographic signature verification first
+  if (token.includes('.')) {
+    const parts = token.split('.');
+    if (parts.length === 2) {
+      const [payloadB64, sig] = parts;
+      try {
+        const expectedSig = crypto
+          .createHmac('sha256', TOKEN_SECRET)
+          .update(payloadB64)
+          .digest('hex');
 
-  if (!order) {
+        if (
+          sig.length === expectedSig.length &&
+          crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expectedSig))
+        ) {
+          const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf8');
+          const data = JSON.parse(payloadJson);
+
+          if (Date.now() > data.exp) {
+            return { success: false, error: 'expired' };
+          }
+
+          const product = getProductById(data.versionId);
+          const allowedFiles = getFilesForProduct(data.versionId);
+
+          return {
+            success: true,
+            order: {
+              id: data.id,
+              email: data.email,
+              versionId: data.versionId,
+              productName: product ? product.name : data.versionId,
+              downloadToken: token,
+              tokenExpiresAt: new Date(data.exp),
+              downloadCount: 0,
+              allowedFiles,
+            },
+          };
+        }
+      } catch (err) {
+        console.warn('Token cryptographic verification failed:', err);
+      }
+    }
+  }
+
+  // 2. Legacy database lookup fallback
+  try {
+    const order = await db.order.findUnique({
+      where: { downloadToken: token },
+    });
+
+    if (!order) {
+      return { success: false, error: 'not_found' };
+    }
+
+    if (order.status !== 'completed') {
+      return { success: false, error: 'revoked' };
+    }
+
+    if (new Date() > new Date(order.tokenExpiresAt)) {
+      return { success: false, error: 'expired' };
+    }
+
+    const product = getProductById(order.versionId);
+    const allowedFiles = getFilesForProduct(order.versionId);
+
+    return {
+      success: true,
+      order: {
+        id: order.id,
+        email: order.email,
+        versionId: order.versionId,
+        productName: product ? product.name : order.versionId,
+        downloadToken: order.downloadToken,
+        tokenExpiresAt: order.tokenExpiresAt,
+        downloadCount: order.downloadCount,
+        allowedFiles,
+      },
+    };
+  } catch (dbErr) {
+    console.warn('DB lookup failed during token validation:', dbErr);
     return { success: false, error: 'not_found' };
   }
-
-  if (order.status !== 'completed') {
-    return { success: false, error: 'revoked' };
-  }
-
-  if (new Date() > new Date(order.tokenExpiresAt)) {
-    return { success: false, error: 'expired' };
-  }
-
-  const product = getProductById(order.versionId);
-  const allowedFiles = getFilesForProduct(order.versionId);
-
-  return {
-    success: true,
-    order: {
-      id: order.id,
-      email: order.email,
-      versionId: order.versionId,
-      productName: product ? product.name : order.versionId,
-      downloadToken: order.downloadToken,
-      tokenExpiresAt: order.tokenExpiresAt,
-      downloadCount: order.downloadCount,
-      allowedFiles,
-    },
-  };
 }
 
 export async function resendOrderLinks(rawEmail: string): Promise<{ success: boolean; count: number }> {
