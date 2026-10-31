@@ -65,6 +65,7 @@ If you have any questions or need assistance, reply directly to ${SITE_CONFIG.su
   // If Resend API key is configured, use it
   if (process.env.RESEND_API_KEY) {
     try {
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The Stump Grinding Playbook <onboarding@resend.dev>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -72,7 +73,7 @@ If you have any questions or need assistance, reply directly to ${SITE_CONFIG.su
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: `${SITE_CONFIG.name} <orders@${new URL(SITE_CONFIG.url).hostname}>`,
+          from: fromEmail,
           to: [to],
           subject,
           text: textBody,
