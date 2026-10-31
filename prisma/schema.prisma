@@ -1,0 +1,41 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  email           String
+  versionId       String        // "playbook-only", "calculator-templates", "full-kit"
+  amount          Float
+  currency        String        @default("USD")
+  provider        String        // "lemonsqueezy", "stripe", "paypal", "razorpay", "demo"
+  providerOrderId String?
+  status          String        @default("completed") // completed, pending, refunded
+  downloadToken   String        @unique
+  tokenExpiresAt  DateTime
+  downloadCount   Int           @default(0)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  downloadLogs    DownloadLog[]
+}
+
+model DownloadLog {
+  id           String   @id @default(cuid())
+  orderId      String
+  order        Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  filename     String
+  ipAddress    String?
+  downloadedAt DateTime @default(now())
+}
+
+model Lead {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  source    String   @default("pricing_cheat_sheet")
+  createdAt DateTime @default(now())
+}
