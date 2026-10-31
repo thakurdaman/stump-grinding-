@@ -22,9 +22,6 @@ dev.db-journal
 .env.test.local
 .env.production.local
 
-# Private files / digital products (protect commercial assets)
-/private-files/
-!/private-files/.gitkeep
 
 # Logs
 npm-debug.log*
