@@ -74,13 +74,14 @@ async function runTestSuite() {
   console.log('✔ [4/7] Verified dynamic PDF buyer watermarking (pdf-lib)');
 
   // Test 5: Expired Token Simulation (Secure rejection)
+  const expiredEmail = `expired_buyer_${Date.now()}@test.com`;
   const expiredToken = crypto.randomBytes(24).toString('hex');
   const pastDate = new Date();
   pastDate.setDate(pastDate.getDate() - 2); // 2 days ago
 
   await db.order.create({
     data: {
-      email: 'expired_buyer@test.com',
+      email: expiredEmail,
       versionId: 'full-kit',
       amount: 97.0,
       currency: 'USD',
@@ -98,12 +99,12 @@ async function runTestSuite() {
   console.log('✔ [5/7] Verified expired token rejection (410 Expired policy enforced)');
 
   // Test 6: Resend Links Token Refresh
-  const resendResult = await resendOrderLinks('expired_buyer@test.com');
+  const resendResult = await resendOrderLinks(expiredEmail);
   assert.strictEqual(resendResult.success, true);
   assert.strictEqual(resendResult.count, 1);
 
   const refreshedOrder = await db.order.findFirst({
-    where: { email: 'expired_buyer@test.com' },
+    where: { email: expiredEmail },
   });
   assert(refreshedOrder, 'Refreshed order must exist');
   assert.notStrictEqual(refreshedOrder.downloadToken, expiredToken, 'Token must be rotated');
