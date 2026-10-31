@@ -10,6 +10,8 @@ import { PreviewGallery } from '@/components/PreviewGallery';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { LeadCapture } from '@/components/LeadCapture';
 import { CheckoutModal } from '@/components/CheckoutModal';
+import { InteractiveCalculator } from '@/components/InteractiveCalculator';
+import { ShareWidget } from '@/components/ShareWidget';
 import { PRODUCTS, ProductTier } from '@/config/products';
 import { trackEvent } from '@/components/Analytics';
 import {
@@ -207,77 +209,9 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 4: THE MATH EXAMPLE
+            SECTION 4: INTERACTIVE LIVE PRICING ENGINE
         ========================================================================= */}
-        <section className="py-16 bg-sand/30 border-y border-bark/10">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-[#FBF6EC] border-2 border-wood/30 rounded-2xl p-6 sm:p-10 shadow-sm space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-bark/10 pb-5">
-                <div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest font-sans">
-                    Worked Job Breakdown
-                  </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-bold text-bark">
-                    Example Job: 3 Backyard Hardwood Stumps
-                  </h3>
-                </div>
-                <div className="inline-block px-3 py-1 bg-sand border border-wood/25 rounded-md text-xs font-semibold text-wood-dark">
-                  Example job. Your numbers will differ.
-                </div>
-              </div>
-
-              <p className="text-sm text-bark/80">
-                Here is what happens when you quote using our structured diameter, access, and tooth wear adjustments instead of a ballpark guess:
-              </p>
-
-              {/* Numbers Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="bg-sand/50 rounded-xl p-5 border border-bark/10">
-                  <span className="text-xs font-bold uppercase tracking-wider text-bark/60 block mb-1">
-                    Customer Quote
-                  </span>
-                  <div className="flex items-baseline gap-1 text-bark">
-                    <span className="font-serif text-3xl sm:text-4xl font-bold">$250</span>
-                    <span className="text-xs text-wood font-medium">gross</span>
-                  </div>
-                  <p className="text-xs text-bark/70 mt-2">
-                    Based on 18&quot;, 14&quot;, and 24&quot; stumps with standard 6-inch below grade depth.
-                  </p>
-                </div>
-
-                <div className="bg-sand/50 rounded-xl p-5 border border-bark/10">
-                  <span className="text-xs font-bold uppercase tracking-wider text-bark/60 block mb-1">
-                    Direct Costs
-                  </span>
-                  <div className="flex items-baseline gap-1 text-wood-dark">
-                    <span className="font-serif text-3xl sm:text-4xl font-bold">~$144</span>
-                    <span className="text-xs text-wood font-medium">overhead</span>
-                  </div>
-                  <p className="text-xs text-bark/70 mt-2">
-                    Fuel ($22), tooth wear ($32), travel time, equipment depreciation, and insurance portion.
-                  </p>
-                </div>
-
-                <div className="bg-forest-light/60 rounded-xl p-5 border border-forest/30">
-                  <span className="text-xs font-bold uppercase tracking-wider text-forest font-sans block mb-1">
-                    Net Profit Kept
-                  </span>
-                  <div className="flex items-baseline gap-1 text-forest">
-                    <span className="font-serif text-3xl sm:text-4xl font-bold">~$106</span>
-                    <span className="text-xs text-forest font-medium">net kept</span>
-                  </div>
-                  <p className="text-xs text-forest/90 mt-2">
-                    Clean, predictable profit in the pocket for approximately 1.75 hours of total time.
-                  </p>
-                </div>
-              </div>
-
-              <div className="pt-2 text-xs text-bark/60 leading-relaxed italic border-t border-bark/5">
-                * Note: Individual fuel prices, tooth styles (Greenteeth vs standard pockets), machine capacity, and travel distances vary significantly across regions. The playbook teaches you how to plug your own local figures into the calculator.
-              </div>
-            </div>
-          </div>
-        </section>
+        <InteractiveCalculator />
 
         {/* =========================================================================
             SECTION 5: WHAT'S INSIDE
@@ -603,6 +537,11 @@ export default function HomePage() {
                   </div>
                 );
               })}
+            </div>
+
+            {/* Share With Crew / Partner Widget */}
+            <div className="mt-14 max-w-2xl mx-auto">
+              <ShareWidget />
             </div>
           </div>
         </section>

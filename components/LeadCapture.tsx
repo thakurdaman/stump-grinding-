@@ -49,9 +49,24 @@ export const LeadCapture: React.FC = () => {
           </div>
 
           {status === 'success' ? (
-            <div className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-forest/30 border border-forest text-[#FBF6EC] text-sm font-semibold">
-              <CheckCircle2 size={18} className="text-forest-light" />
-              <span>{message}</span>
+            <div className="p-6 rounded-2xl bg-forest/30 border border-forest text-[#FBF6EC] max-w-md mx-auto space-y-4">
+              <div className="flex items-center justify-center gap-2 font-bold text-forest-light text-base">
+                <CheckCircle2 size={20} />
+                <span>You&apos;re all set!</span>
+              </div>
+              <p className="text-xs text-sand/90">
+                Your free 1-page formula card is ready. Click below to download it immediately:
+              </p>
+              <div>
+                <a
+                  href="/downloads/Stump-Grinding-Pricing-Cheat-Sheet.pdf"
+                  download
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-orange hover:bg-orange-hover text-white text-xs font-bold shadow-lg transition-transform transform active:scale-95"
+                >
+                  <Mail size={16} />
+                  Download Free Cheat Sheet (PDF) &rarr;
+                </a>
+              </div>
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="max-w-md mx-auto flex flex-col sm:flex-row gap-3">
