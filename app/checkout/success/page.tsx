@@ -21,11 +21,22 @@ interface SuccessPageProps {
 export default async function CheckoutSuccessPage({ searchParams }: SuccessPageProps) {
   let orderData = null;
 
-  // Attempt resolution by token
+  // Attempt resolution by token (downloadToken or PayPal providerOrderId)
   if (searchParams.token) {
     const res = await validateToken(searchParams.token);
     if (res.success) {
       orderData = res.order;
+    } else {
+      // Check if PayPal passed providerOrderId as the token parameter
+      const order = await db.order.findFirst({
+        where: { providerOrderId: searchParams.token },
+      });
+      if (order) {
+        const tokenRes = await validateToken(order.downloadToken);
+        if (tokenRes.success) {
+          orderData = tokenRes.order;
+        }
+      }
     }
   }
 
