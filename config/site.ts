@@ -6,13 +6,26 @@ export interface BeforeAfterItem {
   afterImage: string;
 }
 
+const getSiteUrl = () => {
+  if (process.env.NEXT_PUBLIC_APP_URL && !process.env.NEXT_PUBLIC_APP_URL.includes('localhost')) {
+    return process.env.NEXT_PUBLIC_APP_URL.replace(/\/+$/, '');
+  }
+  if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
+  }
+  if (process.env.VERCEL_URL) {
+    return `https://${process.env.VERCEL_URL}`;
+  }
+  return 'https://stump-grinding-playbook.vercel.app';
+};
+
 export const SITE_CONFIG = {
   name: 'The Stump Grinding Playbook',
   shortName: 'Stump Playbook',
   title: 'The Stump Grinding Playbook — How to Price, Find, and Grind Stumps Profitably',
   description:
     'A practical, no-fluff guide, pricing calculator, and business templates pack for US stump grinding operators and tree care professionals.',
-  url: process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
+  url: getSiteUrl(),
   supportEmail: process.env.SUPPORT_EMAIL || 'support@stumpgrindingplaybook.com',
   guaranteeDays: 14,
   disclaimer:
