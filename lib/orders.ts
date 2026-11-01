@@ -20,6 +20,9 @@ const TOKEN_SECRET =
   process.env.PAYPAL_CLIENT_SECRET ||
   'stump-grinding-secret-salt-key-2025';
 
+// 100 years = true lifetime validity
+const LIFETIME_DAYS = 36500;
+
 export function generateSignedToken(payload: {
   id: string;
   email: string;
@@ -27,12 +30,13 @@ export function generateSignedToken(payload: {
   expiresInDays?: number;
 }) {
   const expiresAt = new Date();
-  expiresAt.setDate(expiresAt.getDate() + (payload.expiresInDays || 7));
+  expiresAt.setDate(expiresAt.getDate() + (payload.expiresInDays || LIFETIME_DAYS));
   const data = {
     id: payload.id,
     email: payload.email.trim().toLowerCase(),
     versionId: payload.versionId,
     exp: expiresAt.getTime(),
+    lifetime: true,
   };
   const payloadB64 = Buffer.from(JSON.stringify(data)).toString('base64url');
   const signature = crypto.createHmac('sha256', TOKEN_SECRET).update(payloadB64).digest('hex');
@@ -78,7 +82,7 @@ export async function createOrFulfillOrder({
     id: generatedOrderId,
     email,
     versionId,
-    expiresInDays: 7,
+    expiresInDays: LIFETIME_DAYS,
   });
 
   let order: any = null;
@@ -117,13 +121,17 @@ export async function createOrFulfillOrder({
 
   const downloadUrl = `${SITE_CONFIG.url}/download/${downloadToken}`;
 
-  // Send receipt and download email
+  // Send official proof of payment receipt and lifetime download email
   await sendDownloadLinkEmail({
     to: order.email,
     orderId: order.id,
     productName: product.name,
     downloadUrl,
-    expiresInDays: 7,
+    amount,
+    currency,
+    provider,
+    providerOrderId,
+    expiresInDays: LIFETIME_DAYS,
   });
 
   return order;
@@ -151,12 +159,12 @@ export async function validateToken(token: string): Promise<
           const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf8');
           const data = JSON.parse(payloadJson);
 
-          if (Date.now() > data.exp) {
-            return { success: false, error: 'expired' };
-          }
-
           const product = getProductById(data.versionId);
           const allowedFiles = getFilesForProduct(data.versionId);
+
+          // Lifetime access: do not expire valid purchaser tokens
+          const lifetimeExpiry = new Date();
+          lifetimeExpiry.setFullYear(lifetimeExpiry.getFullYear() + 100);
 
           return {
             success: true,
@@ -166,7 +174,7 @@ export async function validateToken(token: string): Promise<
               versionId: data.versionId,
               productName: product ? product.name : data.versionId,
               downloadToken: token,
-              tokenExpiresAt: new Date(data.exp),
+              tokenExpiresAt: lifetimeExpiry,
               downloadCount: 0,
               allowedFiles,
             },
@@ -178,7 +186,7 @@ export async function validateToken(token: string): Promise<
     }
   }
 
-  // 2. Legacy database lookup fallback
+  // 2. Database lookup fallback
   try {
     const order = await db.order.findUnique({
       where: { downloadToken: token },
@@ -192,12 +200,12 @@ export async function validateToken(token: string): Promise<
       return { success: false, error: 'revoked' };
     }
 
-    if (new Date() > new Date(order.tokenExpiresAt)) {
-      return { success: false, error: 'expired' };
-    }
-
     const product = getProductById(order.versionId);
     const allowedFiles = getFilesForProduct(order.versionId);
+
+    // Lifetime access: ensure token remains active permanently
+    const lifetimeExpiry = new Date();
+    lifetimeExpiry.setFullYear(lifetimeExpiry.getFullYear() + 100);
 
     return {
       success: true,
@@ -207,7 +215,7 @@ export async function validateToken(token: string): Promise<
         versionId: order.versionId,
         productName: product ? product.name : order.versionId,
         downloadToken: order.downloadToken,
-        tokenExpiresAt: order.tokenExpiresAt,
+        tokenExpiresAt: lifetimeExpiry,
         downloadCount: order.downloadCount,
         allowedFiles,
       },
@@ -231,28 +239,39 @@ export async function resendOrderLinks(rawEmail: string): Promise<{ success: boo
   }
 
   for (const order of orders) {
-    // Generate fresh token with 7 new days
-    const freshToken = crypto.randomBytes(24).toString('hex');
-    const tokenExpiresAt = new Date();
-    tokenExpiresAt.setDate(tokenExpiresAt.getDate() + 7);
-
-    const updated = await db.order.update({
-      where: { id: order.id },
-      data: {
-        downloadToken: freshToken,
-        tokenExpiresAt,
-      },
+    // Generate fresh signed token with lifetime access
+    const { token: freshToken, expiresAt: tokenExpiresAt } = generateSignedToken({
+      id: order.id,
+      email: order.email,
+      versionId: order.versionId,
+      expiresInDays: LIFETIME_DAYS,
     });
 
-    const product = getProductById(updated.versionId);
+    try {
+      await db.order.update({
+        where: { id: order.id },
+        data: {
+          downloadToken: freshToken,
+          tokenExpiresAt,
+        },
+      });
+    } catch (e) {
+      console.warn('Could not update order in DB:', e);
+    }
+
+    const product = getProductById(order.versionId);
     const downloadUrl = `${SITE_CONFIG.url}/download/${freshToken}`;
 
     await sendDownloadLinkEmail({
-      to: updated.email,
-      orderId: updated.id,
-      productName: product ? product.name : updated.versionId,
+      to: order.email,
+      orderId: order.id,
+      productName: product ? product.name : order.versionId,
       downloadUrl,
-      expiresInDays: 7,
+      amount: order.amount,
+      currency: order.currency,
+      provider: order.provider,
+      providerOrderId: order.providerOrderId || undefined,
+      expiresInDays: LIFETIME_DAYS,
     });
   }
 

@@ -57,7 +57,7 @@ export default function ResendLinksPage() {
                 Resend My Download Links
               </h1>
               <p className="text-sm text-bark/80 leading-relaxed">
-                Lost your download email, bought on a different device, or has your link expired? Enter the email address you purchased with to receive an instant fresh link.
+                Your purchase includes lifetime access. Lost your email or switched devices? Enter the email address you purchased with to instantly re-receive your download links and payment receipt.
               </p>
             </div>
 

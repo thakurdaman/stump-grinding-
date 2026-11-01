@@ -39,14 +39,14 @@ export async function GET(req: NextRequest) {
       if (tokenResult.error === 'expired') {
         return NextResponse.json(
           {
-            error: 'This download link has expired (7-day validity). Visit /resend-links to receive a fresh link.',
+            error: 'This download link has been updated. Visit /resend-links anytime to receive your fresh lifetime download link.',
             expired: true,
           },
           { status: 410 }
         );
       }
       return NextResponse.json(
-        { error: 'Invalid or revoked download link.' },
+        { error: 'Invalid or revoked download link. Visit /resend-links for instant recovery.' },
         { status: 403 }
       );
     }
@@ -64,22 +64,17 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Check rate limit per order (max 10 downloads per file per token) if db is accessible
+    // Lifetime access: unlimited downloads per file. Log download non-blockingly.
     try {
-      const specificFileDownloads = await db.downloadLog.count({
-        where: { orderId: order.id, filename: safeFilename },
+      await db.downloadLog.create({
+        data: {
+          orderId: order.id,
+          filename: safeFilename,
+          ipAddress: req.headers.get('x-forwarded-for') || 'unknown',
+        },
       });
-
-      if (specificFileDownloads >= 10) {
-        return NextResponse.json(
-          {
-            error: 'Download limit exceeded for this link (maximum 10 downloads per file). Please visit /resend-links to issue a fresh link.',
-          },
-          { status: 429 }
-        );
-      }
     } catch (e) {
-      console.warn('DB rate check bypassed:', e);
+      // Non-blocking telemetry
     }
 
     // Locate physical file in private-files

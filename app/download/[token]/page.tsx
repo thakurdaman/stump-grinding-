@@ -4,7 +4,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { validateToken } from '@/lib/orders';
 import { SITE_CONFIG } from '@/config/site';
-import { Download, AlertCircle, BookOpen, FileSpreadsheet, FileText, Clock, RefreshCw } from 'lucide-react';
+import { Download, AlertCircle, BookOpen, FileSpreadsheet, FileText, Clock, RefreshCw, ShieldCheck } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -83,14 +83,14 @@ export default async function DownloadTokenPage({ params }: DownloadPageProps) {
                 </p>
               </div>
 
-              <div className="flex items-center gap-1.5 text-xs text-forest bg-forest/10 px-3 py-1.5 rounded-full font-semibold self-start sm:self-auto">
-                <Clock size={14} />
-                <span>Expires: {new Date(order.tokenExpiresAt).toLocaleDateString()}</span>
+              <div className="flex items-center gap-1.5 text-xs text-forest bg-forest/10 px-3 py-1.5 rounded-full font-bold self-start sm:self-auto">
+                <ShieldCheck size={14} />
+                <span>Lifetime Access Granted • Never Expires</span>
               </div>
             </div>
 
             <p className="text-xs text-bark/80">
-              Click any file below to start your download. Download links are streamed directly from our private storage.
+              Click any file below to start your download. Your purchase includes lifetime download rights — save your files locally and re-download whenever you need.
             </p>
           </div>
 

@@ -93,9 +93,9 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
                     Delivered to <strong>{orderData.email}</strong>
                   </p>
                 </div>
-                <div className="flex items-center gap-1.5 text-xs text-forest font-semibold">
-                  <Clock size={14} />
-                  <span>Valid for 7 days</span>
+                <div className="flex items-center gap-1.5 text-xs text-forest bg-forest/10 px-3 py-1.5 rounded-full font-bold">
+                  <CheckCircle2 size={14} />
+                  <span>Lifetime Access • Never Expires</span>
                 </div>
               </div>
 

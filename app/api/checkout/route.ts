@@ -3,6 +3,7 @@ import { getProductById } from '@/config/products';
 import { getPaymentProvider } from '@/lib/payments';
 import { SITE_CONFIG } from '@/config/site';
 import { createOrFulfillOrder } from '@/lib/orders';
+import { verifyEmail } from '@/lib/email-verifier';
 
 export async function POST(req: Request) {
   try {
@@ -16,10 +17,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // Live verification: RFC syntax, typos, disposable blocker, and DNS MX mail exchange lookup
+    const verification = await verifyEmail(email);
+    if (!verification.valid) {
       return NextResponse.json(
-        { error: 'Please enter a valid email address.' },
+        {
+          error: verification.reason,
+          suggestion: verification.suggestion,
+          isDisposable: verification.isDisposable,
+        },
         { status: 400 }
       );
     }
