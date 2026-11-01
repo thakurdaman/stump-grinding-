@@ -11,6 +11,8 @@ import { FaqAccordion } from '@/components/FaqAccordion';
 import { LeadCapture } from '@/components/LeadCapture';
 import { CheckoutModal } from '@/components/CheckoutModal';
 import { InteractiveCalculator } from '@/components/InteractiveCalculator';
+import { VideoWalkthrough } from '@/components/VideoWalkthrough';
+import { Testimonials } from '@/components/Testimonials';
 import { ShareWidget } from '@/components/ShareWidget';
 import { PRODUCTS, ProductTier } from '@/config/products';
 import { trackEvent } from '@/components/Analytics';
@@ -87,7 +89,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Trust line */}
-                <div className="pt-4 flex items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium">
+                <div className="pt-4 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium">
                   <span className="flex items-center gap-1.5 text-forest font-bold">
                     <ShieldCheck size={18} /> Instant download
                   </span>
@@ -95,6 +97,12 @@ export default function HomePage() {
                   <span>14-day money-back guarantee</span>
                   <span>•</span>
                   <span>Written for US operators</span>
+                </div>
+
+                {/* Micro ROI callout pill */}
+                <div className="inline-flex items-center gap-2 text-xs font-semibold text-bark/85 bg-sand/70 px-3.5 py-1.5 rounded-lg border border-bark/15 shadow-sm">
+                  <TrendingUp size={15} className="text-orange shrink-0" />
+                  <span><strong>Pays for itself on Job #1:</strong> average US grind quote is $185–$350.</span>
                 </div>
               </div>
 
@@ -358,6 +366,11 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
+            SECTION 5B: 90-SECOND VIDEO WALKTHROUGH
+        ========================================================================= */}
+        <VideoWalkthrough />
+
+        {/* =========================================================================
             SECTION 6: PREVIEWS
         ========================================================================= */}
         <PreviewGallery />
@@ -439,11 +452,16 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
+            SECTION 8B: REAL OPERATOR TESTIMONIALS
+        ========================================================================= */}
+        <Testimonials />
+
+        {/* =========================================================================
             SECTION 9: VERSIONS AND PRICING
         ========================================================================= */}
         <section id="pricing" className="py-24 bg-[#FBF6EC] border-t border-bark/10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-2xl mx-auto text-center space-y-3 mb-16">
+            <div className="max-w-2xl mx-auto text-center space-y-3 mb-10">
               <span className="text-xs font-bold tracking-widest uppercase text-forest font-sans">
                 Transparent Pricing
               </span>
@@ -453,6 +471,26 @@ export default function HomePage() {
               <p className="text-bark/80 text-base leading-relaxed">
                 One-time purchase in USD. Keep everything forever with instant download access.
               </p>
+            </div>
+
+            {/* High-Converting ROI Banner: Pays for itself on Job #1 */}
+            <div className="max-w-3xl mx-auto mb-14 bg-sand/60 border-2 border-orange/40 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+              <div className="w-14 h-14 rounded-2xl bg-orange text-white flex items-center justify-center shrink-0 shadow-md">
+                <TrendingUp size={28} />
+              </div>
+              <div className="space-y-1">
+                <div className="flex items-center justify-center sm:justify-start gap-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-orange font-sans">Immediate Positive ROI</span>
+                  <span className="text-xs text-bark/40">•</span>
+                  <span className="text-xs font-semibold text-forest font-sans">Field Math</span>
+                </div>
+                <h4 className="font-serif font-bold text-bark text-lg">
+                  Average US Stump Grind: $185–$350 | Complete Kit: $97
+                </h4>
+                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                  This entire kit pays for itself before you even finish grinding your very first oak root flare. One single properly calculated quote prevents giving away hundreds in underpriced labor and dull cutter teeth.
+                </p>
+              </div>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch">
