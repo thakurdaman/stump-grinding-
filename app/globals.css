@@ -24,3 +24,90 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Stump grinding & 3D telemetry animations */
+@keyframes spinFast {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spinSlow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes chipFly1 {
+  0% { transform: translate(0, 0) scale(0.6) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(110px, -70px) scale(1.1) rotate(240deg); opacity: 0; }
+}
+
+@keyframes chipFly2 {
+  0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(140px, -30px) scale(1) rotate(320deg); opacity: 0; }
+}
+
+@keyframes chipFly3 {
+  0% { transform: translate(0, 0) scale(0.7) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(90px, -110px) scale(0.9) rotate(-190deg); opacity: 0; }
+}
+
+@keyframes chipFly4 {
+  0% { transform: translate(0, 0) scale(0.4) rotate(0deg); opacity: 0; }
+  15% { opacity: 1; }
+  100% { transform: translate(130px, 10px) scale(1.2) rotate(180deg); opacity: 0; }
+}
+
+@keyframes scanLaser {
+  0%, 100% { top: 15%; opacity: 0.4; }
+  50% { top: 80%; opacity: 1; }
+}
+
+@keyframes radarWave {
+  0% { transform: scale(0.5); opacity: 0.8; }
+  100% { transform: scale(1.3); opacity: 0; }
+}
+
+@keyframes sparkFlash {
+  0%, 100% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px) rotateX(2deg) rotateY(-2deg); }
+  50% { transform: translateY(-8px) rotateX(0deg) rotateY(1deg); }
+}
+
+.animate-spin-fast {
+  animation: spinFast 0.5s linear infinite;
+}
+.animate-spin-slow {
+  animation: spinSlow 10s linear infinite;
+}
+.animate-chip-1 {
+  animation: chipFly1 0.65s cubic-bezier(0.2, 0.8, 0.4, 1) infinite;
+}
+.animate-chip-2 {
+  animation: chipFly2 0.8s cubic-bezier(0.2, 0.8, 0.4, 1) infinite 0.12s;
+}
+.animate-chip-3 {
+  animation: chipFly3 0.6s cubic-bezier(0.2, 0.8, 0.4, 1) infinite 0.25s;
+}
+.animate-chip-4 {
+  animation: chipFly4 0.9s cubic-bezier(0.2, 0.8, 0.4, 1) infinite 0.38s;
+}
+.animate-laser {
+  animation: scanLaser 2s ease-in-out infinite;
+}
+.animate-radar {
+  animation: radarWave 2s cubic-bezier(0.1, 0.7, 0.3, 1) infinite;
+}
+.animate-spark {
+  animation: sparkFlash 0.35s ease-in-out infinite;
+}
+.animate-float-3d {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
