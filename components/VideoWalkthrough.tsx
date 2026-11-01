@@ -120,6 +120,7 @@ const DEMO_STEPS: SimulationStep[] = [
 
 export function VideoWalkthrough() {
   const [activeTab, setActiveTab] = useState<'sim' | 'video' | 'photos'>('sim');
+  const [selectedVideoId, setSelectedVideoId] = useState('fspc5_zXA6k');
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
@@ -619,30 +620,70 @@ export function VideoWalkthrough() {
         {/* TAB 2: COMMERCIAL TRACKED GRINDER ACTION VIDEO */}
         {activeTab === 'video' && (
           <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-bark/20 bg-bark">
-            <div className="bg-[#24170E] px-4 py-3 flex items-center justify-between border-b border-sand/15 text-sand text-xs">
+            <div className="bg-[#24170E] px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-sand/15 text-sand text-xs">
               <div className="flex items-center gap-2 font-mono">
                 <Video size={14} className="text-orange" />
-                <span className="font-bold text-[#FBF6EC]">Commercial 35HP Tracked Stump Cutter in Action</span>
+                <span className="font-bold text-[#FBF6EC]">
+                  {selectedVideoId === 'fspc5_zXA6k'
+                    ? 'Commercial 35HP Vermeer SC362 Stump Cutter'
+                    : 'Heavy-Duty Vermeer SC70TX in Field Action'}
+                </span>
               </div>
-              <span className="px-2 py-0.5 rounded bg-forest/30 text-green-300 font-mono text-[10px] font-bold">
-                1080P FIELD CAPTURE
-              </span>
+
+              {/* Video Selector Switch */}
+              <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-lg border border-sand/10 text-[11px] font-mono">
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoId('fspc5_zXA6k')}
+                  className={`px-2.5 py-1 rounded transition-colors ${
+                    selectedVideoId === 'fspc5_zXA6k'
+                      ? 'bg-orange text-white font-bold'
+                      : 'text-sand/70 hover:text-sand'
+                  }`}
+                >
+                  35HP Cutter
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSelectedVideoId('iXeglmIZTRU')}
+                  className={`px-2.5 py-1 rounded transition-colors ${
+                    selectedVideoId === 'iXeglmIZTRU'
+                      ? 'bg-orange text-white font-bold'
+                      : 'text-sand/70 hover:text-sand'
+                  }`}
+                >
+                  SC70TX Tracked
+                </button>
+              </div>
             </div>
 
             <div className="relative aspect-video bg-black flex items-center justify-center">
               <iframe
+                key={selectedVideoId}
                 className="w-full h-full"
-                src="https://www.youtube-nocookie.com/embed/r1r2c5t0?autoplay=0&rel=0&modestbranding=1"
+                src={`https://www.youtube.com/embed/${selectedVideoId}?rel=0&modestbranding=1`}
                 title="Commercial Stump Grinding Machine Field Operation"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
                 allowFullScreen
               />
             </div>
 
-            <div className="p-4 sm:p-6 bg-[#1A120B] text-sand space-y-2">
-              <h4 className="font-serif text-lg font-bold text-[#FBF6EC]">
-                How Machine Wear &amp; Operating Cost Tie Directly to Your Formula
-              </h4>
+            <div className="p-4 sm:p-6 bg-[#1A120B] text-sand space-y-3">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <h4 className="font-serif text-lg font-bold text-[#FBF6EC]">
+                  How Machine Wear &amp; Operating Cost Tie Directly to Your Formula
+                </h4>
+                <a
+                  href={`https://www.youtube.com/watch?v=${selectedVideoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-xs text-orange hover:underline font-mono"
+                >
+                  <span>Watch on YouTube</span>
+                  <ArrowRight size={12} />
+                </a>
+              </div>
               <p className="text-xs sm:text-sm text-sand/80 leading-relaxed font-sans">
                 Notice the flying woodchips and carbide teeth impact. A set of 16 Greenteeth or Vermeer teeth costs \$180–\$240 to replace. If you don&apos;t charge a tooth wear buffer on rocky soil or root flares, you are literally grinding away your profit. The Playbook teaches you the exact per-inch math to bill.
               </p>
