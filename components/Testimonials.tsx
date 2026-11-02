@@ -361,8 +361,13 @@ export function Testimonials() {
                 {/* Rating stars & verified badge */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1 text-orange">
-                    {[...Array(item.rating || 5)].map((_, i) => (
-                      <Star key={i} size={16} fill="#E8731A" stroke="none" />
+                    {[1, 2, 3, 4, 5].map((starIdx) => (
+                      <Star
+                        key={starIdx}
+                        size={16}
+                        fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
+                        stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
+                      />
                     ))}
                   </div>
                   {item.verifiedOperator && (

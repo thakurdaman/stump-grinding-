@@ -667,10 +667,12 @@ export default function HomePage() {
       <Footer />
 
       {/* Checkout Modal */}
-      <CheckoutModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
+      {selectedProduct && (
+        <CheckoutModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      )}
     </>
   );
 }

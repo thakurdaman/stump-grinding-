@@ -34,10 +34,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
   const [verification, setVerification] = useState<VerificationState>({ status: 'idle' });
   const checkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  if (!product) return null;
-
   // Real-time live email deliverability verification (like Google / Apple)
   useEffect(() => {
+    if (!product) return;
+
     if (checkTimeoutRef.current) {
       clearTimeout(checkTimeoutRef.current);
     }
@@ -102,6 +102,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!product) return;
     setError(null);
 
     // Block submission if live check confirmed email domain is invalid
@@ -138,6 +139,8 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
       setLoading(false);
     }
   };
+
+  if (!product) return null;
 
   return (
     <div
