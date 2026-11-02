@@ -6,15 +6,20 @@ import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SingleSliderProps {
   item: BeforeAfterItem;
+  index: number;
+  total: number;
 }
 
-const ComparisonCard: React.FC<SingleSliderProps> = ({ item }) => {
+const ComparisonCard: React.FC<SingleSliderProps> = ({ item, index, total }) => {
   const [sliderPos, setSliderPos] = useState<number>(50);
 
   return (
     <div className="bg-[#FBF6EC] border border-bark/15 rounded-2xl p-5 sm:p-7 shadow-sm hover:shadow-md transition-shadow space-y-4 w-full">
-      <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1">
+      <div className="flex items-start justify-between gap-3">
         <h4 className="font-serif font-bold text-lg sm:text-xl text-bark">{item.title}</h4>
+        <span className="shrink-0 px-2.5 py-1 rounded-full bg-bark/5 border border-bark/10 text-xs font-mono font-semibold text-bark">
+          Scenario {index + 1} of {total}
+        </span>
       </div>
       <p className="text-xs sm:text-sm text-wood-dark leading-relaxed">{item.description}</p>
 
@@ -101,13 +106,15 @@ export const BeforeAfter: React.FC = () => {
   };
 
   const handlePrev = () => {
-    const nextIdx = activeIndex > 0 ? activeIndex - 1 : items.length - 1;
-    scrollTo(nextIdx);
+    if (activeIndex > 0) {
+      scrollTo(activeIndex - 1);
+    }
   };
 
   const handleNext = () => {
-    const nextIdx = activeIndex < items.length - 1 ? activeIndex + 1 : 0;
-    scrollTo(nextIdx);
+    if (activeIndex < items.length - 1) {
+      scrollTo(activeIndex + 1);
+    }
   };
 
   const handleScroll = () => {
@@ -144,34 +151,31 @@ export const BeforeAfter: React.FC = () => {
           </p>
         </div>
 
-        {/* Carousel Header Indicator */}
-        <div className="flex items-center justify-center mb-5">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bark/5 border border-bark/10 text-xs font-mono font-semibold text-bark">
-            <span>Scenario {activeIndex + 1} of {items.length}</span>
-          </div>
-        </div>
-
         {/* Carousel with Side Arrow Navigation */}
         <div className="relative max-w-3xl mx-auto">
-          {/* Left Side Arrow Button */}
-          <button
-            onClick={handlePrev}
-            className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
-            aria-label="Previous field job scenario"
-            title="Previous job scenario"
-          >
-            <ChevronLeft size={24} />
-          </button>
+          {/* Left Side Arrow Button (only shown when not on the first scenario) */}
+          {activeIndex > 0 && (
+            <button
+              onClick={handlePrev}
+              className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Previous field job scenario"
+              title="Previous job scenario"
+            >
+              <ChevronLeft size={24} />
+            </button>
+          )}
 
-          {/* Right Side Arrow Button */}
-          <button
-            onClick={handleNext}
-            className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
-            aria-label="Next field job scenario"
-            title="Next job scenario"
-          >
-            <ChevronRight size={24} />
-          </button>
+          {/* Right Side Arrow Button (only shown when not on the last scenario) */}
+          {activeIndex < items.length - 1 && (
+            <button
+              onClick={handleNext}
+              className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Next field job scenario"
+              title="Next job scenario"
+            >
+              <ChevronRight size={24} />
+            </button>
+          )}
 
           {/* Swipeable Carousel Track */}
           <div
@@ -180,31 +184,36 @@ export const BeforeAfter: React.FC = () => {
             className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pb-2 no-scrollbar px-1"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {items.map((item) => (
+            {items.map((item, idx) => (
               <div
                 key={item.id}
                 className="w-full flex-shrink-0 snap-center"
               >
-                <ComparisonCard item={item} />
+                <ComparisonCard item={item} index={idx} total={items.length} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Dots Pagination */}
-        <div className="flex items-center justify-center gap-2 mt-4">
-          {items.map((item, idx) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(idx)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                activeIndex === idx
-                  ? 'w-8 bg-orange'
-                  : 'w-2.5 bg-bark/20 hover:bg-bark/40'
-              }`}
-              aria-label={`Jump to scenario ${idx + 1}`}
-            />
-          ))}
+        {/* Navigation Indicator & Dots */}
+        <div className="flex flex-col items-center justify-center gap-2.5 mt-5">
+          <div className="flex items-center justify-center gap-2">
+            {items.map((item, idx) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(idx)}
+                className={`h-2.5 rounded-full transition-all duration-300 ${
+                  activeIndex === idx
+                    ? 'w-8 bg-orange'
+                    : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+                }`}
+                aria-label={`Jump to scenario ${idx + 1}`}
+              />
+            ))}
+          </div>
+          <span className="text-xs font-mono font-medium text-bark/60">
+            Scenario {activeIndex + 1} of {items.length}
+          </span>
         </div>
       </div>
     </section>
