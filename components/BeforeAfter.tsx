@@ -99,8 +99,13 @@ export const BeforeAfter: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {config.items.map((item) => (
-            <ComparisonCard key={item.id} item={item} />
+          {config.items.map((item, idx) => (
+            <div 
+              key={item.id} 
+              className={idx === config.items.length - 1 && config.items.length % 2 !== 0 ? 'md:col-span-2 md:max-w-xl md:mx-auto w-full' : ''}
+            >
+              <ComparisonCard item={item} />
+            </div>
           ))}
         </div>
       </div>

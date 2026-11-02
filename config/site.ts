@@ -32,9 +32,8 @@ export const SITE_CONFIG = {
     'Educational material. Not legal, tax, insurance, or safety advice. Prices in the calculator are starting points, not market guarantees. Results depend on your market and effort.',
   
   // Real jobs before/after gallery configuration
-  // Set enabled to true when you put your photos in /public/images/
   beforeAfter: {
-    enabled: true, // Shows clean labeled fallback placeholders if files don't exist yet
+    enabled: true,
     items: [
       {
         id: 'job-1',
@@ -49,6 +48,27 @@ export const SITE_CONFIG = {
         description: 'Challenging rock-heavy soil with extended surface roots. Factored tooth wear into the quote.',
         beforeImage: '/images/before-maple.jpg',
         afterImage: '/images/after-maple.jpg',
+      },
+      {
+        id: 'job-3',
+        title: 'Storm Windthrow & 5-Foot Root Plate',
+        description: 'Blown-over Red Maple root ball along property border. Ground 12 inches below grade and backfilled.',
+        beforeImage: '/images/before-windthrow.jpg',
+        afterImage: '/images/after-windthrow.jpg',
+      },
+      {
+        id: 'job-4',
+        title: 'Sidewalk & Concrete Curb Root Heave',
+        description: 'Aggressive root flare lifting pedestrian concrete. Precision vertical sweep with zero edging damage.',
+        beforeImage: '/images/before-sidewalk.jpg',
+        afterImage: '/images/after-sidewalk.jpg',
+      },
+      {
+        id: 'job-5',
+        title: 'Commercial Turf & Open Grounds Clearing',
+        description: 'Large diameter hardwood stump sectioned and pulverized down to mulch bed ready for sod and re-grading.',
+        beforeImage: '/images/before-clearing.jpg',
+        afterImage: '/images/after-clearing.jpg',
       },
     ] as BeforeAfterItem[],
   },
