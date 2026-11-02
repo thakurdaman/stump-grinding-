@@ -6,21 +6,14 @@ import { SlidersHorizontal, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface SingleSliderProps {
   item: BeforeAfterItem;
-  index: number;
-  total: number;
 }
 
-const ComparisonCard: React.FC<SingleSliderProps> = ({ item, index, total }) => {
+const ComparisonCard: React.FC<SingleSliderProps> = ({ item }) => {
   const [sliderPos, setSliderPos] = useState<number>(50);
 
   return (
     <div className="bg-[#FBF6EC] border border-bark/15 rounded-2xl p-5 sm:p-7 shadow-sm hover:shadow-md transition-shadow space-y-4 w-full">
-      <div className="flex items-start justify-between gap-3">
-        <h4 className="font-serif font-bold text-lg sm:text-xl text-bark">{item.title}</h4>
-        <span className="shrink-0 px-2.5 py-1 rounded-full bg-bark/5 border border-bark/10 text-xs font-mono font-semibold text-bark">
-          Scenario {index + 1} of {total}
-        </span>
-      </div>
+      <h4 className="font-serif font-bold text-lg sm:text-xl text-bark">{item.title}</h4>
       <p className="text-xs sm:text-sm text-wood-dark leading-relaxed">{item.description}</p>
 
       {/* Comparison Container */}
@@ -184,36 +177,31 @@ export const BeforeAfter: React.FC = () => {
             className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pb-2 no-scrollbar px-1"
             style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
           >
-            {items.map((item, idx) => (
+            {items.map((item) => (
               <div
                 key={item.id}
                 className="w-full flex-shrink-0 snap-center"
               >
-                <ComparisonCard item={item} index={idx} total={items.length} />
+                <ComparisonCard item={item} />
               </div>
             ))}
           </div>
         </div>
 
-        {/* Navigation Indicator & Dots */}
-        <div className="flex flex-col items-center justify-center gap-2.5 mt-5">
-          <div className="flex items-center justify-center gap-2">
-            {items.map((item, idx) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(idx)}
-                className={`h-2.5 rounded-full transition-all duration-300 ${
-                  activeIndex === idx
-                    ? 'w-8 bg-orange'
-                    : 'w-2.5 bg-bark/20 hover:bg-bark/40'
-                }`}
-                aria-label={`Jump to scenario ${idx + 1}`}
-              />
-            ))}
-          </div>
-          <span className="text-xs font-mono font-medium text-bark/60">
-            Scenario {activeIndex + 1} of {items.length}
-          </span>
+        {/* Navigation Dots */}
+        <div className="flex items-center justify-center gap-2 mt-5">
+          {items.map((item, idx) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                activeIndex === idx
+                  ? 'w-8 bg-orange'
+                  : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+              }`}
+              aria-label={`Jump to scenario ${idx + 1}`}
+            />
+          ))}
         </div>
       </div>
     </section>
