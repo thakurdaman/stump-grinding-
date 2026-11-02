@@ -9,14 +9,12 @@ import {
   ArrowRight, 
   Volume2, 
   VolumeX, 
-  Sparkles, 
   ShieldAlert, 
   Video, 
-  Layers, 
   Camera, 
-  Flame, 
-  Gauge, 
-  Maximize2 
+  Calculator, 
+  Smartphone,
+  Sparkles
 } from 'lucide-react';
 
 interface SimulationStep {
@@ -32,7 +30,7 @@ interface SimulationStep {
   wearBuffer: number;
   totalQuote: number;
   profitMargin: string;
-  rpm: number;
+  terrainNote: string;
   depthInches: number;
   isGrinding: boolean;
   hasRockAlert: boolean;
@@ -42,67 +40,67 @@ interface SimulationStep {
 const DEMO_STEPS: SimulationStep[] = [
   {
     time: 0,
-    stage: '1. Laser Caliper & Core Size',
+    stage: '1. Measure Diameter (24" Oak)',
     diameter: 24,
-    species: 'White Oak (Hardwood)',
-    rootFlare: 'Scanning root flares...',
-    soil: 'Standard Loam',
-    access: 'Standard Gate',
+    species: 'White Oak (Dense Hardwood)',
+    rootFlare: 'Inspecting surface roots...',
+    soil: 'Standard Lawn Loam',
+    access: 'Standard Gate (>36")',
     basePrice: 144,
     multipliers: 0,
     wearBuffer: 0,
     totalQuote: 144,
     profitMargin: '65%',
-    rpm: 1200,
+    terrainNote: 'Lawn Grade Level',
     depthInches: 0,
     isGrinding: false,
     hasRockAlert: false,
-    note: 'Laser caliper locks 24" core diameter. Machine baseline volume calculated.',
+    note: 'Measure flare-to-flare at ground level (24 inches). Base cut time calculated.',
   },
   {
     time: 4,
-    stage: '2. Root Flare Radar Detection',
+    stage: '2. Add Surface Roots (8 Ft)',
     diameter: 24,
     species: 'White Oak (Hardwood)',
-    rootFlare: '8 ft Lateral Flares (+$65)',
-    soil: 'Standard Loam',
-    access: 'Standard Gate',
+    rootFlare: '8 ft Surface Roots (+$65)',
+    soil: 'Standard Lawn Loam',
+    access: 'Standard Gate (>36")',
     basePrice: 144,
     multipliers: 65,
     wearBuffer: 15,
     totalQuote: 224,
     profitMargin: '70%',
-    rpm: 1850,
+    terrainNote: 'Lateral Root Flare',
     depthInches: 4,
     isGrinding: true,
     hasRockAlert: false,
-    note: 'Underground root flare detected: adds \$65 so you don\'t chase roots for free.',
+    note: 'Add 8 linear feet of surface roots ($5/ft) so you never chase roots for 45 mins for free.',
   },
   {
     time: 8,
-    stage: '3. Rock & Tooth Wear Defense',
+    stage: '3. Rock Buffer & Tight Gate',
     diameter: 24,
     species: 'White Oak (Hardwood)',
-    rootFlare: '8 ft Lateral Flares (+$65)',
+    rootFlare: '8 ft Surface Roots (+$65)',
     soil: 'River Rock Inclusions (Tooth Risk)',
-    access: '34" Tight Gate (+$35)',
+    access: 'Tight 34" Gate (+$35)',
     basePrice: 144,
     multipliers: 100,
     wearBuffer: 56,
     totalQuote: 300,
     profitMargin: '72%',
-    rpm: 2200,
+    terrainNote: 'Rock Hazard Buffer',
     depthInches: 8,
     isGrinding: true,
     hasRockAlert: true,
-    note: 'Tooth Wear Reserve triggered: puts \$56 into your carbide tooth replacement fund.',
+    note: 'Auto-add $56 carbide tooth wear fund for rocky soil plus $35 for track ramp labor.',
   },
   {
     time: 12,
-    stage: '4. Final Client Bid & Profit Lock',
+    stage: '4. Final Bid to Client ($345)',
     diameter: 24,
     species: 'White Oak (Hardwood)',
-    rootFlare: '8 ft Lateral Flares (Included)',
+    rootFlare: '8 ft Surface Roots (Included)',
     soil: 'Rocky Soil Buffer Applied',
     access: 'Tight Gate Surcharge Applied',
     basePrice: 144,
@@ -110,11 +108,11 @@ const DEMO_STEPS: SimulationStep[] = [
     wearBuffer: 56,
     totalQuote: 345,
     profitMargin: '74%',
-    rpm: 2400,
+    terrainNote: '12" Below Grade Finish',
     depthInches: 12,
     isGrinding: true,
     hasRockAlert: false,
-    note: 'Full \$345 quote calculated with 74% gross profit margin. SMS ready.',
+    note: 'Total bid: $345.00 with 74% gross margin. Ready to text or hand to homeowner on the spot.',
   },
 ];
 
@@ -128,7 +126,7 @@ export function VideoWalkthrough() {
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
 
-  const duration = 16; // 16-second snappy loop
+  const duration = 16; // 16-second snappy walkthrough
 
   // Get active step from time
   const currentStep = [...DEMO_STEPS].reverse().find((s) => currentTime >= s.time) || DEMO_STEPS[0];
@@ -217,17 +215,17 @@ export function VideoWalkthrough() {
     <section className="py-20 bg-gradient-to-b from-cream via-[#F5EDE0] to-cream border-t border-bark/10 overflow-hidden">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Header with Badges */}
+        {/* Header - Clean, Authoritative, Zero AI Buzzwords */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-8">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange/15 border border-orange/30 text-orange text-xs font-bold uppercase tracking-wider shadow-sm">
-            <Flame size={14} className="text-orange animate-pulse" />
-            <span>Stump Grinding Telemetry &amp; Quoting Engine</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand/80 border border-wood/30 text-wood-dark text-xs font-bold uppercase tracking-wider">
+            <Calculator size={13} className="text-orange" />
+            <span>Field Quoting Walkthrough</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-bark tracking-tight">
-            Watch the 16-Second Job Quoter in Action
+            How to Quote a $345 Stump in 16 Seconds on Your Phone
           </h2>
           <p className="text-bark/80 text-sm sm:text-base leading-relaxed">
-            See how the Excel engine turns a 24&quot; White Oak with subterranean root flares and rock hazards into a protected \$345 quote with 74% profit.
+            Watch how an 18–24&quot; White Oak with surface root flares and rocky soil gets accurately priced right in the customer&apos;s yard before you unload your machine.
           </p>
 
           {/* Mode Switcher Tabs */}
@@ -240,8 +238,8 @@ export function VideoWalkthrough() {
                   : 'bg-sand/60 text-bark/80 hover:bg-sand hover:text-bark'
               }`}
             >
-              <Layers size={14} className={activeTab === 'sim' ? 'text-orange' : ''} />
-              <span>3D Machinery Simulator</span>
+              <Smartphone size={14} className={activeTab === 'sim' ? 'text-orange' : ''} />
+              <span>Field Calculator Walkthrough</span>
             </button>
             <button
               onClick={() => setActiveTab('video')}
@@ -252,7 +250,7 @@ export function VideoWalkthrough() {
               }`}
             >
               <Video size={14} className={activeTab === 'video' ? 'text-orange' : ''} />
-              <span>Commercial Tracked Grinder Video</span>
+              <span>Tracked Grinder in Field</span>
             </button>
             <button
               onClick={() => setActiveTab('photos')}
@@ -263,31 +261,28 @@ export function VideoWalkthrough() {
               }`}
             >
               <Camera size={14} className={activeTab === 'photos' ? 'text-orange' : ''} />
-              <span>Field Job Inspection</span>
+              <span>Job Inspection Steps</span>
             </button>
           </div>
         </div>
 
-        {/* TAB 1: 3D MACHINERY SIMULATOR */}
+        {/* TAB 1: FIELD CALCULATOR WALKTHROUGH */}
         {activeTab === 'sim' && (
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
             
-            {/* Left 8 Cols: Interactive 3D Screen Player */}
+            {/* Left 8 Cols: Rugged Field Screen */}
             <div className="lg:col-span-8">
               <div 
-                className="rounded-2xl overflow-hidden shadow-2xl border-2 border-bark/30 bg-[#160E08] transition-transform duration-300"
-                style={{ perspective: '1000px' }}
+                className="rounded-2xl overflow-hidden shadow-2xl border-2 border-bark/30 bg-[#160E08]"
               >
                 
-                {/* HUD Header Bar */}
+                {/* Field Top Bar */}
                 <div className="bg-[#24170E] px-4 py-2.5 flex items-center justify-between border-b border-sand/15 text-sand/80 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-3 h-3 rounded-full bg-red-500 inline-block shadow-sm" />
-                    <span className="w-3 h-3 rounded-full bg-amber-500 inline-block shadow-sm" />
-                    <span className="w-3 h-3 rounded-full bg-emerald-500 inline-block shadow-sm" />
-                    <span className="ml-2 font-mono text-[11px] text-[#FBF6EC] font-semibold tracking-wide flex items-center gap-1.5">
-                      <Gauge size={13} className="text-orange" />
-                      GRINDER_TELEMETRY_HUD // 24&quot; OAK JOB
+                    <span className="w-2.5 h-2.5 rounded-full bg-forest inline-block" />
+                    <span className="font-mono text-[11px] text-[#FBF6EC] font-semibold tracking-wide flex items-center gap-1.5">
+                      <Smartphone size={13} className="text-orange" />
+                      STUMP_PRICING_CALCULATOR.XLSX &bull; BACKYARD BID
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
@@ -297,52 +292,42 @@ export function VideoWalkthrough() {
                   </div>
                 </div>
 
-                {/* 3D Visualizer Canvas Screen */}
+                {/* Stage Screen with Wood Grain Texture */}
                 <div className="relative aspect-[16/10] sm:aspect-[16/9.5] bg-[#120B06] p-4 sm:p-6 flex flex-col justify-between overflow-hidden select-none">
                   
-                  {/* Photo Texture Backdrop (Wood Grain + Ambient Forest) */}
+                  {/* Photo Texture Backdrop (Wood Grain) */}
                   <div 
                     className="absolute inset-0 opacity-20 bg-cover bg-center pointer-events-none mix-blend-luminosity filter blur-[1px]"
                     style={{ backgroundImage: "url('/images/stump-wood.jpg')" }}
                   />
 
-                  {/* Blueprint Grid Overlay */}
-                  <div className="absolute inset-0 opacity-15 bg-[linear-gradient(to_right,#E8731A_1px,transparent_1px),linear-gradient(to_bottom,#E8731A_1px,transparent_1px)] bg-[size:28px_28px] pointer-events-none" />
-
-                  {/* Top Status & Gauges Bar */}
+                  {/* Top Field Job Specs Bar */}
                   <div className="relative z-10 flex flex-wrap items-center justify-between gap-2 bg-[#20140B]/90 backdrop-blur-md px-3.5 py-2 rounded-xl border border-sand/15 shadow">
                     <div className="flex items-center gap-2 text-xs text-sand">
-                      <span className={`w-2.5 h-2.5 rounded-full ${isPlaying ? 'bg-orange animate-ping' : 'bg-sand/40'}`} />
+                      <span className={`w-2 h-2 rounded-full ${isPlaying ? 'bg-orange animate-ping' : 'bg-sand/40'}`} />
                       <span className="font-bold text-[#FBF6EC] font-mono text-[11px]">
-                        ENGINE: <span className={isPlaying ? 'text-green-400 font-bold' : 'text-amber-400'}>{isPlaying ? 'ENGAGED' : 'STANDBY'}</span>
+                        SITE: <span className="text-orange font-bold">24&quot; WHITE OAK</span>
                       </span>
                     </div>
 
                     <div className="flex items-center gap-4 text-[11px] font-mono text-sand/80">
                       <div>
-                        CUTTER: <span className="text-orange font-bold">{currentStep.rpm} RPM</span>
+                        TERRAIN: <span className="text-amber-300 font-bold">{currentStep.terrainNote}</span>
                       </div>
                       <div>
-                        GRADE DEPTH: <span className="text-emerald-400 font-bold">-{currentStep.depthInches}&quot; SUB</span>
+                        DEPTH: <span className="text-emerald-400 font-bold">-{currentStep.depthInches}&quot; GRADE</span>
                       </div>
                     </div>
                   </div>
 
-                  {/* Center Stage: 3D Stump Cross-Section & Spinning Cutter Wheel */}
+                  {/* Center Stage: Stump Cross-Section & Cutter Wheel */}
                   <div className="relative z-10 my-auto py-2 flex flex-col sm:flex-row items-center justify-between gap-4">
                     
-                    {/* Visual 1: 3D Stump Cross Section with Root Flares */}
+                    {/* Visual 1: Stump Cross Section with Ground Measurements */}
                     <div className="relative flex flex-col items-center justify-center">
-                      
-                      {/* Laser Caliper Dimension Line across stump */}
                       <div className="relative w-44 sm:w-52 h-44 sm:h-52 flex items-center justify-center">
                         
-                        {/* Underground radar ping waves (expanding when scanning root flares) */}
-                        {currentStep.time >= 4 && (
-                          <div className="absolute inset-0 rounded-full border border-forest/40 animate-radar pointer-events-none" />
-                        )}
-
-                        {/* Outer Bark & Root Flare Tentacles */}
+                        {/* Root Flare Ring */}
                         <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
                           {/* Underground roots radiating out */}
                           <path
@@ -362,31 +347,31 @@ export function VideoWalkthrough() {
                           <circle cx="100" cy="100" r="7" fill="#E8731A" />
                         </svg>
 
-                        {/* Laser Scan Line moving up and down */}
-                        <div className="absolute w-36 h-0.5 bg-red-500 shadow-[0_0_8px_#ff0000] animate-laser pointer-events-none" />
+                        {/* Measurement Tape Line across stump */}
+                        <div className="absolute w-36 h-0.5 bg-amber-400/80 shadow-[0_0_6px_#f59e0b] pointer-events-none" />
 
                         {/* Core Diameter Badge in Center */}
-                        <div className="relative z-10 px-2.5 py-1 rounded bg-black/80 border border-orange text-orange font-mono text-[11px] font-bold shadow-lg">
-                          &Oslash; 24.0&quot; OAK
+                        <div className="relative z-10 px-2.5 py-1 rounded bg-black/85 border border-orange text-orange font-mono text-[11px] font-bold shadow-lg">
+                          &Oslash; 24.0&quot; GROUND MEASURE
                         </div>
                       </div>
 
                       <span className="text-[10px] font-mono text-sand/70 mt-1 uppercase">
-                        Core Trunk + Lateral Roots
+                        Trunk Core + 8ft Lateral Roots
                       </span>
                     </div>
 
-                    {/* Visual 2: Spinning 3D Carbide Cutter Wheel with Flying Woodchips & Sparks */}
+                    {/* Visual 2: Cutter Wheel with Flying Woodchips */}
                     <div className="relative flex flex-col items-center justify-center">
                       <div className="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
                         
-                        {/* 3D Tilted Cutter Wheel Hub */}
+                        {/* Heavy-duty Cutter Wheel */}
                         <div 
                           className={`relative w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#4A3222] bg-gradient-to-tr from-[#1A120B] to-[#362013] shadow-2xl flex items-center justify-center ${
                             currentStep.isGrinding && isPlaying ? 'animate-spin-fast' : 'animate-spin-slow'
                           }`}
                         >
-                          {/* 8 Tungsten Carbide Teeth projecting outwards */}
+                          {/* 8 Carbide Teeth */}
                           {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
                             <div
                               key={deg}
@@ -405,7 +390,7 @@ export function VideoWalkthrough() {
                           </div>
                         </div>
 
-                        {/* Flying Woodchips and Sawdust Particles (active during grinding) */}
+                        {/* Flying Woodchips during cut */}
                         {currentStep.isGrinding && (
                           <div className="absolute inset-0 pointer-events-none">
                             <span className="absolute left-1/2 top-1/2 w-3 h-2 rounded bg-amber-200 border border-amber-600 animate-chip-1" />
@@ -413,7 +398,7 @@ export function VideoWalkthrough() {
                             <span className="absolute left-1/2 top-1/2 w-4 h-2 rounded bg-[#C49A6C] border border-[#7D4F35] animate-chip-3" />
                             <span className="absolute left-1/2 top-1/2 w-2 h-3 rounded bg-amber-300 animate-chip-4" />
                             
-                            {/* Rock Strike Spark Flash */}
+                            {/* Rock Strike Spark */}
                             {currentStep.hasRockAlert && (
                               <div className="absolute left-2/3 top-1/3 w-8 h-8 rounded-full bg-yellow-300 blur-sm animate-spark" />
                             )}
@@ -422,18 +407,18 @@ export function VideoWalkthrough() {
                       </div>
 
                       <div className="flex items-center gap-1.5 mt-1">
-                        <span className={`w-2 h-2 rounded-full ${currentStep.isGrinding ? 'bg-orange animate-ping' : 'bg-sand/30'}`} />
+                        <span className={`w-2 h-2 rounded-full ${currentStep.isGrinding ? 'bg-orange' : 'bg-sand/30'}`} />
                         <span className="text-[10px] font-mono text-sand/80 uppercase">
-                          {currentStep.isGrinding ? 'Grinding -12" Grade' : 'Cutter Positioned'}
+                          {currentStep.isGrinding ? 'Cutting 10-12" Below Grade' : 'Positioning Grinder'}
                         </span>
                       </div>
                     </div>
 
-                    {/* Visual 3: Live Bid Calculation HUD */}
+                    {/* Visual 3: Live Bid Calculation Box */}
                     <div className="bg-[#1C120B]/95 border-2 border-orange/60 rounded-2xl p-4 text-sand shadow-xl min-w-[210px] sm:min-w-[240px]">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sand/70">
-                          INSTANT FIELD QUOTE
+                          INSTANT CALCULATED BID
                         </span>
                         <span className="text-[10px] text-green-400 font-mono font-bold bg-forest/40 px-1.5 py-0.5 rounded">
                           {currentStep.profitMargin} Margin
@@ -461,39 +446,39 @@ export function VideoWalkthrough() {
 
                       {/* Rock Alert Badge */}
                       {currentStep.hasRockAlert && (
-                        <div className="mt-2.5 px-2 py-1 rounded bg-red-950/80 border border-red-500/60 flex items-center gap-1.5 text-[10px] text-red-200 font-mono animate-pulse">
-                          <ShieldAlert size={12} className="text-red-400 shrink-0" />
-                          <span>ROCK HAZARD: +$56 TOOTH FUND</span>
+                        <div className="mt-2.5 px-2 py-1 rounded bg-amber-950/80 border border-amber-500/60 flex items-center gap-1.5 text-[10px] text-amber-200 font-mono">
+                          <ShieldAlert size={12} className="text-amber-400 shrink-0" />
+                          <span>ROCK BUFFER: +$56 TOOTH FUND</span>
                         </div>
                       )}
                     </div>
                   </div>
 
-                  {/* Stage Explanation Ticker */}
+                  {/* Stage Explanation */}
                   <div className="relative z-10 bg-[#1D130B]/90 border border-sand/15 rounded-xl px-3.5 py-2 flex items-center gap-2 text-xs text-[#FBF6EC]">
-                    <Sparkles size={14} className="text-orange shrink-0 animate-bounce" />
+                    <CheckCircle2 size={14} className="text-forest shrink-0" />
                     <span className="font-sans font-medium">{currentStep.note}</span>
                   </div>
 
-                  {/* Big Center Play Prompt when Paused at Start */}
+                  {/* Play Prompt when Paused */}
                   {!isPlaying && currentTime === 0 && (
                     <div 
                       onClick={() => {
                         setIsPlaying(true);
                         playSoundEffect('grind');
                       }}
-                      className="absolute inset-0 bg-black/60 backdrop-blur-[3px] flex flex-col items-center justify-center cursor-pointer z-30 group"
+                      className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-30 group"
                     >
-                      <div className="w-20 h-20 rounded-full bg-orange text-white flex items-center justify-center shadow-[0_0_30px_#E8731A] group-hover:scale-110 transition-transform">
+                      <div className="w-20 h-20 rounded-full bg-orange text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
                         <Play size={36} fill="#FFFFFF" className="ml-1" />
                       </div>
-                      <span className="mt-4 text-xs sm:text-sm font-bold text-white uppercase tracking-wider bg-bark/90 px-4 py-2 rounded-full border border-orange/40 shadow">
-                        Click to Play 16-Second 3D Quoting Simulation
+                      <span className="mt-4 text-xs sm:text-sm font-bold text-white uppercase tracking-wider bg-bark/90 px-4 py-2 rounded-full border border-sand/20 shadow">
+                        Click to Play 16-Second Quoting Walkthrough
                       </span>
                     </div>
                   )}
 
-                  {/* Playback Scrub & Speed Controls */}
+                  {/* Controls */}
                   <div className="relative z-10 pt-3 border-t border-sand/15 flex items-center gap-3 text-sand text-xs">
                     <button
                       onClick={() => setIsPlaying(!isPlaying)}
@@ -506,7 +491,7 @@ export function VideoWalkthrough() {
                     <button
                       onClick={handleRestart}
                       className="w-8 h-8 rounded-lg bg-sand/20 text-sand flex items-center justify-center hover:bg-sand/30 transition-colors shrink-0"
-                      title="Restart simulation"
+                      title="Restart walkthrough"
                     >
                       <RotateCcw size={13} />
                     </button>
@@ -515,7 +500,7 @@ export function VideoWalkthrough() {
                       {formatTime(currentTime)} / {formatTime(duration)}
                     </span>
 
-                    {/* Scrubber Range */}
+                    {/* Scrubber */}
                     <input
                       type="range"
                       min={0}
@@ -550,32 +535,32 @@ export function VideoWalkthrough() {
               </div>
             </div>
 
-            {/* Right 4 Cols: Playbook Value Column */}
+            {/* Right 4 Cols: Practical Rules for Operators */}
             <div className="lg:col-span-4 space-y-4">
               <div className="bg-[#FBF6EC] border border-bark/15 rounded-2xl p-6 space-y-4 shadow-sm">
                 <div className="flex items-center gap-2 text-forest font-bold text-xs uppercase tracking-wider">
                   <CheckCircle2 size={16} />
-                  <span>The Ground Rule</span>
+                  <span>The 3 Ground Rules</span>
                 </div>
                 <h3 className="font-serif font-bold text-xl sm:text-2xl text-bark leading-tight">
-                  Never Guess on a Stump Again
+                  Stop Eyeballing Stumps and Leaving Money in the Dirt
                 </h3>
                 <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
-                  The spreadsheet shown in the simulator works directly on your iPhone or Android. You enter the diameter, check the boxes, and quote the homeowner with zero math anxiety.
+                  The spreadsheet shown here runs directly in Excel on your phone. You check the boxes while standing with the customer and quote them with confidence.
                 </p>
 
                 <div className="space-y-3 pt-2 text-xs text-bark/85 border-t border-bark/10">
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={15} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>No Underquoting:</strong> Calculates root flares so you never chase roots for 45 minutes for free.</span>
+                    <span><strong>Rule 1: Never Measure Just the Trunk:</strong> Measure flare edge to flare edge at lawn grade. That 18&quot; cut top is actually a 24&quot; grind.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={15} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>Carbide Tooth Fund:</strong> Adds \$20–\$60 into a replacement wear reserve when rocky soil is present.</span>
+                    <span><strong>Rule 2: Bill Surface Roots ($5–$12/ft):</strong> Homeowners want lateral roots flush with the lawn. Never chase them for free.</span>
                   </div>
                   <div className="flex items-start gap-2.5">
                     <CheckCircle2 size={15} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>Tight Gate Surcharge:</strong> Automatically bills \$35–\$75 for gates under 36&quot; requiring track ramps.</span>
+                    <span><strong>Rule 3: Build a Tooth Fund ($20–$60):</strong> Auto-charge for rocky river soil so the customer buys your next set of carbide teeth, not you.</span>
                   </div>
                 </div>
 
@@ -584,7 +569,7 @@ export function VideoWalkthrough() {
                     href="#pricing"
                     className="w-full py-3.5 px-4 rounded-xl bg-orange hover:bg-orange-hover text-white text-xs font-bold flex items-center justify-center gap-2 shadow-md transition-all transform active:scale-95"
                   >
-                    <span>Download Calculator &amp; Playbook Bundle &rarr;</span>
+                    <span>Get the Calculator &amp; Playbook Bundle &rarr;</span>
                   </a>
                 </div>
               </div>
@@ -592,7 +577,7 @@ export function VideoWalkthrough() {
               {/* Step Quick-Jump Selector */}
               <div className="bg-[#24170E] border border-sand/15 rounded-2xl p-4 text-sand space-y-2">
                 <span className="text-[11px] font-mono uppercase tracking-wider text-sand/60 font-bold block">
-                  Jump to Simulation Phase:
+                  Click to View Quoting Stage:
                 </span>
                 <div className="grid grid-cols-2 gap-2 text-[11px] font-mono">
                   {DEMO_STEPS.map((step) => (
@@ -617,7 +602,7 @@ export function VideoWalkthrough() {
           </div>
         )}
 
-        {/* TAB 2: COMMERCIAL TRACKED GRINDER ACTION VIDEO */}
+        {/* TAB 2: VERMEER TRACKED GRINDER ACTION VIDEO */}
         {activeTab === 'video' && (
           <div className="max-w-4xl mx-auto rounded-2xl overflow-hidden shadow-2xl border-2 border-bark/20 bg-bark">
             <div className="bg-[#24170E] px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-sand/15 text-sand text-xs">
@@ -702,14 +687,14 @@ export function VideoWalkthrough() {
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-orange font-mono text-[10px] font-bold">
-                  STEP 1: INSPECTION
+                  STEP 1: MEASURE
                 </span>
               </div>
               <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Measuring the True Diameter
+                Measure Root Flare to Root Flare
               </h4>
               <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Never measure just the cut trunk. Measure root flare edge to root flare edge at lawn grade. That 18&quot; trunk is actually a 28&quot; grind.
+                Never eyeball the cut trunk alone. Measure flare edge to flare edge at lawn grade. That 18&quot; trunk is actually a 24&quot; grind.
               </p>
             </div>
 
@@ -721,14 +706,14 @@ export function VideoWalkthrough() {
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-green-400 font-mono text-[10px] font-bold">
-                  STEP 2: 12&quot; SUB-GRADE
+                  STEP 2: 10-12&quot; DEPTH
                 </span>
               </div>
               <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Full Depth Tooth Churn
+                Grind Below Lawn Grade
               </h4>
               <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Reaching 10–12 inches below lawn grade produces 3x the mulch volume. The Playbook includes the cleanup &amp; backfill fee matrix.
+                Reaching 10–12 inches deep ensures the customer can reseed grass or plant sod over the spot with zero surface regrowth.
               </p>
             </div>
 
@@ -740,14 +725,14 @@ export function VideoWalkthrough() {
                   className="w-full h-full object-cover"
                 />
                 <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-amber-300 font-mono text-[10px] font-bold">
-                  STEP 3: JOB COMPLETION
+                  STEP 3: PAID IN FULL
                 </span>
               </div>
               <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Clean Yard &amp; Paid In Full
+                Collect $345 on the Spot
               </h4>
               <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Customer hands you \$345 cash or pays via SMS invoice on the spot. You net \$255+ after gas and tooth reserve in under 50 minutes.
+                Customer signs the pre-job waiver, you complete the grind, and collect payment via cash or SMS invoice before leaving the driveway.
               </p>
             </div>
           </div>
