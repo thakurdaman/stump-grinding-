@@ -119,6 +119,7 @@ const DEMO_STEPS: SimulationStep[] = [
 export function VideoWalkthrough() {
   const [activeTab, setActiveTab] = useState<'sim' | 'video' | 'photos'>('sim');
   const [selectedVideoId, setSelectedVideoId] = useState('fspc5_zXA6k');
+  const [isVideoStarted, setIsVideoStarted] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [playbackSpeed, setPlaybackSpeed] = useState<number>(1);
@@ -616,42 +617,93 @@ export function VideoWalkthrough() {
               </div>
 
               {/* Video Selector Switch */}
-              <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-lg border border-sand/10 text-[11px] font-mono">
-                <button
-                  type="button"
-                  onClick={() => setSelectedVideoId('fspc5_zXA6k')}
-                  className={`px-2.5 py-1 rounded transition-colors ${
-                    selectedVideoId === 'fspc5_zXA6k'
-                      ? 'bg-orange text-white font-bold'
-                      : 'text-sand/70 hover:text-sand'
-                  }`}
+              <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5 bg-black/40 p-1 rounded-lg border border-sand/10 text-[11px] font-mono">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedVideoId('fspc5_zXA6k');
+                      setIsVideoStarted(true);
+                    }}
+                    className={`px-2.5 py-1 rounded transition-colors ${
+                      selectedVideoId === 'fspc5_zXA6k'
+                        ? 'bg-orange text-white font-bold'
+                        : 'text-sand/70 hover:text-sand'
+                    }`}
+                  >
+                    35HP Cutter
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedVideoId('iXeglmIZTRU');
+                      setIsVideoStarted(true);
+                    }}
+                    className={`px-2.5 py-1 rounded transition-colors ${
+                      selectedVideoId === 'iXeglmIZTRU'
+                        ? 'bg-orange text-white font-bold'
+                        : 'text-sand/70 hover:text-sand'
+                    }`}
+                  >
+                    SC70TX Tracked
+                  </button>
+                </div>
+
+                <a
+                  href={`https://www.youtube.com/watch?v=${selectedVideoId}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 rounded bg-sand/10 hover:bg-sand/20 text-orange font-mono text-[11px] font-semibold transition-colors"
                 >
-                  35HP Cutter
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedVideoId('iXeglmIZTRU')}
-                  className={`px-2.5 py-1 rounded transition-colors ${
-                    selectedVideoId === 'iXeglmIZTRU'
-                      ? 'bg-orange text-white font-bold'
-                      : 'text-sand/70 hover:text-sand'
-                  }`}
-                >
-                  SC70TX Tracked
-                </button>
+                  <span>Open YouTube</span>
+                  <ArrowRight size={11} />
+                </a>
               </div>
             </div>
 
-            <div className="relative aspect-video bg-black flex items-center justify-center">
-              <iframe
-                key={selectedVideoId}
-                className="w-full h-full"
-                src={`https://www.youtube.com/embed/${selectedVideoId}?rel=0&modestbranding=1`}
-                title="Commercial Stump Grinding Machine Field Operation"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+            <div className="relative aspect-video bg-black flex items-center justify-center overflow-hidden">
+              {isVideoStarted ? (
+                <iframe
+                  key={selectedVideoId}
+                  className="w-full h-full"
+                  src={`https://www.youtube-nocookie.com/embed/${selectedVideoId}?autoplay=1&rel=0&playsinline=1`}
+                  title="Commercial Stump Grinding Machine Field Operation"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              ) : (
+                <div
+                  onClick={() => setIsVideoStarted(true)}
+                  className="relative w-full h-full cursor-pointer group flex items-center justify-center"
+                >
+                  {/* High-Res Video Poster Image */}
+                  <img
+                    src={`https://img.youtube.com/vi/${selectedVideoId}/maxresdefault.jpg`}
+                    alt="Commercial Stump Grinding Machine Operation"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 filter brightness-90 group-hover:brightness-100"
+                    onError={(e) => {
+                      // Fallback to hqdefault if maxres isn't cached
+                      (e.currentTarget as HTMLImageElement).src = `https://img.youtube.com/vi/${selectedVideoId}/hqdefault.jpg`;
+                    }}
+                  />
+                  
+                  {/* Dark Vignette Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-black/40 group-hover:via-black/20 transition-colors" />
+
+                  {/* Pulsing Play Button Facade */}
+                  <div className="relative z-10 flex flex-col items-center text-center p-4">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-orange/95 text-white flex items-center justify-center shadow-2xl group-hover:scale-110 group-hover:bg-orange transition-all duration-300 border-4 border-white/20">
+                      <Play size={40} fill="#FFFFFF" className="ml-1.5" />
+                    </div>
+                    <span className="mt-4 px-4 py-1.5 rounded-full bg-black/80 backdrop-blur-sm border border-sand/30 text-white font-mono text-xs sm:text-sm font-bold tracking-wide shadow-lg">
+                      Click to Play Field Demo (1080p)
+                    </span>
+                    <span className="mt-1 text-sand/70 text-[11px] font-mono">
+                      Vermeer Commercial Stump Cutter &bull; Real Operation
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="p-4 sm:p-6 bg-[#1A120B] text-sand space-y-3">
