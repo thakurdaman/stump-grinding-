@@ -144,45 +144,51 @@ export const BeforeAfter: React.FC = () => {
           </p>
         </div>
 
-        {/* Carousel Header Controls */}
-        <div className="flex items-center justify-between mb-4 px-2">
+        {/* Carousel Header Indicator */}
+        <div className="flex items-center justify-center mb-5">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bark/5 border border-bark/10 text-xs font-mono font-semibold text-bark">
             <span>Scenario {activeIndex + 1} of {items.length}</span>
           </div>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrev}
-              className="p-2.5 rounded-full bg-[#FBF6EC] border border-bark/20 hover:border-orange hover:bg-white text-bark transition shadow-sm active:scale-95"
-              aria-label="Previous field job scenario"
-            >
-              <ChevronLeft size={20} />
-            </button>
-            <button
-              onClick={handleNext}
-              className="p-2.5 rounded-full bg-[#FBF6EC] border border-bark/20 hover:border-orange hover:bg-white text-bark transition shadow-sm active:scale-95"
-              aria-label="Next field job scenario"
-            >
-              <ChevronRight size={20} />
-            </button>
-          </div>
         </div>
 
-        {/* Swipeable Carousel Track */}
-        <div
-          ref={scrollRef}
-          onScroll={handleScroll}
-          className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pb-4 no-scrollbar -mx-4 px-4 sm:mx-0 sm:px-0"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {items.map((item) => (
-            <div
-              key={item.id}
-              className="w-full flex-shrink-0 snap-center max-w-3xl mx-auto"
-            >
-              <ComparisonCard item={item} />
-            </div>
-          ))}
+        {/* Carousel with Side Arrow Navigation */}
+        <div className="relative max-w-3xl mx-auto">
+          {/* Left Side Arrow Button */}
+          <button
+            onClick={handlePrev}
+            className="absolute -left-3 sm:-left-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+            aria-label="Previous field job scenario"
+            title="Previous job scenario"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          {/* Right Side Arrow Button */}
+          <button
+            onClick={handleNext}
+            className="absolute -right-3 sm:-right-6 top-1/2 -translate-y-1/2 z-30 w-11 h-11 sm:w-12 sm:h-12 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+            aria-label="Next field job scenario"
+            title="Next job scenario"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* Swipeable Carousel Track */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory scroll-smooth gap-6 pb-2 no-scrollbar px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="w-full flex-shrink-0 snap-center"
+              >
+                <ComparisonCard item={item} />
+              </div>
+            ))}
+          </div>
         </div>
 
         {/* Dots Pagination */}
