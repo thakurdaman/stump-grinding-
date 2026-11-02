@@ -4,7 +4,7 @@ import path from 'path';
 import { db } from '@/lib/db';
 import { validateToken } from '@/lib/orders';
 import { isFileAllowedForProduct } from '@/config/products';
-import { stampPdfWithBuyerEmail } from '@/lib/stamper';
+import { stampPdf } from '@/lib/pdf/stampPdf';
 
 export const dynamic = 'force-dynamic';
 
@@ -111,11 +111,17 @@ export async function GET(req: NextRequest) {
     const ext = path.extname(safeFilename).toLowerCase();
     const contentType = MIME_MAP[ext] || 'application/octet-stream';
 
-    // Optional PDF stamping
-    const shouldStamp = process.env.STAMP_PDF === 'true';
+    // Buyer-specific PDF stamping (enabled by default)
+    const shouldStamp = process.env.STAMP_PDF !== 'false';
     if (ext === '.pdf' && shouldStamp) {
       try {
-        const stampedBytes = await stampPdfWithBuyerEmail(filePath, order.email);
+        const stampedBytes = await stampPdf({
+          inputPath: filePath,
+          email: order.email,
+          orderId: order.id,
+          purchaseDate: (order as any).createdAt || new Date(),
+        });
+
         return new NextResponse(Buffer.from(stampedBytes), {
           status: 200,
           headers: {
@@ -125,8 +131,16 @@ export async function GET(req: NextRequest) {
             'Cache-Control': 'no-store, no-cache, must-revalidate',
           },
         });
-      } catch (stampErr) {
-        console.error('PDF stamp failed, serving original file:', stampErr);
+      } catch (stampErr: any) {
+        console.error(`[PDF_STAMP_ERROR] Order ${order.id} (${order.email}):`, stampErr);
+        const failMode = process.env.STAMP_FAIL_MODE || 'block';
+        if (failMode === 'block') {
+          return NextResponse.json(
+            { error: 'Unable to prepare licensed document. Please contact support.' },
+            { status: 500 }
+          );
+        }
+        console.warn(`[PDF_STAMP_FALLBACK] Serving unstamped file for order ${order.id}`);
       }
     }
 

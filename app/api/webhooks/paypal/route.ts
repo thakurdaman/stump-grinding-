@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PayPalProvider } from '@/lib/payments/paypal';
-import { createOrFulfillOrder } from '@/lib/orders';
+import { createOrFulfillOrder, markOrderRefunded } from '@/lib/orders';
+import { db } from '@/lib/db';
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
-    if (result.order) {
+    if (result.order && (result.eventType === 'PAYMENT.CAPTURE.COMPLETED' || !result.eventType)) {
       await createOrFulfillOrder({
         email: result.order.email,
         versionId: result.order.versionId,
@@ -21,6 +22,21 @@ export async function POST(req: Request) {
         provider: 'paypal',
         providerOrderId: result.order.providerOrderId,
       });
+    } else if (
+      result.eventType === 'PAYMENT.CAPTURE.REFUNDED' ||
+      result.eventType === 'PAYMENT.CAPTURE.REVERSED'
+    ) {
+      try {
+        const providerOrderId = (result as any).resource?.id || (result as any).order?.providerOrderId;
+        if (providerOrderId) {
+          const order = await db.order.findFirst({ where: { providerOrderId } });
+          if (order) {
+            await markOrderRefunded(order.id);
+          }
+        }
+      } catch (refundErr) {
+        console.warn('PayPal refund processing error:', refundErr);
+      }
     }
 
     return NextResponse.json({ received: true });

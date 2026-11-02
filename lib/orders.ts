@@ -1,8 +1,11 @@
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import { db } from './db';
 import { getProductById, getFilesForProduct, ProductFile } from '@/config/products';
 import { sendDownloadLinkEmail } from './email';
 import { SITE_CONFIG } from '@/config/site';
+import { stampPdf, invalidateStampedPdfCache } from '@/lib/pdf/stampPdf';
 
 export interface ValidatedOrder {
   id: string;
@@ -121,6 +124,21 @@ export async function createOrFulfillOrder({
 
   const downloadUrl = `${SITE_CONFIG.url}/download/${downloadToken}`;
 
+  // Pre-warm stamped PDF cache in background if product contains the Playbook PDF
+  const allowedFiles = getFilesForProduct(product.id);
+  const hasPlaybookPdf = allowedFiles.some((f) => f.format === 'PDF');
+  if (hasPlaybookPdf) {
+    const playbookPath = path.join(process.cwd(), 'private-files', 'The-Stump-Grinding-Playbook.pdf');
+    if (fs.existsSync(playbookPath)) {
+      stampPdf({
+        inputPath: playbookPath,
+        email: order.email,
+        orderId: order.id,
+        purchaseDate: new Date(),
+      }).catch((e) => console.warn(`Background PDF stamp pre-warm failed for ${order.id}:`, e));
+    }
+  }
+
   // Send official proof of payment receipt and lifetime download email
   await sendDownloadLinkEmail({
     to: order.email,
@@ -135,6 +153,20 @@ export async function createOrFulfillOrder({
   });
 
   return order;
+}
+
+export async function markOrderRefunded(orderId: string): Promise<boolean> {
+  try {
+    await db.order.update({
+      where: { id: orderId },
+      data: { status: 'refunded', downloadToken: `revoked_${Date.now()}` },
+    });
+  } catch (e) {
+    console.warn(`Could not mark order ${orderId} as refunded in DB:`, e);
+  }
+  // Invalidate and delete cached stamped PDF file
+  invalidateStampedPdfCache(orderId);
+  return true;
 }
 
 export async function validateToken(token: string): Promise<
@@ -158,6 +190,19 @@ export async function validateToken(token: string): Promise<
         ) {
           const payloadJson = Buffer.from(payloadB64, 'base64url').toString('utf8');
           const data = JSON.parse(payloadJson);
+
+          // Check if order was marked refunded / revoked in DB
+          try {
+            const dbOrder = await db.order.findUnique({
+              where: { id: data.id },
+              select: { status: true },
+            });
+            if (dbOrder && (dbOrder.status === 'refunded' || dbOrder.status === 'revoked')) {
+              return { success: false, error: 'revoked' };
+            }
+          } catch {
+            // Stateless verification proceeds if DB unreachable
+          }
 
           const product = getProductById(data.versionId);
           const allowedFiles = getFilesForProduct(data.versionId);

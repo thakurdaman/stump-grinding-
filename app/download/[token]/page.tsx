@@ -92,6 +92,9 @@ export default async function DownloadTokenPage({ params }: DownloadPageProps) {
             <p className="text-xs text-bark/80">
               Click any file below to start your download. Your purchase includes lifetime download rights — save your files locally and re-download whenever you need.
             </p>
+            <p className="text-[11px] text-wood-dark font-medium italic pt-1 border-t border-bark/10">
+              Your copy is licensed to <strong>{order.email}</strong>. Please don&apos;t share it.
+            </p>
           </div>
 
           {/* Files List */}

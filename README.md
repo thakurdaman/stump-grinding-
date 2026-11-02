@@ -151,3 +151,66 @@ This runs 7 automated assertions verifying token expiration, tier file boundarie
 - [ ] **Test Live Sandbox**: Run a 100%-off coupon or $1 test transaction on your chosen provider to verify webhook signatures.
 - [ ] **Domain & SSL**: Point your custom domain and verify HTTPS certificates.
 - [ ] **Export Leads**: Retrieve captured cheat sheet emails at `/api/admin/leads?format=csv` using your `ADMIN_SECRET_KEY`.
+
+---
+
+## 7. PDF Licensing, Stamping & Anti-Piracy Architecture
+
+Every customer who purchases a tier containing the Playbook PDF receives a cryptographically licensed copy uniquely watermarked for them. The original PDF in `/private-files/The-Stump-Grinding-Playbook.pdf` is **never modified** and is never accessible directly.
+
+### How Stamping Works
+1. **Footer Stamp on Every Page**:
+   - Centered near the bottom inside margins (7.5 pt Helvetica).
+   - Format: `Licensed to {email} | Order {orderId} | {YYYY-MM-DD}`.
+   - On page 1 (cover with dark background), the stamp renders in light cream (`#F5F0E1`) with 80% opacity.
+   - On pages 2–34, it renders in muted gray-brown (`rgb(0.38, 0.34, 0.3)`) at `Y=16` pt, placed cleanly below the page number circle (`Y=24–46`) with zero collision.
+2. **Subtle Diagonal Center Watermark**:
+   - A 45-degree faint watermark (`Licensed to {email}`) across the center of each page with 7% opacity. Legible upon inspection but does not disrupt reading.
+3. **Forensic Metadata Embedding**:
+   - An HMAC-SHA256 signature calculated from `orderId:email:date` is embedded into the PDF Subject and Keywords metadata alongside the Order ID.
+   - Even if a pirate crops the footer or removes the visual watermarks, the file can be forensically traced back to the purchasing account via PDF metadata properties.
+4. **Instant Disk Caching**:
+   - Stamped PDFs are cached in `/private-files/stamped/{orderId}.pdf`.
+   - The first download stamps the PDF (or pre-warms on webhook fulfillment), and subsequent downloads are served from cache in under 5ms.
+5. **Refunds & Revocations**:
+   - Marking an order refunded revokes download access and immediately purges `/private-files/stamped/{orderId}.pdf` from disk.
+
+### Configuration Flags (`.env`)
+```bash
+# Enable/disable PDF watermarking (default: true)
+STAMP_PDF="true"
+
+# Enable/disable subtle diagonal center watermark (default: true)
+STAMP_DIAGONAL="true"
+
+# Enable/disable disk caching of stamped PDFs (default: true)
+STAMP_CACHE="true"
+
+# Failure handling mode: "block" (returns 500 error if stamp fails) or "fallback" (serves unstamped PDF with warning)
+STAMP_FAIL_MODE="block"
+```
+
+### How to Trace a Leaked Copy
+If a pirated copy of the playbook is discovered on a forum or file-sharing site:
+1. **Visual Check**: Check the footer on any page (or page 1 cover) for `Licensed to {email} | Order {orderId}`.
+2. **Metadata Inspection**:
+   Open the PDF in Adobe Acrobat, Chrome, or run:
+   ```bash
+   pdfinfo leaked.pdf
+   ```
+   Check the `Subject` and `Keywords` tags. You will find:
+   - `order:ord_xxxxxxxxxxxx`
+   - `license:buyer@domain.com`
+   - `trace:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx`
+3. Cross-reference the `orderId` in your database or Stripe/PayPal dashboard to identify the customer and revoke their access.
+
+### Clearing the Stamping Cache
+To purge all cached stamped files and force fresh stamping:
+```bash
+# PowerShell:
+Remove-Item -Recurse -Force private-files/stamped/*
+
+# Bash:
+rm -rf private-files/stamped/*
+```
+
