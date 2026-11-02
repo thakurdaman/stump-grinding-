@@ -11,7 +11,9 @@ import {
   AlertTriangle, 
   Mail, 
   Infinity as InfinityIcon,
-  ReceiptText
+  ReceiptText,
+  KeyRound,
+  Send
 } from 'lucide-react';
 
 interface CheckoutModalProps {
@@ -20,10 +22,11 @@ interface CheckoutModalProps {
 }
 
 interface VerificationState {
-  status: 'idle' | 'checking' | 'valid' | 'invalid' | 'typo';
+  status: 'idle' | 'checking' | 'valid' | 'invalid' | 'typo' | 'code_sent' | 'verified';
   message?: string;
   suggestion?: string | null;
   mxHost?: string | null;
+  demoCode?: string | null;
 }
 
 export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }) => {
@@ -32,9 +35,13 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [verification, setVerification] = useState<VerificationState>({ status: 'idle' });
+  const [otpCode, setOtpCode] = useState('');
+  const [isSendingCode, setIsSendingCode] = useState(false);
+  const [isVerifyingCode, setIsVerifyingCode] = useState(false);
+  const [codeError, setCodeError] = useState<string | null>(null);
   const checkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Real-time live email deliverability verification (like Google / Apple)
+  // Real-time live email deliverability verification (Syntax, Gibberish, Typo, DNS MX)
   useEffect(() => {
     if (!product) return;
 
@@ -54,7 +61,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
       return;
     }
 
-    setVerification({ status: 'checking', message: 'Verifying email & active mail exchange server...' });
+    setVerification({ status: 'checking', message: 'Checking mailbox syntax, domain MX, and address validity...' });
 
     checkTimeoutRef.current = setTimeout(async () => {
       try {
@@ -74,17 +81,16 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
         } else if (data.valid && data.deliverable) {
           setVerification({
             status: 'valid',
-            message: `Mail server verified active (${data.mxHost || 'active host'}). Lifetime access & payment receipt will arrive safely.`,
+            message: `Mail server active (${data.mxHost || 'google'}). Verify this specific mailbox via 6-digit code.`,
             mxHost: data.mxHost,
           });
         } else {
           setVerification({
             status: 'invalid',
-            message: data.reason || 'This email domain does not have active mail servers and cannot receive emails.',
+            message: data.reason || 'This email address does not appear to be an active, real mailbox.',
           });
         }
       } catch {
-        // Fallback gracefully on network error
         setVerification({ status: 'idle' });
       }
     }, 400);
@@ -92,11 +98,79 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
     return () => {
       if (checkTimeoutRef.current) clearTimeout(checkTimeoutRef.current);
     };
-  }, [email]);
+  }, [email, product]);
 
   const handleApplySuggestion = () => {
     if (verification.suggestion) {
       setEmail(verification.suggestion);
+    }
+  };
+
+  const handleSendCode = async () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || verification.status === 'invalid') return;
+
+    setIsSendingCode(true);
+    setCodeError(null);
+
+    try {
+      const res = await fetch('/api/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'send-code', email: trimmed }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setCodeError(data.message || 'Failed to send verification code.');
+        setIsSendingCode(false);
+        return;
+      }
+
+      setVerification((prev) => ({
+        ...prev,
+        status: 'code_sent',
+        message: `6-digit verification code sent to ${trimmed}.`,
+        demoCode: data.demoCode,
+      }));
+      setIsSendingCode(false);
+    } catch (err: any) {
+      setCodeError(err.message || 'Network error sending code.');
+      setIsSendingCode(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !otpCode.trim()) return;
+
+    setIsVerifyingCode(true);
+    setCodeError(null);
+
+    try {
+      const res = await fetch('/api/verify-email', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'check-code', email: trimmed, code: otpCode.trim() }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        setCodeError(data.message || 'Invalid or expired verification code.');
+        setIsVerifyingCode(false);
+        return;
+      }
+
+      setVerification({
+        status: 'verified',
+        message: `Mailbox verified & confirmed active! Lifetime access & receipt will arrive safely at ${trimmed}.`,
+      });
+      setIsVerifyingCode(false);
+    } catch (err: any) {
+      setCodeError(err.message || 'Network error verifying code.');
+      setIsVerifyingCode(false);
     }
   };
 
@@ -214,7 +288,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
               <label className="block text-xs font-bold uppercase tracking-wider text-bark">
                 Delivery Email Address <span className="text-orange">*</span>
               </label>
-              <span className="text-[10px] text-wood-dark flex items-center gap-1">
+              <span className="text-[10px] text-wood-dark flex items-center gap-1 font-mono">
                 <Mail size={11} />
                 Live Mailbox Verification
               </span>
@@ -225,13 +299,19 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
                 type="email"
                 required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setOtpCode('');
+                  setCodeError(null);
+                }}
                 placeholder="operator@myyardcare.com"
                 className={`w-full px-4 py-3 rounded-lg border bg-white text-bark text-sm focus:outline-none focus:ring-2 transition-colors ${
-                  verification.status === 'valid'
-                    ? 'border-forest/50 focus:ring-forest'
+                  verification.status === 'verified'
+                    ? 'border-forest ring-1 ring-forest'
                     : verification.status === 'invalid' || verification.status === 'typo'
-                    ? 'border-amber-500 focus:ring-amber-500'
+                    ? 'border-red-500 focus:ring-red-500'
+                    : verification.status === 'valid' || verification.status === 'code_sent'
+                    ? 'border-orange focus:ring-orange'
                     : 'border-bark/20 focus:ring-orange'
                 }`}
               />
@@ -241,28 +321,30 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
                 {verification.status === 'checking' && (
                   <Loader2 size={18} className="text-orange animate-spin" />
                 )}
-                {verification.status === 'valid' && (
+                {verification.status === 'verified' && (
                   <CheckCircle2 size={18} className="text-forest" />
                 )}
                 {(verification.status === 'invalid' || verification.status === 'typo') && (
-                  <AlertTriangle size={18} className="text-amber-600" />
+                  <AlertTriangle size={18} className="text-red-600" />
                 )}
               </div>
             </div>
 
             {/* Live Mailbox Status Feedback Pills */}
             {verification.status === 'checking' && (
-              <p className="text-[11px] text-wood-dark mt-1.5 flex items-center gap-1">
+              <p className="text-[11px] text-wood-dark mt-1.5 flex items-center gap-1 font-mono">
                 <span className="w-1.5 h-1.5 rounded-full bg-orange animate-pulse" />
-                <span>Checking mail server MX records...</span>
+                <span>Checking mailbox syntax &amp; active mail servers...</span>
               </p>
             )}
 
-            {verification.status === 'valid' && (
-              <p className="text-[11px] text-forest font-medium mt-1.5 flex items-center gap-1">
-                <CheckCircle2 size={12} className="shrink-0" />
-                <span>{verification.message}</span>
-              </p>
+            {verification.status === 'invalid' && (
+              <div className="mt-2 p-2.5 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2">
+                <AlertTriangle size={15} className="text-red-600 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold">Invalid / Fake Mailbox:</span> {verification.message}
+                </div>
+              </div>
             )}
 
             {verification.status === 'typo' && (
@@ -281,16 +363,108 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
               </div>
             )}
 
-            {verification.status === 'invalid' && (
-              <p className="text-[11px] text-red-600 font-semibold mt-1.5 flex items-center gap-1">
-                <AlertTriangle size={12} className="shrink-0" />
-                <span>{verification.message}</span>
-              </p>
+            {/* Step 2: Verification Code Trigger (Google / Apple Style) */}
+            {verification.status === 'valid' && (
+              <div className="mt-2.5 p-3 rounded-xl bg-orange/10 border border-orange/30 text-bark space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="text-xs">
+                    <span className="font-bold text-wood-dark block">Verify Mailbox Ownership:</span>
+                    <span className="text-[11px] text-bark/80">
+                      Send a 6-digit verification code to confirm you can receive your materials.
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={isSendingCode}
+                    className="px-3.5 py-1.5 rounded-lg bg-orange hover:bg-orange-hover text-white text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 shrink-0"
+                  >
+                    {isSendingCode ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <Send size={13} />
+                    )}
+                    <span>Send Code</span>
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* Step 3: Enter 6-Digit Code */}
+            {verification.status === 'code_sent' && (
+              <div className="mt-2.5 p-3.5 rounded-xl bg-white border-2 border-orange/40 shadow-sm space-y-2.5 animate-in fade-in">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-bark flex items-center gap-1.5">
+                    <KeyRound size={14} className="text-orange" />
+                    <span>Enter 6-Digit Verification Code</span>
+                  </span>
+                  <button
+                    type="button"
+                    onClick={handleSendCode}
+                    disabled={isSendingCode}
+                    className="text-[11px] text-orange hover:underline font-mono"
+                  >
+                    {isSendingCode ? 'Resending...' : 'Resend Code'}
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    maxLength={6}
+                    value={otpCode}
+                    onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, ''))}
+                    placeholder="123456"
+                    className="w-36 px-3 py-2 rounded-lg border-2 border-bark/20 text-center text-base font-mono tracking-widest font-bold text-bark focus:outline-none focus:border-orange"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleVerifyCode}
+                    disabled={isVerifyingCode || otpCode.length < 6}
+                    className="px-4 py-2 rounded-lg bg-forest hover:bg-forest-dark text-white text-xs font-bold transition-all disabled:opacity-50 flex items-center gap-1.5 shadow-sm"
+                  >
+                    {isVerifyingCode ? (
+                      <Loader2 size={13} className="animate-spin" />
+                    ) : (
+                      <CheckCircle2 size={13} />
+                    )}
+                    <span>Confirm Code</span>
+                  </button>
+                </div>
+
+                {codeError && (
+                  <p className="text-[11px] text-red-600 font-semibold">{codeError}</p>
+                )}
+
+                {/* Demo Helper Button */}
+                {verification.demoCode && (
+                  <div className="pt-1 border-t border-bark/10 flex items-center justify-between text-[11px]">
+                    <span className="text-wood-dark font-mono">[Demo Test Code]: {verification.demoCode}</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setOtpCode(verification.demoCode || '');
+                      }}
+                      className="text-orange hover:underline font-bold font-mono"
+                    >
+                      Click to Auto-Fill
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Step 4: Confirmed & Verified State */}
+            {verification.status === 'verified' && (
+              <div className="mt-2 p-2.5 rounded-lg bg-forest/15 border border-forest/30 text-forest text-xs flex items-center gap-2 animate-in fade-in">
+                <CheckCircle2 size={16} className="text-forest shrink-0" />
+                <span className="font-semibold">{verification.message}</span>
+              </div>
             )}
 
             {verification.status === 'idle' && (
               <p className="text-[11px] text-wood-dark mt-1">
-                Your lifetime download access and official PayPal payment receipt will be sent here.
+                Your lifetime download access and official payment receipt will be sent here.
               </p>
             )}
           </div>
@@ -328,10 +502,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
 
           <div className="pt-2 border-t border-bark/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-forest font-semibold">
             <div className="flex items-center gap-1.5">
-              <ShieldCheck size={15} />
+              <ShieldCheck size={14} />
               <span>14-Day Money-Back Guarantee</span>
             </div>
-            <span className="text-wood-dark">PayPal &bull; Major Cards &bull; Instant Receipt</span>
+            <div className="text-wood-dark">
+              <span>PayPal &bull; Major Cards &bull; Instant Receipt</span>
+            </div>
           </div>
         </form>
       </div>

@@ -228,3 +228,110 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
 
   return { success: true };
 }
+
+export async function sendVerificationCodeEmail({
+  to,
+  code,
+}: {
+  to: string;
+  code: string;
+}): Promise<{ success: boolean; error?: string }> {
+  const subject = `Your 6-Digit Email Verification Code: ${code} - ${SITE_CONFIG.name}`;
+  const textBody = `
+===================================================================
+EMAIL VERIFICATION CODE: ${code}
+${SITE_CONFIG.name}
+===================================================================
+
+Hi,
+
+To guarantee your lifetime access and official payment receipt arrive safely in your inbox, please verify your email address.
+
+Your 6-digit verification code is: ${code}
+
+Enter this code on the website checkout to confirm your mailbox and proceed to secure payment. This code expires in 10 minutes.
+
+If you did not request this verification code, you can safely ignore this email.
+
+— ${SITE_CONFIG.name}
+  `.trim();
+
+  const htmlBody = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Email Verification Code</title>
+</head>
+<body style="margin: 0; padding: 20px; background-color: #FBF6EC; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #33241B;">
+  <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #E5D5C5; overflow: hidden; box-shadow: 0 4px 12px rgba(51, 36, 27, 0.08);">
+    
+    <div style="background-color: #33241B; padding: 20px; text-align: center; border-bottom: 3px solid #E8731A;">
+      <h1 style="color: #FBF6EC; margin: 0; font-size: 18px; font-weight: bold;">
+        ${SITE_CONFIG.name}
+      </h1>
+      <p style="color: #E8731A; margin: 4px 0 0 0; font-size: 12px; font-weight: 600; text-transform: uppercase;">
+        Live Mailbox Verification
+      </p>
+    </div>
+
+    <div style="padding: 28px 24px; text-align: center;">
+      <p style="font-size: 14px; color: #684128; margin: 0 0 16px 0;">
+        Enter this 6-digit code to verify your delivery mailbox and confirm lifetime access delivery:
+      </p>
+
+      <div style="display: inline-block; padding: 14px 28px; background-color: #FBF6EC; border: 2px dashed #E8731A; border-radius: 8px; font-family: monospace; font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #33241B; margin: 8px 0 20px 0;">
+        ${code}
+      </div>
+
+      <p style="font-size: 12px; color: #8A5A3B; margin: 0;">
+        This code expires in 10 minutes. If you did not enter your email on our site, please ignore this message.
+      </p>
+    </div>
+
+    <div style="background-color: #FBF6EC; padding: 14px; text-align: center; font-size: 11px; color: #8A5A3B; border-top: 1px solid #E5D5C5;">
+      &copy; ${new Date().getFullYear()} ${SITE_CONFIG.name}. All rights reserved.
+    </div>
+
+  </div>
+</body>
+</html>
+  `.trim();
+
+  if (process.env.RESEND_API_KEY) {
+    try {
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The Stump Grinding Playbook <onboarding@resend.dev>';
+      const res = await fetch('https://api.resend.com/emails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+        },
+        body: JSON.stringify({
+          from: fromEmail,
+          to: [to],
+          subject,
+          text: textBody,
+          html: htmlBody,
+        }),
+      });
+
+      if (!res.ok) {
+        const errJson = await res.json();
+        console.error('Failed to send Resend verification email:', errJson);
+        return { success: false, error: JSON.stringify(errJson) };
+      }
+      return { success: true };
+    } catch (err: any) {
+      console.error('Resend verification email exception:', err);
+      return { success: false, error: err.message };
+    }
+  }
+
+  console.log('\n=================== [EMAIL VERIFICATION CODE] ===================');
+  console.log(`TO: ${to}`);
+  console.log(`CODE: ${code}`);
+  console.log('=================================================================\n');
+
+  return { success: true };
+}

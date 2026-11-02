@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { verifyEmail } from '@/lib/email-verifier';
+import { 
+  verifyEmail, 
+  sendVerificationCode, 
+  checkVerificationCode 
+} from '@/lib/email-verifier';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +18,19 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const email = body.email || '';
+    const { email = '', action, code } = body;
+
+    if (action === 'send-code') {
+      const res = await sendVerificationCode(email);
+      return NextResponse.json(res);
+    }
+
+    if (action === 'check-code') {
+      const res = checkVerificationCode(email, code);
+      return NextResponse.json(res);
+    }
+
+    // Default pre-check
     const result = await verifyEmail(email);
     return NextResponse.json(result);
   } catch (err: any) {
