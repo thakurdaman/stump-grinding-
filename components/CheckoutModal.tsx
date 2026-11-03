@@ -185,6 +185,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
       return;
     }
 
+    if (!name.trim()) {
+      setError('Please enter your full name. Name is required for licensing and proof of payment.');
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -471,10 +476,11 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
 
           <div>
             <label className="block text-xs font-bold uppercase tracking-wider text-bark mb-1.5">
-              Your Name (Optional)
+              Your Full Name <span className="text-orange">*</span>
             </label>
             <input
               type="text"
+              required
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. John Miller"

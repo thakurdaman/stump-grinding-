@@ -10,9 +10,9 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { versionId, email, name } = body;
 
-    if (!versionId || !email) {
+    if (!versionId || !email || !name || !String(name).trim()) {
       return NextResponse.json(
-        { error: 'Version ID and email are required.' },
+        { error: 'Package version, delivery email, and your full name are all required.' },
         { status: 400 }
       );
     }
