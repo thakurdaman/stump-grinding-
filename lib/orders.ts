@@ -6,6 +6,7 @@ import { getProductById, getFilesForProduct, ProductFile } from '@/config/produc
 import { sendDownloadLinkEmail } from './email';
 import { SITE_CONFIG } from '@/config/site';
 import { stampPdf, invalidateStampedPdfCache } from '@/lib/pdf/stampPdf';
+import { stampResource } from '@/lib/stampers/stampResource';
 
 export interface ValidatedOrder {
   id: string;
@@ -124,22 +125,36 @@ export async function createOrFulfillOrder({
 
   const downloadUrl = `${SITE_CONFIG.url}/download/${downloadToken}`;
 
-  // Pre-warm stamped PDF cache in background if product contains the Playbook PDF
+  // Pre-stamp all entitled resources and prepare email attachments + direct download stream links
   const allowedFiles = getFilesForProduct(product.id);
-  const hasPlaybookPdf = allowedFiles.some((f) => f.format === 'PDF');
-  if (hasPlaybookPdf) {
-    const playbookPath = path.join(process.cwd(), 'private-files', 'The-Stump-Grinding-Playbook.pdf');
-    if (fs.existsSync(playbookPath)) {
-      stampPdf({
-        inputPath: playbookPath,
+  const attachments: { filename: string; content: string }[] = [];
+  const directDownloadLinks: { name: string; filename: string; url: string; format: string }[] = [];
+
+  for (const f of allowedFiles) {
+    try {
+      const stamped = await stampResource({
+        filename: f.filename,
         email: order.email,
         orderId: order.id,
         purchaseDate: new Date(),
-      }).catch((e) => console.warn(`Background PDF stamp pre-warm failed for ${order.id}:`, e));
+      });
+      attachments.push({
+        filename: f.filename,
+        content: Buffer.from(stamped).toString('base64'),
+      });
+    } catch (e) {
+      console.warn(`Could not stamp/attach ${f.filename}:`, e);
     }
+
+    directDownloadLinks.push({
+      name: f.name,
+      filename: f.filename,
+      url: `${SITE_CONFIG.url}/api/download?token=${downloadToken}&file=${encodeURIComponent(f.filename)}`,
+      format: f.format,
+    });
   }
 
-  // Send official proof of payment receipt and lifetime download email
+  // Send official proof of payment receipt and lifetime access email with attached resources
   await sendDownloadLinkEmail({
     to: order.email,
     orderId: order.id,
@@ -150,6 +165,8 @@ export async function createOrFulfillOrder({
     provider,
     providerOrderId,
     expiresInDays: LIFETIME_DAYS,
+    attachments,
+    directDownloadLinks,
   });
 
   return order;
@@ -307,6 +324,34 @@ export async function resendOrderLinks(rawEmail: string): Promise<{ success: boo
     const product = getProductById(order.versionId);
     const downloadUrl = `${SITE_CONFIG.url}/download/${freshToken}`;
 
+    const allowedFiles = product ? getFilesForProduct(product.id) : [];
+    const attachments: { filename: string; content: string }[] = [];
+    const directDownloadLinks: { name: string; filename: string; url: string; format: string }[] = [];
+
+    for (const f of allowedFiles) {
+      try {
+        const stamped = await stampResource({
+          filename: f.filename,
+          email: order.email,
+          orderId: order.id,
+          purchaseDate: new Date(),
+        });
+        attachments.push({
+          filename: f.filename,
+          content: Buffer.from(stamped).toString('base64'),
+        });
+      } catch (e) {
+        console.warn(`Could not stamp/attach ${f.filename}:`, e);
+      }
+
+      directDownloadLinks.push({
+        name: f.name,
+        filename: f.filename,
+        url: `${SITE_CONFIG.url}/api/download?token=${freshToken}&file=${encodeURIComponent(f.filename)}`,
+        format: f.format,
+      });
+    }
+
     await sendDownloadLinkEmail({
       to: order.email,
       orderId: order.id,
@@ -317,6 +362,8 @@ export async function resendOrderLinks(rawEmail: string): Promise<{ success: boo
       provider: order.provider,
       providerOrderId: order.providerOrderId || undefined,
       expiresInDays: LIFETIME_DAYS,
+      attachments,
+      directDownloadLinks,
     });
   }
 

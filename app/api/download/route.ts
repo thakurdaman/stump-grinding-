@@ -4,7 +4,7 @@ import path from 'path';
 import { db } from '@/lib/db';
 import { validateToken } from '@/lib/orders';
 import { isFileAllowedForProduct } from '@/config/products';
-import { stampPdf } from '@/lib/pdf/stampPdf';
+import { stampResource } from '@/lib/stampers/stampResource';
 
 export const dynamic = 'force-dynamic';
 
@@ -111,12 +111,12 @@ export async function GET(req: NextRequest) {
     const ext = path.extname(safeFilename).toLowerCase();
     const contentType = MIME_MAP[ext] || 'application/octet-stream';
 
-    // Buyer-specific PDF stamping (enabled by default)
+    // Buyer-specific stamping & trademarking (PDF, XLSX, DOCX)
     const shouldStamp = process.env.STAMP_PDF !== 'false';
-    if (ext === '.pdf' && shouldStamp) {
+    if (shouldStamp) {
       try {
-        const stampedBytes = await stampPdf({
-          inputPath: filePath,
+        const stampedBytes = await stampResource({
+          filename: safeFilename,
           email: order.email,
           orderId: order.id,
           purchaseDate: (order as any).createdAt || new Date(),
@@ -132,7 +132,7 @@ export async function GET(req: NextRequest) {
           },
         });
       } catch (stampErr: any) {
-        console.error(`[PDF_STAMP_ERROR] Order ${order.id} (${order.email}):`, stampErr);
+        console.error(`[STAMP_RESOURCE_ERROR] Order ${order.id} (${order.email}) file ${safeFilename}:`, stampErr);
         const failMode = process.env.STAMP_FAIL_MODE || 'block';
         if (failMode === 'block') {
           return NextResponse.json(
@@ -140,11 +140,11 @@ export async function GET(req: NextRequest) {
             { status: 500 }
           );
         }
-        console.warn(`[PDF_STAMP_FALLBACK] Serving unstamped file for order ${order.id}`);
+        console.warn(`[STAMP_FALLBACK] Serving unstamped file for order ${order.id}`);
       }
     }
 
-    // Stream the raw file
+    // Stream the raw file if stamping disabled or fallback
     const fileBuffer = fs.readFileSync(filePath);
     return new NextResponse(fileBuffer, {
       status: 200,

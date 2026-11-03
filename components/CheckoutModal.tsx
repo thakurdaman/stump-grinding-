@@ -269,9 +269,9 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
           <div className="bg-[#EAF2EC] border border-forest/20 rounded-xl p-3.5 flex items-start gap-2.5 text-xs text-forest">
             <CheckCircle2 size={16} className="text-forest shrink-0 mt-0.5" />
             <div>
-              <span className="font-bold">Lifetime Digital Ownership:</span>
+              <span className="font-bold">Direct Lifetime Email Delivery:</span>
               <span className="text-forest/90 block mt-0.5">
-                No 7-day expiration. Download and re-download as many times as you want, even 2+ years from now.
+                All purchased materials are trademarked to your email and dispatched directly to your inbox. No website portal or login needed—access anytime, anywhere for life.
               </span>
             </div>
           </div>

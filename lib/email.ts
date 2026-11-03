@@ -1,15 +1,29 @@
 import { SITE_CONFIG } from '@/config/site';
 
+export interface EmailAttachment {
+  filename: string;
+  content: string; // Base64 encoded string
+}
+
+export interface DirectDownloadLink {
+  name: string;
+  filename: string;
+  url: string;
+  format: string;
+}
+
 export interface SendDownloadEmailOptions {
   to: string;
   orderId: string;
   productName: string;
-  downloadUrl: string;
+  downloadUrl?: string;
   amount?: number;
   currency?: string;
   provider?: string;
   providerOrderId?: string;
   expiresInDays?: number;
+  attachments?: EmailAttachment[];
+  directDownloadLinks?: DirectDownloadLink[];
 }
 
 export async function sendDownloadLinkEmail({
@@ -21,6 +35,8 @@ export async function sendDownloadLinkEmail({
   currency = 'USD',
   provider = 'PayPal',
   providerOrderId,
+  attachments = [],
+  directDownloadLinks = [],
 }: SendDownloadEmailOptions): Promise<{ success: boolean; error?: string }> {
   const receiptNum = `REC-${orderId.slice(-8).toUpperCase()}`;
   const transactionId = providerOrderId || `TXN-${orderId.slice(-12).toUpperCase()}`;
@@ -32,6 +48,10 @@ export async function sendDownloadLinkEmail({
   const formattedPrice = `$${Number(amount).toFixed(2)} ${currency.toUpperCase()}`;
 
   const subject = `Official Payment Receipt & Lifetime Access: ${productName} (#${receiptNum})`;
+
+  const linksText = directDownloadLinks.length > 0
+    ? directDownloadLinks.map(l => `- ${l.name} (${l.format}):\n  ${l.url}`).join('\n\n')
+    : downloadUrl ? `Access link: ${downloadUrl}` : '';
 
   const textBody = `
 ===================================================================
@@ -57,13 +77,19 @@ Item:             ${productName}
 Quantity:         1
 Total Amount:     ${formattedPrice}
 
-YOUR LIFETIME ACCESS DOWNLOAD LINK:
+YOUR WATERMARKED & LICENSED FILES:
 -------------------------------------------------------------------
-Access your files anytime:
-${downloadUrl}
+All files have been individually licensed and trademarked exclusively to:
+${to} (Order ${orderId})
+
+YOUR LIFETIME ACCESS DOWNLOAD LINKS:
+-------------------------------------------------------------------
+You can download your resources anytime, anywhere, directly from these links:
+
+${linksText}
 
 * LIFETIME ACCESS GUARANTEE:
-These files have NO 7-day expiration. Your link remains active for lifetime
+These files have NO expiration date. Your access remains active for lifetime
 usage. You can download and access these resources today, next month, or
 2+ years from now without ever having to repurchase.
 
@@ -77,6 +103,38 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
 
 — ${SITE_CONFIG.name}
   `.trim();
+
+  const linksHtml = directDownloadLinks.length > 0
+    ? `
+      <div style="background-color: #ffffff; border: 1px solid #EADCCF; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+        <h3 style="margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #684128; border-bottom: 1px solid #EADCCF; padding-bottom: 8px;">
+          Your Licensed Resources (Direct Download):
+        </h3>
+        <p style="font-size: 12px; color: #7A6252; margin: 0 0 14px 0;">
+          Each file is individually stamped with your verified email (<strong style="color: #33241B;">${to}</strong>) and order ID (<strong style="color: #33241B;">${orderId}</strong>) for lifetime digital ownership.
+        </p>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          ${directDownloadLinks.map(l => `
+            <div style="padding: 12px; background-color: #FBF6EC; border: 1px solid #E5D5C5; border-radius: 6px; margin-bottom: 8px;">
+              <div style="font-weight: bold; font-size: 14px; color: #33241B; margin-bottom: 4px;">
+                ${l.name}
+              </div>
+              <a href="${l.url}" style="background-color: #E8731A; color: #ffffff; text-decoration: none; padding: 8px 18px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-top: 6px;">
+                Download ${l.format} &rarr;
+              </a>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    `
+    : `
+      <!-- Action Button -->
+      <div style="text-align: center; margin: 28px 0;">
+        <a href="${downloadUrl}" style="background-color: #E8731A; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 15px; font-weight: bold; border-radius: 6px; display: inline-block; box-shadow: 0 3px 8px rgba(232, 115, 26, 0.3);">
+          Download Your Files (Lifetime Access) &rarr;
+        </a>
+      </div>
+    `;
 
   const htmlBody = `
 <!DOCTYPE html>
@@ -148,16 +206,12 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
           &#10003; Lifetime Access Guarantee:
         </p>
         <p style="margin: 4px 0 0 0; font-size: 12px; line-height: 1.5; color: #2E5E3E;">
-          Your download link does NOT expire after 7 days. You have lifetime access to these files. You can download and re-download them today, next year, or 2+ years from now anytime.
+          Your resources are delivered directly to your email with NO expiration date. You can open, download, and re-download them today, next year, or 2+ years from now anytime, anywhere.
         </p>
       </div>
 
-      <!-- Action Button -->
-      <div style="text-align: center; margin: 28px 0;">
-        <a href="${downloadUrl}" style="background-color: #E8731A; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 15px; font-weight: bold; border-radius: 6px; display: inline-block; box-shadow: 0 3px 8px rgba(232, 115, 26, 0.3);">
-          Download Your Files (Lifetime Access) &rarr;
-        </a>
-      </div>
+      <!-- Download Links Section -->
+      ${linksHtml}
 
       <!-- Recommended Starting Order -->
       <div style="font-size: 13px; line-height: 1.6; color: #684128; border-top: 1px solid #EFE4CE; padding-top: 18px; margin-top: 24px;">
@@ -191,19 +245,28 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
   if (process.env.RESEND_API_KEY) {
     try {
       const fromEmail = process.env.RESEND_FROM_EMAIL || 'The Stump Grinding Playbook <onboarding@resend.dev>';
+      const resendPayload: any = {
+        from: fromEmail,
+        to: [to],
+        subject,
+        text: textBody,
+        html: htmlBody,
+      };
+
+      if (attachments && attachments.length > 0) {
+        resendPayload.attachments = attachments.map((a) => ({
+          filename: a.filename,
+          content: a.content,
+        }));
+      }
+
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
-        body: JSON.stringify({
-          from: fromEmail,
-          to: [to],
-          subject,
-          text: textBody,
-          html: htmlBody,
-        }),
+        body: JSON.stringify(resendPayload),
       });
 
       if (!res.ok) {

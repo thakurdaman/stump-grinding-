@@ -5,7 +5,7 @@ import { Footer } from '@/components/Footer';
 import { validateToken } from '@/lib/orders';
 import { db } from '@/lib/db';
 import { SITE_CONFIG } from '@/config/site';
-import { CheckCircle2, Download, BookOpen, FileSpreadsheet, FileText, ArrowRight, Clock } from 'lucide-react';
+import { CheckCircle2, Mail, ShieldCheck, ArrowRight, RefreshCw, Lock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
 
@@ -27,7 +27,6 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
     if (res.success) {
       orderData = res.order;
     } else {
-      // Check if PayPal passed providerOrderId as the token parameter
       const order = await db.order.findFirst({
         where: { providerOrderId: searchParams.token },
       });
@@ -53,157 +52,129 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
     }
   }
 
-  const getFileIcon = (format: string) => {
-    if (format === 'PDF') return <BookOpen className="text-orange" size={20} />;
-    if (format === 'Excel') return <FileSpreadsheet className="text-forest" size={20} />;
-    return <FileText className="text-wood-dark" size={20} />;
-  };
+  const deliveryEmail = orderData?.email || searchParams.email || 'your verified email address';
 
   return (
     <>
       <Header />
 
       <main className="flex-1 py-16 bg-[#FBF6EC]">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          {/* Order Confirmed Banner */}
-          <div className="bg-sand/40 border border-wood/30 rounded-2xl p-8 sm:p-10 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-forest/20 text-forest flex items-center justify-center mx-auto">
-              <CheckCircle2 size={36} />
+        <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+          
+          {/* Confirmation Card */}
+          <div className="bg-white border-2 border-bark/15 rounded-3xl p-8 sm:p-12 text-center space-y-6 shadow-sm">
+            <div className="w-20 h-20 rounded-full bg-forest/15 text-forest flex items-center justify-center mx-auto shadow-inner">
+              <Mail size={40} className="text-forest animate-pulse" />
             </div>
-            <span className="text-xs font-bold uppercase tracking-wider text-forest font-sans">
-              Payment Successful
-            </span>
-            <h1 className="font-serif text-3xl sm:text-4xl font-bold text-bark">
-              Thank you for your purchase!
-            </h1>
-            <p className="text-sm sm:text-base text-bark/85 max-w-lg mx-auto">
-              Your order has been completed and your download links are ready below. A copy has also been sent to your email.
-            </p>
-          </div>
 
-          {/* Download Area */}
-          {orderData ? (
-            <div className="bg-white border-2 border-bark/15 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-bark/10 pb-4">
-                <div>
-                  <h2 className="font-serif font-bold text-xl text-bark">
-                    {orderData.productName}
-                  </h2>
-                  <p className="text-xs text-wood-dark">
-                    Delivered to <strong>{orderData.email}</strong>
-                  </p>
-                </div>
-                <div className="flex items-center gap-1.5 text-xs text-forest bg-forest/10 px-3 py-1.5 rounded-full font-bold">
-                  <CheckCircle2 size={14} />
-                  <span>Lifetime Access • Never Expires</span>
-                </div>
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-forest/10 text-forest text-xs font-mono font-bold uppercase tracking-wider">
+                <CheckCircle2 size={14} />
+                <span>Payment Confirmed &bull; Sent to Email Only</span>
               </div>
-
-              <div className="space-y-4">
-                <p className="text-xs font-bold uppercase tracking-wider text-bark/60">
-                  Your Included Files (Click to Download):
-                </p>
-
-                {orderData.allowedFiles.map((file) => (
-                  <div
-                    key={file.id}
-                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl border border-bark/10 bg-sand/20 hover:border-orange transition-colors"
-                  >
-                    <div className="flex items-start gap-3">
-                      <div className="p-2.5 rounded-lg bg-sand/60 shrink-0">
-                        {getFileIcon(file.format)}
-                      </div>
-                      <div>
-                        <h4 className="font-serif font-bold text-base text-bark">
-                          {file.name}
-                        </h4>
-                        <p className="text-xs text-bark/70 mt-0.5">{file.description}</p>
-                        <span className="text-[11px] font-mono text-wood-dark mt-1 inline-block">
-                          {file.format} • {file.sizeApprox}
-                        </span>
-                      </div>
-                    </div>
-
-                    <a
-                      href={`/api/download?token=${orderData.downloadToken}&file=${file.filename}`}
-                      className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg bg-orange hover:bg-orange-hover text-white text-xs font-bold shadow-sm transition-all shrink-0"
-                    >
-                      <Download size={14} />
-                      Download {file.format}
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ) : (
-            <div className="bg-sand/30 border border-wood/20 rounded-2xl p-8 text-center space-y-3">
-              <h3 className="font-serif font-bold text-xl text-bark">
-                Looking for your files?
-              </h3>
-              <p className="text-xs text-bark/80 max-w-md mx-auto">
-                If your payment was just completed via an external portal, please check your inbox for your secure download link, or enter your email on our link recovery page.
+              <h1 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
+                Check Your Verified Email
+              </h1>
+              <p className="text-sm sm:text-base text-bark/85 leading-relaxed">
+                Your purchase has been completed. All materials and resources have been personalized with your digital license and sent directly to:
               </p>
-              <div className="pt-2">
-                <Link
-                  href="/resend-links"
-                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-orange text-white text-xs font-bold hover:bg-orange-hover transition-colors"
-                >
-                  Lookup My Download Links &rarr;
-                </Link>
+              <div className="inline-block px-4 py-2 rounded-xl bg-sand/40 border border-bark/15 font-mono text-sm sm:text-base font-bold text-bark">
+                {deliveryEmail}
               </div>
             </div>
-          )}
 
-          {/* Recommended Start Here Order */}
-          <div className="bg-sand/30 border border-bark/15 rounded-2xl p-6 sm:p-8 space-y-4">
-            <h3 className="font-serif font-bold text-lg text-bark">
-              Recommended &ldquo;Start Here&rdquo; Order
-            </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs">
-              <div className="bg-white/80 p-4 rounded-xl border border-bark/10 space-y-1.5">
-                <span className="font-bold text-orange uppercase tracking-wider block text-[11px]">
-                  Step 1
-                </span>
-                <p className="font-bold text-bark text-sm">Read the Playbook</p>
-                <p className="text-bark/75">
-                  Understand 811 utility flags, insurance traps, and the baseline quoting formula.
-                </p>
+            {/* Privacy & Anti-Piracy Notice */}
+            <div className="bg-[#FAF4EB] border border-bark/15 rounded-2xl p-5 text-left space-y-2 text-xs sm:text-sm text-bark/80">
+              <div className="flex items-center gap-2 font-bold text-bark">
+                <Lock size={16} className="text-forest shrink-0" />
+                <span>Private Email-Only Delivery</span>
               </div>
+              <p className="leading-relaxed">
+                To protect your personalized license watermark and prevent unauthorized public exposure, <strong>no download files or order keys are hosted on this website</strong>.
+              </p>
+              <p className="leading-relaxed text-forest font-medium">
+                &bull; You have permanent, lifetime access to your resources directly inside your email inbox anytime, anywhere, on any phone, tablet, or computer.
+              </p>
+            </div>
 
-              <div className="bg-white/80 p-4 rounded-xl border border-bark/10 space-y-1.5">
-                <span className="font-bold text-forest uppercase tracking-wider block text-[11px]">
-                  Step 2
-                </span>
-                <p className="font-bold text-bark text-sm">Open the Calculator</p>
-                <p className="text-bark/75">
-                  Input your vehicle fuel cost and target hourly profit on the Settings tab.
-                </p>
-              </div>
+            {/* Next Steps */}
+            <div className="text-left space-y-3 pt-2 border-t border-bark/10">
+              <span className="text-xs font-bold uppercase tracking-wider text-bark/60">
+                What to do right now:
+              </span>
+              <ul className="space-y-2.5 text-xs sm:text-sm text-bark/85">
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange/20 text-orange font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    1
+                  </span>
+                  <span>
+                    Open your email inbox at <strong>{deliveryEmail}</strong>.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange/20 text-orange font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    2
+                  </span>
+                  <span>
+                    Look for the email with subject: <br />
+                    <code className="text-xs font-mono bg-bark/5 px-2 py-0.5 rounded text-bark font-semibold">
+                      Official Payment Receipt &amp; Lifetime Access: {orderData?.productName || 'The Stump Grinding Playbook'}
+                    </code>
+                  </span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-orange/20 text-orange font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    3
+                  </span>
+                  <span>
+                    Check your <strong>Spam or Promotions</strong> folder if you do not see it in your primary inbox within 60 seconds.
+                  </span>
+                </li>
+                <li className="flex items-start gap-2.5">
+                  <span className="w-5 h-5 rounded-full bg-forest/20 text-forest font-bold text-xs flex items-center justify-center shrink-0 mt-0.5">
+                    4
+                  </span>
+                  <span>
+                    Download your personalized files and keep that email saved as your permanent lifetime digital key.
+                  </span>
+                </li>
+              </ul>
+            </div>
 
-              <div className="bg-white/80 p-4 rounded-xl border border-bark/10 space-y-1.5">
-                <span className="font-bold text-wood uppercase tracking-wider block text-[11px]">
-                  Step 3
-                </span>
-                <p className="font-bold text-bark text-sm">Customize Templates</p>
-                <p className="text-bark/75">
-                  Add your company name and phone to the service agreements and pre-job inspection.
-                </p>
-              </div>
+            {/* Action Buttons */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              <a
+                href={`mailto:${deliveryEmail}`}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-orange hover:bg-orange-hover text-white text-sm font-bold shadow transition-all"
+              >
+                <Mail size={16} />
+                Open Email Inbox
+              </a>
+              <Link
+                href="/"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-bark/5 hover:bg-bark/10 text-bark text-sm font-bold border border-bark/15 transition-colors"
+              >
+                Back to Homepage
+              </Link>
             </div>
           </div>
 
-          {/* Support Notice */}
+          {/* Support Guarantee */}
           <div className="text-center text-xs text-wood-dark space-y-1">
             <p>
-              Need assistance? Email support directly at{' '}
-              <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-orange underline">
+              Did not receive the email or need help? Our support desk responds quickly at{' '}
+              <a href={`mailto:${SITE_CONFIG.supportEmail}`} className="text-orange underline font-semibold">
                 {SITE_CONFIG.supportEmail}
               </a>
             </p>
-            <p>
-              Files can be downloaded up to 10 times per file on this link. You can generate fresh links at any time.
+            <p className="text-bark/60">
+              Need to resend your lifetime materials to this verified address?{' '}
+              <Link href="/resend-links" className="text-forest underline font-semibold">
+                Use the Instant Resend Tool &rarr;
+              </Link>
             </p>
           </div>
+
         </div>
       </main>
 
