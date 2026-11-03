@@ -1,14 +1,14 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Share2, Copy, Check, MessageSquare } from 'lucide-react';
+import { Share2, Copy, Check, MessageSquare, Instagram } from 'lucide-react';
 import { trackEvent } from './Analytics';
 
 export const ShareWidget: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
   const shareUrl = 'https://stump-grinding-playbook.vercel.app';
-  const shareTitle = 'Check out this Stump Grinding Pricing & Operating Playbook';
+  const shareTitle = 'Check out The First 10 Stumps System: Pricing Engine & Field Manual';
 
   const handleCopy = () => {
     trackEvent('share_click', { platform: 'copy_link' });
@@ -23,6 +23,14 @@ export const ShareWidget: React.FC = () => {
     window.open(`https://api.whatsapp.com/send?text=${text}`, '_blank');
   };
 
+  const handleInstagram = () => {
+    trackEvent('share_click', { platform: 'instagram' });
+    try {
+      navigator.clipboard.writeText(`${shareTitle}: ${shareUrl}`);
+    } catch {}
+    window.open('https://www.instagram.com/direct/inbox/', '_blank');
+  };
+
   const handleFacebook = () => {
     trackEvent('share_click', { platform: 'facebook' });
     window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
@@ -35,13 +43,22 @@ export const ShareWidget: React.FC = () => {
         <span>Share with your crew or partner:</span>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 flex-wrap justify-center sm:justify-end">
         <button
           onClick={handleWhatsApp}
           className="px-3 py-1.5 rounded-lg bg-[#25D366]/15 hover:bg-[#25D366]/25 text-[#128C7E] text-xs font-bold flex items-center gap-1.5 transition-colors"
         >
           <MessageSquare size={14} />
           WhatsApp
+        </button>
+
+        <button
+          onClick={handleInstagram}
+          className="px-3 py-1.5 rounded-lg bg-[#E1306C]/15 hover:bg-[#E1306C]/25 text-[#E1306C] text-xs font-bold flex items-center gap-1.5 transition-colors"
+          title="Share via Instagram Direct message"
+        >
+          <Instagram size={14} />
+          Instagram
         </button>
 
         <button
