@@ -60,25 +60,25 @@ export default function HomePage() {
               <div className="lg:col-span-7 space-y-6">
                 <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
                   <TreeRing size={16} strokeColor="#E8731A" />
-                  <span>The American Operator&apos;s Field Kit</span>
+                  <span>Built for Trades Guys &bull; Weekend &amp; Full-Time</span>
                 </div>
 
-                <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-bark tracking-tight leading-[1.12]">
-                  Stop guessing what to charge for a stump.
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14]">
+                  Stop guessing stump prices. Quote every job like a pro and book your first 10 paying stump jobs in 30 days.
                 </h1>
 
-                <p className="text-lg sm:text-xl text-bark/85 leading-relaxed font-sans max-w-xl">
-                  A complete, field-tested pricing system, operating manual, and client templates pack. Know your real equipment costs, stay protected with 811 locates, and price every job for actual profit.
+                <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl">
+                  The pricing calculator, quote scripts, and door-knock templates for new stump grinders. Built for trades guys, not &ldquo;entrepreneurs.&rdquo;
                 </p>
 
-                {/* Primary & Secondary CTA */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                {/* Primary CTA button directly below subline */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-1">
                   <a
                     href="#pricing"
                     onClick={() => trackEvent('view_versions')}
                     className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95"
                   >
-                    <span>Get the Kit &rarr;</span>
+                    <span>Get The First 10 Stumps System &rarr;</span>
                   </a>
                   <a
                     href="#inside"
@@ -88,8 +88,33 @@ export default function HomePage() {
                   </a>
                 </div>
 
+                {/* What's Included (short bullet list below the hero) */}
+                <div className="pt-2">
+                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark font-sans block mb-2.5">
+                    What&apos;s Included:
+                  </span>
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-bark/90 font-medium">
+                    <li className="flex items-center gap-2">
+                      <Check className="text-forest shrink-0" size={17} />
+                      <span>Stump pricing calculator (spreadsheet)</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="text-forest shrink-0" size={17} />
+                      <span>Quote and pitch scripts</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="text-forest shrink-0" size={17} />
+                      <span>Door-knock and outreach templates</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="text-forest shrink-0" size={17} />
+                      <span>Step-by-step playbook PDF</span>
+                    </li>
+                  </ul>
+                </div>
+
                 {/* Trust line */}
-                <div className="pt-4 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium">
+                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10">
                   <span className="flex items-center gap-1.5 text-forest font-bold">
                     <ShieldCheck size={18} /> Instant download
                   </span>
@@ -97,12 +122,6 @@ export default function HomePage() {
                   <span>14-day money-back guarantee</span>
                   <span>•</span>
                   <span>Written for US operators</span>
-                </div>
-
-                {/* Micro ROI callout pill */}
-                <div className="inline-flex items-center gap-2 text-xs font-semibold text-bark/85 bg-sand/70 px-3.5 py-1.5 rounded-lg border border-bark/15 shadow-sm">
-                  <TrendingUp size={15} className="text-orange shrink-0" />
-                  <span><strong>Pays for itself on Job #1:</strong> average US grind quote is $185–$350.</span>
                 </div>
               </div>
 
@@ -119,7 +138,7 @@ export default function HomePage() {
                           Field Manual &amp; Software
                         </span>
                         <h2 className="font-serif text-2xl font-bold text-[#FBF6EC] mt-1">
-                          The Stump Grinding Playbook
+                          The First 10 Stumps System
                         </h2>
                       </div>
                       <TreeRing size={42} strokeColor="#E8731A" />
@@ -127,32 +146,36 @@ export default function HomePage() {
 
                     <div className="space-y-3 text-sm text-sand/85">
                       <div className="flex items-center gap-3">
-                        <BookOpen size={18} className="text-orange shrink-0" />
-                        <span>30+ Page Tactical Playbook (PDF)</span>
-                      </div>
-                      <div className="flex items-center gap-3">
                         <FileSpreadsheet size={18} className="text-forest-light shrink-0" />
-                        <span>Multi-Stump Excel &amp; Sheets Calculator</span>
+                        <span>Stump pricing calculator (spreadsheet)</span>
                       </div>
                       <div className="flex items-center gap-3">
                         <FileText size={18} className="text-wood-light shrink-0" />
-                        <span>12 Legal, Quoting &amp; Safety Word Templates</span>
+                        <span>Quote and pitch scripts</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <FileText size={18} className="text-orange shrink-0" />
+                        <span>Door-knock and outreach templates</span>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <BookOpen size={18} className="text-forest-light shrink-0" />
+                        <span>Step-by-step playbook PDF</span>
                       </div>
                     </div>
 
                     {/* Quick Preview Box */}
                     <div className="bg-wood-dark/40 rounded-xl p-4 border border-sand/10 text-xs space-y-1">
-                      <p className="font-bold text-[#FBF6EC]">Direct Operator Download</p>
+                      <p className="font-bold text-[#FBF6EC]">Built for Trades Guys</p>
                       <p className="text-sand/70">
-                        Compatible with all devices. No monthly software subscriptions.
+                        Compatible with all devices. Instant delivery to your email.
                       </p>
                     </div>
 
                     <a
                       href="#pricing"
-                      className="w-full py-3 rounded-lg bg-orange hover:bg-orange-hover text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors"
+                      className="w-full py-3.5 rounded-lg bg-orange hover:bg-orange-hover text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors"
                     >
-                      <span>Choose Your Version</span>
+                      <span>Get The First 10 Stumps System</span>
                       <ArrowRight size={16} />
                     </a>
                   </div>

@@ -19,7 +19,7 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: `${SITE_CONFIG.name} — Stop Guessing What to Charge for a Stump`,
+    default: `${SITE_CONFIG.name} — Stop Guessing Stump Prices`,
     template: `%s | ${SITE_CONFIG.name}`,
   },
   description: SITE_CONFIG.description,
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
         url: '/images/cover.jpg',
         width: 1280,
         height: 720,
-        alt: 'The Stump Grinding Playbook Cover',
+        alt: 'The First 10 Stumps System',
       },
     ],
   },
@@ -61,7 +61,7 @@ export default function RootLayout({
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
-    name: 'The Stump Grinding Playbook & Pricing Engine',
+    name: 'The First 10 Stumps System',
     description: SITE_CONFIG.description,
     image: `${SITE_CONFIG.url}/images/cover.jpg`,
     brand: {

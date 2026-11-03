@@ -21,10 +21,10 @@ export const Header: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-serif font-bold text-lg sm:text-xl text-bark tracking-tight leading-tight">
-              The Stump Grinding Playbook
+              The First 10 Stumps System
             </span>
             <span className="text-[11px] font-sans uppercase tracking-wider text-wood font-medium">
-              Field Manual & Pricing Engine
+              Field Manual &amp; Pricing Engine
             </span>
           </div>
         </Link>
@@ -53,7 +53,7 @@ export const Header: React.FC = () => {
             href="#pricing"
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-orange text-white text-sm font-bold shadow-sm hover:bg-orange-hover focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95"
           >
-            Get the Kit
+            Get The System
           </Link>
         </nav>
 
@@ -100,7 +100,7 @@ export const Header: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-lg bg-orange text-white font-bold text-sm shadow hover:bg-orange-hover"
             >
-              Get the Kit &rarr;
+              Get The First 10 Stumps System &rarr;
             </Link>
           </div>
         </div>

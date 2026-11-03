@@ -20,11 +20,11 @@ const getSiteUrl = () => {
 };
 
 export const SITE_CONFIG = {
-  name: 'The Stump Grinding Playbook',
-  shortName: 'Stump Playbook',
-  title: 'The Stump Grinding Playbook — How to Price, Find, and Grind Stumps Profitably',
+  name: 'The First 10 Stumps System',
+  shortName: 'First 10 Stumps',
+  title: 'The First 10 Stumps System — Stop Guessing Stump Prices',
   description:
-    'A practical, no-fluff guide, pricing calculator, and business templates pack for US stump grinding operators and tree care professionals.',
+    'Pricing calculator, quote scripts, and outreach templates to help new stump grinders book their first 10 paying jobs in 30 days.',
   url: getSiteUrl(),
   supportEmail: process.env.SUPPORT_EMAIL || 'support@stumpgrindingplaybook.com',
   guaranteeDays: 14,
