@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import crypto from 'crypto';
 import { PDFDocument, rgb, degrees, StandardFonts } from 'pdf-lib';
 
@@ -95,7 +96,8 @@ function fitTextToWidth(
  * Get path to stamped cache file
  */
 export function getStampedCachePath(orderId: string): string {
-  const cacheDir = path.join(process.cwd(), 'private-files', 'stamped');
+  const baseDir = process.env.VERCEL ? os.tmpdir() : path.join(process.cwd(), 'private-files');
+  const cacheDir = path.join(baseDir, 'stamped');
   return path.join(cacheDir, `${orderId}.pdf`);
 }
 

@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { stampPdf } from '@/lib/pdf/stampPdf';
 import { stampDocx } from './stampDocx';
 import { stampXlsx } from './stampXlsx';
@@ -29,7 +30,8 @@ export async function stampResource({
   }
 
   const ext = path.extname(filename).toLowerCase();
-  const cacheDir = path.join(privateDir, 'stamped', orderId);
+  const baseCacheDir = process.env.VERCEL ? os.tmpdir() : privateDir;
+  const cacheDir = path.join(baseCacheDir, 'stamped', orderId);
   const cachePath = path.join(cacheDir, filename);
 
   // Check cache
