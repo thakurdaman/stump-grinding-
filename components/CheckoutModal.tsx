@@ -509,7 +509,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
           <div className="pt-2 border-t border-bark/10 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-forest font-semibold">
             <div className="flex items-center gap-1.5">
               <ShieldCheck size={14} />
-              <span>14-Day Money-Back Guarantee</span>
+              <span>{product.id === 'full-kit' ? '7-Day Money-Back Guarantee' : 'Instant Digital Access'}</span>
             </div>
             <div className="text-wood-dark">
               <span>PayPal &bull; Major Cards &bull; Instant Receipt</span>

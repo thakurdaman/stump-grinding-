@@ -62,7 +62,7 @@ export default function TermsPage() {
 
               <h3 className="font-serif font-bold text-xl text-bark">5. Refund Policy</h3>
               <p>
-                Refunds are governed by our 14-day Money-Back Guarantee policy as outlined in our Refund Policy.
+                Refunds are governed by our 7-day Money-Back Guarantee policy applicable exclusively to the Full Kit, as outlined in our Refund Policy. Standalone tiers (Playbook Only and Calculator + Templates) are final sale and non-refundable.
               </p>
             </div>
           </div>

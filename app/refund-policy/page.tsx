@@ -28,28 +28,35 @@ export default function RefundPolicyPage() {
                   Risk-Free Guarantee
                 </span>
                 <h1 className="font-serif font-bold text-3xl text-bark">
-                  14-Day Refund Policy
+                  7-Day Refund Policy
                 </h1>
               </div>
             </div>
 
             <div className="prose prose-sm text-bark/85 leading-relaxed space-y-4 pt-2">
               <p>
-                We stand behind the quality and practical field usefulness of <strong>The Stump Grinding Playbook</strong>, the Pricing Calculator, and the Templates Pack.
+                We stand behind the quality and practical field usefulness of <strong>The First 10 Stumps System</strong>.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
-                1. 14-Day Money-Back Guarantee
+                1. 7-Day Money-Back Guarantee (Full Kit Only)
               </h3>
               <p>
-                If you purchase any tier of The Stump Grinding Playbook and decide within 14 calendar days of purchase that the material does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
+                We provide an up-to-7-day money-back guarantee exclusively on the <strong>Full Kit ($97)</strong> tier. If you purchase the Full Kit and decide within 7 calendar days of purchase that the system does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
-                2. How to Request a Refund
+                2. Standalone Tiers (Non-Refundable)
               </h3>
               <p>
-                Requesting a refund is straightforward. Simply send an email to:
+                Due to the immediate digital delivery and non-returnable nature of downloadable digital materials, individual standalone tiers—specifically the <strong>Playbook Only ($47)</strong> and the <strong>Calculator + Templates ($67)</strong>—are final sale and are not eligible for refunds.
+              </p>
+
+              <h3 className="font-serif font-bold text-xl text-bark pt-2">
+                3. How to Request a Refund
+              </h3>
+              <p>
+                If you purchased the Full Kit and wish to request a refund within 7 days, simply send an email to:
               </p>
               <div className="p-4 bg-sand/30 rounded-lg border border-bark/10">
                 <p className="font-mono text-sm font-semibold text-bark">
@@ -64,14 +71,14 @@ export default function RefundPolicyPage() {
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
-                3. Refund Processing
+                4. Refund Processing
               </h3>
               <p>
                 Once received, your refund will be processed through the original payment processor (Lemon Squeezy, Stripe, or PayPal) within 24 to 48 business hours. Funds typically reflect back on your original card or bank account within 3 to 7 business days, depending on your financial institution.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
-                4. File Access After Refund
+                5. File Access After Refund
               </h3>
               <p>
                 Upon processing a refund, the corresponding digital download tokens will be revoked.

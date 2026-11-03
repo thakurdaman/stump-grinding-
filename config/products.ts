@@ -99,7 +99,7 @@ export const PRODUCTS: ProductTier[] = [
       'All 12 Templates & Scripts Pack (Word / Docs)',
       'Equipment & teeth maintenance tracking sheets',
       'Save $17 compared to buying separately',
-      '14-Day Money-Back Guarantee',
+      '7-Day Money-Back Guarantee',
       'Instant access on any device',
     ],
     buttonText: 'Get the Full Kit ($97)',
