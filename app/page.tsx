@@ -551,9 +551,6 @@ export default function HomePage() {
                         <span className={`font-serif text-4xl sm:text-5xl font-bold ${isHighlight ? 'text-[#FBF6EC]' : 'text-bark'}`}>
                           ${tier.price}
                         </span>
-                        <span className={`text-xs font-semibold uppercase tracking-wider ${isHighlight ? 'text-sand/60' : 'text-wood'}`}>
-                          USD one-time
-                        </span>
                         {tier.regularPrice && (
                           <span className="text-sm line-through text-sand/50 ml-1">
                             ${tier.regularPrice}

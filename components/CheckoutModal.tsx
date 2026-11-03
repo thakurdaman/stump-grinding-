@@ -266,7 +266,6 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
               <span className="font-serif font-bold text-2xl text-bark">
                 ${product.price}
               </span>
-              <span className="text-xs text-wood block font-medium">USD one-time</span>
             </div>
           </div>
 
