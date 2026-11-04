@@ -27,7 +27,7 @@ export const SITE_CONFIG = {
     'Pricing calculator, quote scripts, and outreach templates to help new stump grinders book their first 10 paying jobs in 30 days.',
   url: getSiteUrl(),
   supportEmail: process.env.SUPPORT_EMAIL || 'support@stumpgrindingplaybook.com',
-  guaranteeDays: 15,
+  guaranteeDays: 14,
   disclaimer:
     'Educational material. Not legal, tax, insurance, or safety advice. Prices in the calculator are starting points, not market guarantees. Results depend on your market and effort.',
   

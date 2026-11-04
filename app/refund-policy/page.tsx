@@ -28,7 +28,7 @@ export default function RefundPolicyPage() {
                   Risk-Free Guarantee
                 </span>
                 <h1 className="font-serif font-bold text-3xl text-bark">
-                  15-Day Refund Policy
+                  14-Day Refund Policy
                 </h1>
               </div>
             </div>
@@ -39,10 +39,10 @@ export default function RefundPolicyPage() {
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
-                1. 15-Day Money-Back Guarantee (Full Kit Only)
+                1. 14-Day Money-Back Guarantee (Full Kit Only)
               </h3>
               <p>
-                We provide an up-to-15-day money-back guarantee exclusively on the <strong>Full Kit ($97)</strong> tier. If you purchase the Full Kit and decide within 15 calendar days of purchase that the system does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
+                We provide an up-to-14-day money-back guarantee exclusively on the <strong>Full Kit ($97)</strong> tier. If you purchase the Full Kit and decide within 14 calendar days of purchase that the system does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
@@ -56,7 +56,7 @@ export default function RefundPolicyPage() {
                 3. How to Request a Refund
               </h3>
               <p>
-                If you purchased the Full Kit and wish to request a refund within 15 days, simply send an email to:
+                If you purchased the Full Kit and wish to request a refund within 14 days, simply send an email to:
               </p>
               <div className="p-4 bg-sand/30 rounded-lg border border-bark/10">
                 <p className="font-mono text-sm font-semibold text-bark">

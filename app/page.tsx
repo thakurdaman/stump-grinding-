@@ -119,7 +119,7 @@ export default function HomePage() {
                     <ShieldCheck size={18} /> Instant download
                   </span>
                   <span>•</span>
-                  <span>15-day money-back guarantee (Full Kit)</span>
+                  <span>14-day money-back guarantee (Full Kit)</span>
                   <span>•</span>
                   <span>Written for US operators</span>
                 </div>
@@ -615,10 +615,10 @@ export default function HomePage() {
               </div>
               <div className="space-y-2 text-center sm:text-left">
                 <h3 className="font-serif text-2xl font-bold text-bark">
-                  15-Day Money-Back Guarantee (Full Kit)
+                  14-Day Money-Back Guarantee (Full Kit)
                 </h3>
                 <p className="text-sm text-bark/85 leading-relaxed">
-                  Put The First 10 Stumps Full Kit to work. If you don&apos;t feel the complete package helps you avoid under-bidding or saves you hours of guesswork on job sites, send an email within 15 days of purchase and we will refund 100% of your money. Note: Standalone tiers (Playbook Only and Calculator + Templates) are non-refundable.
+                  Put The First 10 Stumps Full Kit to work. If you don&apos;t feel the complete package helps you avoid under-bidding or saves you hours of guesswork on job sites, send an email within 14 days of purchase and we will refund 100% of your money. Note: Standalone tiers (Playbook Only and Calculator + Templates) are non-refundable.
                 </p>
                 <div className="pt-1">
                   <Link
@@ -678,7 +678,7 @@ export default function HomePage() {
             </div>
 
             <div className="pt-2 text-xs text-sand/60">
-              Immediate digital file delivery • 15-day refund guarantee on Full Kit
+              Immediate digital file delivery • 14-day refund guarantee on Full Kit
             </div>
           </div>
         </section>

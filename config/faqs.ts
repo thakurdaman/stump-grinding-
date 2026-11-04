@@ -42,7 +42,7 @@ export const FAQS: FaqItem[] = [
   {
     question: 'How do refunds work?',
     answer:
-      'We offer an up-to-15-day money-back guarantee exclusively on the Full Kit. If you purchase the Full Kit and decide within 15 days of purchase that the system does not meet your operational needs, simply email us at support@stumpgrindingplaybook.com and we will issue a full 100% refund. Please note that standalone tiers (Playbook Only and Calculator + Templates) are delivered as instant digital downloads and are non-refundable.',
+      'We offer an up-to-14-day money-back guarantee exclusively on the Full Kit. If you purchase the Full Kit and decide within 14 days of purchase that the system does not meet your operational needs, simply email us at support@stumpgrindingplaybook.com and we will issue a full 100% refund. Please note that standalone tiers (Playbook Only and Calculator + Templates) are delivered as instant digital downloads and are non-refundable.',
   },
   {
     question: 'What if a download link expires?',
