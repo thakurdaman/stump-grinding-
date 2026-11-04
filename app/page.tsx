@@ -589,7 +589,7 @@ export default function HomePage() {
                         {tier.buttonText}
                       </button>
                       <p className={`text-[11px] text-center mt-2 ${isHighlight ? 'text-sand/60' : 'text-wood'}`}>
-                        Instant access • Secure 256-bit checkout
+                        Instant access
                       </p>
                     </div>
                   </div>
