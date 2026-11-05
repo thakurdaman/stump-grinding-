@@ -53,7 +53,7 @@ export const PRODUCTS: ProductTier[] = [
     id: 'playbook-only',
     name: 'Playbook Only',
     tagline: 'The complete foundational guide for starting and running stump jobs.',
-    price: 47,
+    price: 1,
     fileIds: ['playbook'],
     description: 'The definitive 30+ page field manual on equipment, insurance, pricing structure, marketing, and safety.',
     features: [
@@ -64,7 +64,7 @@ export const PRODUCTS: ProductTier[] = [
       'Quoting, upselling, and 30-day kickoff plan',
       'Instant download & free lifetime updates',
     ],
-    buttonText: 'Get the Playbook ($47)',
+    buttonText: 'Get the Playbook ($1 - Live Test)',
   },
   {
     id: 'calculator-templates',
