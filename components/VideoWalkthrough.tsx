@@ -14,7 +14,9 @@ import {
   Camera, 
   Calculator, 
   Smartphone,
-  Sparkles
+  Sparkles,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 interface SimulationStep {
@@ -116,6 +118,33 @@ const DEMO_STEPS: SimulationStep[] = [
   },
 ];
 
+const INSPECTION_STEPS = [
+  {
+    step: 'STEP 1: MEASURE',
+    badgeColor: 'text-orange',
+    image: '/images/stump-wood.jpg',
+    alt: '24 Inch White Oak Stump with Lateral Root Flares',
+    title: 'Measure Root Flare to Root Flare',
+    description: 'Never eyeball the cut trunk alone. Measure flare edge to flare edge at lawn grade. That 18" trunk is actually a 24" grind.',
+  },
+  {
+    step: 'STEP 2: 10-12" DEPTH',
+    badgeColor: 'text-green-400',
+    image: '/images/wood-chips.jpg',
+    alt: 'High volume wood chips from below grade grinding',
+    title: 'Grind Below Lawn Grade',
+    description: 'Reaching 10–12 inches deep ensures the customer can reseed grass or plant sod over the spot with zero surface regrowth.',
+  },
+  {
+    step: 'STEP 3: PAID IN FULL',
+    badgeColor: 'text-amber-300',
+    image: '/images/tree-forest.jpg',
+    alt: 'Clean property restoration after grinding',
+    title: 'Collect $345 on the Spot',
+    description: 'Customer signs the pre-job waiver, you complete the grind, and collect payment via cash or SMS invoice before leaving the driveway.',
+  },
+];
+
 export function VideoWalkthrough() {
   const [activeTab, setActiveTab] = useState<'sim' | 'video' | 'photos'>('sim');
   const [selectedVideoId, setSelectedVideoId] = useState('fspc5_zXA6k');
@@ -126,6 +155,54 @@ export function VideoWalkthrough() {
   const [isMuted, setIsMuted] = useState(true);
   const timerRef = useRef<NodeJS.Timeout | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+
+  // Photos tab mobile carousel state
+  const photoScrollRef = useRef<HTMLDivElement>(null);
+  const [activePhotoIndex, setActivePhotoIndex] = useState(0);
+
+  const scrollPhotoTo = (index: number) => {
+    if (!photoScrollRef.current) return;
+    const container = photoScrollRef.current;
+    const targetChild = container.children[index] as HTMLElement;
+    if (targetChild) {
+      container.scrollTo({
+        left: targetChild.offsetLeft - container.offsetLeft,
+        behavior: 'smooth',
+      });
+      setActivePhotoIndex(index);
+    }
+  };
+
+  const handlePrevPhoto = () => {
+    if (activePhotoIndex > 0) {
+      scrollPhotoTo(activePhotoIndex - 1);
+    }
+  };
+
+  const handleNextPhoto = () => {
+    if (activePhotoIndex < INSPECTION_STEPS.length - 1) {
+      scrollPhotoTo(activePhotoIndex + 1);
+    }
+  };
+
+  const handlePhotoScroll = () => {
+    if (!photoScrollRef.current) return;
+    const container = photoScrollRef.current;
+    const scrollPos = container.scrollLeft;
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    Array.from(container.children).forEach((child, idx) => {
+      const el = child as HTMLElement;
+      const diff = Math.abs(el.offsetLeft - container.offsetLeft - scrollPos);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+
+    setActivePhotoIndex(closestIndex);
+  };
 
   const duration = 16; // 16-second snappy walkthrough
 
@@ -730,62 +807,81 @@ export function VideoWalkthrough() {
 
         {/* TAB 3: FIELD JOB INSPECTION PHOTOS */}
         {activeTab === 'photos' && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-[#24170E] rounded-2xl overflow-hidden border border-sand/20 shadow-lg space-y-3 p-4">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-sand/10">
-                <img
-                  src="/images/stump-wood.jpg"
-                  alt="24 Inch White Oak Stump with Lateral Root Flares"
-                  className="w-full h-full object-cover"
-                />
-                <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-orange font-mono text-[10px] font-bold">
-                  STEP 1: MEASURE
-                </span>
-              </div>
-              <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Measure Root Flare to Root Flare
-              </h4>
-              <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Never eyeball the cut trunk alone. Measure flare edge to flare edge at lawn grade. That 18&quot; trunk is actually a 24&quot; grind.
-              </p>
+          <div className="relative">
+            {/* Mobile Previous Button */}
+            {activePhotoIndex > 0 && (
+              <button
+                onClick={handlePrevPhoto}
+                className="md:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+                aria-label="Previous inspection step"
+                title="Previous step"
+              >
+                <ChevronLeft size={22} />
+              </button>
+            )}
+
+            {/* Mobile Next Button */}
+            {activePhotoIndex < INSPECTION_STEPS.length - 1 && (
+              <button
+                onClick={handleNextPhoto}
+                className="md:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+                aria-label="Next inspection step"
+                title="Next step"
+              >
+                <ChevronRight size={22} />
+              </button>
+            )}
+
+            {/* Swipeable Track on Mobile, 3-Col Grid on Desktop */}
+            <div
+              ref={photoScrollRef}
+              onScroll={handlePhotoScroll}
+              className="flex md:grid md:grid-cols-3 gap-6 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-2 md:pb-0 no-scrollbar px-1"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+              {INSPECTION_STEPS.map((item) => (
+                <div
+                  key={item.step}
+                  className="w-full flex-shrink-0 snap-center md:flex-shrink md:w-auto flex"
+                >
+                  <div className="w-full bg-[#24170E] rounded-2xl overflow-hidden border border-sand/20 shadow-lg space-y-3 p-4 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-sand/10">
+                        <img
+                          src={item.image}
+                          alt={item.alt}
+                          className="w-full h-full object-cover"
+                        />
+                        <span className={`absolute top-2 left-2 px-2 py-1 rounded bg-black/80 ${item.badgeColor} font-mono text-[10px] font-bold`}>
+                          {item.step}
+                        </span>
+                      </div>
+                      <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-sand/80 leading-relaxed font-sans">
+                        {item.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              ))}
             </div>
 
-            <div className="bg-[#24170E] rounded-2xl overflow-hidden border border-sand/20 shadow-lg space-y-3 p-4">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-sand/10">
-                <img
-                  src="/images/wood-chips.jpg"
-                  alt="High volume wood chips from below grade grinding"
-                  className="w-full h-full object-cover"
+            {/* Mobile Navigation Dots */}
+            <div className="flex md:hidden items-center justify-center gap-2 mt-5">
+              {INSPECTION_STEPS.map((item, idx) => (
+                <button
+                  key={item.step}
+                  onClick={() => scrollPhotoTo(idx)}
+                  className={`h-2.5 rounded-full transition-all duration-300 ${
+                    activePhotoIndex === idx
+                      ? 'w-8 bg-orange'
+                      : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+                  }`}
+                  aria-label={`Jump to ${item.step}`}
                 />
-                <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-green-400 font-mono text-[10px] font-bold">
-                  STEP 2: 10-12&quot; DEPTH
-                </span>
-              </div>
-              <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Grind Below Lawn Grade
-              </h4>
-              <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Reaching 10–12 inches deep ensures the customer can reseed grass or plant sod over the spot with zero surface regrowth.
-              </p>
-            </div>
-
-            <div className="bg-[#24170E] rounded-2xl overflow-hidden border border-sand/20 shadow-lg space-y-3 p-4">
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden border border-sand/10">
-                <img
-                  src="/images/tree-forest.jpg"
-                  alt="Clean property restoration after grinding"
-                  className="w-full h-full object-cover"
-                />
-                <span className="absolute top-2 left-2 px-2 py-1 rounded bg-black/80 text-amber-300 font-mono text-[10px] font-bold">
-                  STEP 3: PAID IN FULL
-                </span>
-              </div>
-              <h4 className="font-serif font-bold text-base text-[#FBF6EC]">
-                Collect $345 on the Spot
-              </h4>
-              <p className="text-xs text-sand/80 leading-relaxed font-sans">
-                Customer signs the pre-job waiver, you complete the grind, and collect payment via cash or SMS invoice before leaving the driveway.
-              </p>
+              ))}
             </div>
           </div>
         )}
