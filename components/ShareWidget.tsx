@@ -7,7 +7,7 @@ import { trackEvent } from './Analytics';
 export const ShareWidget: React.FC = () => {
   const [copied, setCopied] = useState(false);
 
-  const shareUrl = 'https://stump-grinding-playbook.vercel.app';
+  const shareUrl = 'https://stumpgrindingplaybook.com';
   const shareTitle = 'Check out The First 10 Stumps System: Pricing Engine & Field Manual';
 
   const handleCopy = () => {

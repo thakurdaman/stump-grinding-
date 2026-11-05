@@ -16,7 +16,7 @@ const getSiteUrl = () => {
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
   }
-  return 'https://stump-grinding-playbook.vercel.app';
+  return 'https://stumpgrindingplaybook.com';
 };
 
 export const SITE_CONFIG = {
