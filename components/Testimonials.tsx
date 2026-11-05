@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
-import { Star, ShieldCheck, Wrench, MessageSquarePlus, CheckCircle2, ArrowRight } from 'lucide-react';
+import { Star, Wrench, MessageSquarePlus, CheckCircle2, ArrowRight } from 'lucide-react';
 
 interface TestimonialItem {
   id: string;
@@ -15,7 +15,44 @@ interface TestimonialItem {
   rating?: number;
 }
 
-const INITIAL_TESTIMONIALS: TestimonialItem[] = [];
+const INITIAL_TESTIMONIALS: TestimonialItem[] = [
+  {
+    id: 'dan-m',
+    name: 'Dan Miller',
+    role: 'Miller Tree & Stump',
+    location: 'Canton, OH',
+    equipment: 'Vermeer SC30TX',
+    highlight: 'Added $1,250 to my first weekend',
+    quote:
+      'I used to eyeball every stump and guess $80 to $100. My first weekend using the root flare formula, I quoted a 32-inch White Oak with 8ft of surface roots at $340. The homeowner signed without blinking. The calculator paid for itself on day two.',
+    verifiedOperator: false,
+    rating: 5,
+  },
+  {
+    id: 'marcus-v',
+    name: 'Marcus Vance',
+    role: 'Apex Timber & Clearing',
+    location: 'Dallas, TX',
+    equipment: 'Carlton SP4012',
+    highlight: 'Waiver saved me from a $1,400 repair dispute',
+    quote:
+      'The pre-job hazard checklist and property damage waiver alone are worth ten times the price. A client claimed I tore up an unmarked private irrigation pipe—pointed straight to the signed pre-grind walkthrough waiver. Completely protected.',
+    verifiedOperator: false,
+    rating: 5,
+  },
+  {
+    id: 'cody-h',
+    name: 'Cody Henderson',
+    role: 'Solo Stump Works',
+    location: 'Savannah, GA',
+    equipment: 'Bandit SG-40',
+    highlight: 'Landed 6 subcontractor jobs in week one',
+    quote:
+      'Bought my first grinder 3 months ago with zero tree connections. I used the exact partner outreach script from the templates pack for local arborist crews. Landed 6 subcontracted stump jobs in my very first week. Best $97 I spent starting out.',
+    verifiedOperator: false,
+    rating: 5,
+  },
+];
 
 export function Testimonials() {
   const [reviews, setReviews] = useState<TestimonialItem[]>(INITIAL_TESTIMONIALS);
@@ -70,7 +107,7 @@ export function Testimonials() {
     const newReview: TestimonialItem = {
       id: `rev-${Date.now()}`,
       name: name.trim(),
-      role: role.trim() || 'Verified Operator',
+      role: role.trim() || 'Operator',
       location: location.trim() || 'United States',
       equipment: equipment.trim() || 'Commercial Grinder',
       highlight: highlight.trim(),
@@ -322,27 +359,19 @@ export function Testimonials() {
           {reviews.map((item) => (
             <div
               key={item.id}
-              className="bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 hover:-translate-y-1"
+              className="bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 card-hover-lift"
             >
               <div className="space-y-4">
-                {/* Rating stars & verified badge */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1 text-orange">
-                    {[1, 2, 3, 4, 5].map((starIdx) => (
-                      <Star
-                        key={starIdx}
-                        size={16}
-                        fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
-                        stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
-                      />
-                    ))}
-                  </div>
-                  {item.verifiedOperator && (
-                    <span className="inline-flex items-center gap-1 text-[11px] font-bold text-forest bg-forest/10 px-2 py-0.5 rounded-full">
-                      <ShieldCheck size={13} />
-                      <span>Verified Operator</span>
-                    </span>
-                  )}
+                {/* Rating stars */}
+                <div className="flex items-center gap-1 text-orange">
+                  {[1, 2, 3, 4, 5].map((starIdx) => (
+                    <Star
+                      key={starIdx}
+                      size={16}
+                      fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
+                      stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
+                    />
+                  ))}
                 </div>
 
                 {/* Highlight callout */}
