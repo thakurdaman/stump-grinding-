@@ -1,11 +1,59 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { SITE_CONFIG } from '@/config/site';
-import { Eye, X, FileText, Table, CheckSquare, Download, Maximize2 } from 'lucide-react';
+import { Eye, X, FileText, Table, CheckSquare, Download, Maximize2, ChevronLeft, ChevronRight } from 'lucide-react';
 
 export const PreviewGallery: React.FC = () => {
   const [activePreview, setActivePreview] = useState<(typeof SITE_CONFIG.previews)[0] | null>(null);
+  const items = SITE_CONFIG.previews;
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const scrollTo = (index: number) => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const targetChild = container.children[index] as HTMLElement;
+    if (targetChild) {
+      container.scrollTo({
+        left: targetChild.offsetLeft - container.offsetLeft,
+        behavior: 'smooth',
+      });
+      setActiveIndex(index);
+    }
+  };
+
+  const handlePrev = () => {
+    if (activeIndex > 0) {
+      scrollTo(activeIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (activeIndex < items.length - 1) {
+      scrollTo(activeIndex + 1);
+    }
+  };
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const scrollPos = container.scrollLeft;
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    Array.from(container.children).forEach((child, idx) => {
+      const el = child as HTMLElement;
+      const diff = Math.abs(el.offsetLeft - container.offsetLeft - scrollPos);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+
+    setActiveIndex(closestIndex);
+  };
 
   const getIcon = (category: string) => {
     if (category.includes('PDF')) return <FileText className="text-orange" size={20} />;
@@ -30,52 +78,104 @@ export const PreviewGallery: React.FC = () => {
           </p>
         </div>
 
-        {/* 3 Material Preview Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {SITE_CONFIG.previews.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => setActivePreview(item)}
-              className="bg-[#FBF6EC] border border-bark/15 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:border-orange hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
+        {/* Previews Slider (Mobile Swipeable) / 3-Col Grid on Desktop */}
+        <div className="relative">
+          {/* Mobile Previous Button */}
+          {activeIndex > 0 && (
+            <button
+              onClick={handlePrev}
+              className="md:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Previous material preview"
+              title="Previous material"
             >
-              {/* Document Preview Image Thumbnail */}
-              <div className="h-64 sm:h-72 bg-[#20140B] relative border-b border-bark/15 overflow-hidden flex items-center justify-center p-3 select-none">
-                <div className="relative w-full h-full rounded-lg overflow-hidden shadow-md border border-sand/20 bg-white group-hover:scale-102 transition-transform duration-300">
-                  <img
-                    src={item.image}
-                    alt={item.title}
-                    className="w-full h-full object-cover object-top"
-                  />
-                  {/* Category Pill Tag */}
-                  <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded bg-black/85 text-orange font-mono text-[10px] font-bold shadow-md">
-                    {item.category}
-                  </span>
-                </div>
+              <ChevronLeft size={22} />
+            </button>
+          )}
 
-                {/* Hover Overlay */}
-                <div className="absolute inset-0 bg-bark/50 backdrop-blur-[1px] transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100 duration-200">
-                  <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange text-white text-xs font-bold shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">
-                    <Maximize2 size={14} /> Click to Inspect Document
-                  </span>
+          {/* Mobile Next Button */}
+          {activeIndex < items.length - 1 && (
+            <button
+              onClick={handleNext}
+              className="md:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Next material preview"
+              title="Next material"
+            >
+              <ChevronRight size={22} />
+            </button>
+          )}
+
+          {/* Slider Track on Mobile, 3-Col Grid on Desktop */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-2 md:pb-0 no-scrollbar px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {items.map((item) => (
+              <div
+                key={item.id}
+                className="w-full flex-shrink-0 snap-center md:flex-shrink md:w-auto flex"
+              >
+                <div
+                  onClick={() => setActivePreview(item)}
+                  className="w-full bg-[#FBF6EC] border border-bark/15 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:border-orange hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col justify-between"
+                >
+                  {/* Document Preview Image Thumbnail */}
+                  <div className="h-64 sm:h-72 bg-[#20140B] relative border-b border-bark/15 overflow-hidden flex items-center justify-center p-3 select-none">
+                    <div className="relative w-full h-full rounded-lg overflow-hidden shadow-md border border-sand/20 bg-white group-hover:scale-102 transition-transform duration-300">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover object-top"
+                      />
+                      {/* Category Pill Tag */}
+                      <span className="absolute top-2.5 left-2.5 px-2.5 py-1 rounded bg-black/85 text-orange font-mono text-[10px] font-bold shadow-md">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    {/* Hover Overlay */}
+                    <div className="absolute inset-0 bg-bark/50 backdrop-blur-[1px] transition-opacity flex items-center justify-center opacity-0 group-hover:opacity-100 duration-200">
+                      <span className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-orange text-white text-xs font-bold shadow-lg transform translate-y-2 group-hover:translate-y-0 transition-all">
+                        <Maximize2 size={14} /> Click to Inspect Document
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Card Description */}
+                  <div className="p-6 flex-1 flex flex-col justify-between">
+                    <div>
+                      <h3 className="font-serif font-bold text-lg text-bark mb-2 group-hover:text-orange transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-xs text-bark/70 leading-relaxed font-sans">{item.caption}</p>
+                    </div>
+                    <div className="pt-4 mt-4 border-t border-bark/10 flex items-center justify-between">
+                      <span className="text-xs font-bold text-orange inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
+                        Inspect document pages &rarr;
+                      </span>
+                      <span className="text-[11px] font-mono text-wood font-medium">Ready to use</span>
+                    </div>
+                  </div>
                 </div>
               </div>
+            ))}
+          </div>
+        </div>
 
-              {/* Card Description */}
-              <div className="p-6 flex-1 flex flex-col justify-between">
-                <div>
-                  <h3 className="font-serif font-bold text-lg text-bark mb-2 group-hover:text-orange transition-colors">
-                    {item.title}
-                  </h3>
-                  <p className="text-xs text-bark/70 leading-relaxed font-sans">{item.caption}</p>
-                </div>
-                <div className="pt-4 mt-4 border-t border-bark/10 flex items-center justify-between">
-                  <span className="text-xs font-bold text-orange inline-flex items-center gap-1 group-hover:translate-x-1 transition-transform">
-                    Inspect document pages &rarr;
-                  </span>
-                  <span className="text-[11px] font-mono text-wood font-medium">Ready to use</span>
-                </div>
-              </div>
-            </div>
+        {/* Mobile Navigation Dots */}
+        <div className="flex md:hidden items-center justify-center gap-2 mt-5">
+          {items.map((item, idx) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                activeIndex === idx
+                  ? 'w-8 bg-orange'
+                  : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+              }`}
+              aria-label={`Jump to preview ${idx + 1}`}
+            />
           ))}
         </div>
       </div>
