@@ -51,7 +51,7 @@ export const Header: React.FC = () => {
           </Link>
           <Link
             href="#pricing"
-            className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-orange text-white text-sm font-bold shadow-sm hover:bg-orange-hover focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95"
+            className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-orange text-white text-sm font-bold shadow-sm hover:bg-orange-hover hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95 btn-shimmer"
           >
             Get The System
           </Link>

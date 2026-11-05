@@ -58,38 +58,38 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
               {/* Copy */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider reveal-fade-up">
                   <TreeRing size={16} strokeColor="#E8731A" />
                   <span>Built for Trades Guys &bull; Weekend &amp; Full-Time</span>
                 </div>
 
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14]">
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14] reveal-fade-up reveal-delay-1">
                   Stop guessing stump prices. Quote every job like a pro and book your first 10 paying stump jobs in 30 days.
                 </h1>
 
-                <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl">
+                <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl reveal-fade-up reveal-delay-2">
                   The pricing calculator, quote scripts, and door-knock templates for new stump grinders. Built for trades guys, not &ldquo;entrepreneurs.&rdquo;
                 </p>
 
                 {/* Primary CTA button directly below subline */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-1">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-1 reveal-fade-up reveal-delay-3">
                   <a
                     href="#pricing"
                     onClick={() => trackEvent('view_versions')}
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95"
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 btn-shimmer"
                   >
                     <span>Get The First 10 Stumps System &rarr;</span>
                   </a>
                   <a
                     href="#inside"
-                    className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-sand/60 hover:bg-sand border border-bark/15 text-bark font-bold text-base transition-colors"
+                    className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-sand/60 hover:bg-sand border border-bark/15 text-bark font-bold text-base hover:-translate-y-0.5 hover:border-bark/30 active:scale-95 transition-all"
                   >
                     <span>See what&apos;s inside</span>
                   </a>
                 </div>
 
                 {/* What's Included (short bullet list below the hero) */}
-                <div className="pt-2">
+                <div className="pt-2 reveal-fade-up reveal-delay-3">
                   <span className="text-xs font-bold uppercase tracking-wider text-wood-dark font-sans block mb-2.5">
                     What&apos;s Included:
                   </span>
@@ -114,7 +114,7 @@ export default function HomePage() {
                 </div>
 
                 {/* Trust line */}
-                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10">
+                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10 reveal-fade-up reveal-delay-4">
                   <span className="flex items-center gap-1.5 text-forest font-bold">
                     <ShieldCheck size={18} /> Instant download
                   </span>
@@ -127,11 +127,11 @@ export default function HomePage() {
 
               {/* Hero Art / Cover Card */}
               <div className="lg:col-span-5">
-                <div className="relative mx-auto max-w-md lg:max-w-none">
+                <div className="relative mx-auto max-w-md lg:max-w-none reveal-fade-up reveal-delay-2">
                   {/* Decorative backdrop */}
                   <div className="absolute -inset-2 bg-sand rounded-2xl rotate-1 border border-wood/30 shadow-sm" />
 
-                  <div className="relative bg-bark text-sand rounded-2xl p-6 sm:p-8 shadow-xl border border-wood-dark/60 space-y-6">
+                  <div className="relative bg-bark text-sand rounded-2xl p-6 sm:p-8 shadow-xl border border-wood-dark/60 space-y-6 card-hover-lift">
                     <div className="flex items-start justify-between border-b border-wood-dark/40 pb-5">
                       <div>
                         <span className="text-[11px] font-bold uppercase tracking-widest text-orange font-sans">
@@ -212,7 +212,7 @@ export default function HomePage() {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2">
+              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
                 <Fuel className="text-orange" size={24} />
                 <h4 className="font-serif font-bold text-bark text-base">Unaccounted Fuel &amp; Drive</h4>
                 <p className="text-xs text-bark/75">
@@ -220,7 +220,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2">
+              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
                 <Wrench className="text-wood-dark" size={24} />
                 <h4 className="font-serif font-bold text-bark text-base">Hidden Tooth Wear</h4>
                 <p className="text-xs text-bark/75">
@@ -228,7 +228,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2">
+              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
                 <Clock className="text-forest" size={24} />
                 <h4 className="font-serif font-bold text-bark text-base">Underestimated Chasing</h4>
                 <p className="text-xs text-bark/75">
@@ -263,7 +263,7 @@ export default function HomePage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
               {/* Asset 1: Playbook */}
-              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors">
+              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-orange/15 text-orange flex items-center justify-center">
                     <BookOpen size={24} />
@@ -304,7 +304,7 @@ export default function HomePage() {
               </div>
 
               {/* Asset 2: Calculator */}
-              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors">
+              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-forest/15 text-forest flex items-center justify-center">
                     <FileSpreadsheet size={24} />
@@ -345,7 +345,7 @@ export default function HomePage() {
               </div>
 
               {/* Asset 3: Templates */}
-              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors">
+              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-wood/20 text-wood-dark flex items-center justify-center">
                     <FileText size={24} />
@@ -523,15 +523,15 @@ export default function HomePage() {
                 return (
                   <div
                     key={tier.id}
-                    className={`relative rounded-2xl flex flex-col justify-between transition-all duration-200 ${
+                    className={`relative rounded-2xl flex flex-col justify-between transition-all duration-300 ${
                       isHighlight
-                        ? 'bg-bark text-sand border-2 border-orange shadow-xl lg:-translate-y-2'
-                        : 'bg-sand/35 text-bark border border-bark/20 shadow-sm hover:border-wood'
+                        ? 'bg-bark text-sand border-2 border-orange shadow-2xl lg:-translate-y-2 hover:-translate-y-3 hover:shadow-orange/20'
+                        : 'bg-sand/35 text-bark border border-bark/20 shadow-sm hover:border-wood/60 hover:-translate-y-1 hover:shadow-lg'
                     } p-7 sm:p-8`}
                   >
                     {/* Badge */}
                     {tier.badge && (
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-orange text-white text-xs font-bold uppercase tracking-wider shadow">
+                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-orange text-white text-xs font-bold uppercase tracking-wider shadow animate-badge-pulse">
                         {tier.badge}
                       </div>
                     )}
@@ -548,11 +548,11 @@ export default function HomePage() {
 
                       {/* Price */}
                       <div className="py-6 flex items-baseline gap-2">
-                        <span className={`font-serif text-4xl sm:text-5xl font-bold ${isHighlight ? 'text-[#FBF6EC]' : 'text-bark'}`}>
+                        <span className={`font-serif text-4xl sm:text-5xl font-bold ${isHighlight ? 'text-[#FBF6EC]' : 'text-bark'} tabular-nums`}>
                           ${tier.price}
                         </span>
                         {tier.regularPrice && (
-                          <span className="text-sm line-through text-sand/50 ml-1">
+                          <span className="text-sm line-through text-sand/50 ml-1 tabular-nums">
                             ${tier.regularPrice}
                           </span>
                         )}
@@ -580,9 +580,9 @@ export default function HomePage() {
                     <div className="pt-8">
                       <button
                         onClick={() => handleBuyClick(tier)}
-                        className={`w-full py-4 px-6 rounded-xl font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95 cursor-pointer ${
+                        className={`w-full py-4 px-6 rounded-xl font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 cursor-pointer ${
                           isHighlight
-                            ? 'bg-orange hover:bg-orange-hover text-white'
+                            ? 'bg-orange hover:bg-orange-hover text-white btn-shimmer'
                             : 'bg-orange hover:bg-orange-hover text-white'
                         }`}
                       >

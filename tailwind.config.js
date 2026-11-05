@@ -34,7 +34,31 @@ module.exports = {
       },
       fontFamily: {
         serif: ["var(--font-fraunces)", "Georgia", "serif"],
-        sans: ["var(--font-inter)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+        sans: ["var(--font-sans)", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "sans-serif"],
+      },
+      animation: {
+        'fade-in': 'fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'fade-in-up': 'fadeInUp 0.7s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+        'float-slow': 'floatGentle 4s ease-in-out infinite',
+        'pulse-subtle': 'pulseSubtle 2.5s ease-in-out infinite',
+        'shimmer': 'shimmer 2.2s infinite',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: '0' },
+          '100%': { opacity: '1' },
+        },
+        fadeInUp: {
+          '0%': { opacity: '0', transform: 'translateY(16px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' },
+        },
+        pulseSubtle: {
+          '0%, 100%': { transform: 'scale(1)', opacity: '1' },
+          '50%': { transform: 'scale(1.03)', opacity: '0.92' },
+        },
+        shimmer: {
+          '100%': { transform: 'translateX(100%)' },
+        },
       },
     },
   },

@@ -36,7 +36,7 @@ export const PreviewGallery: React.FC = () => {
             <div
               key={item.id}
               onClick={() => setActivePreview(item)}
-              className="bg-[#FBF6EC] border border-bark/15 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:border-orange transition-all duration-200 cursor-pointer group flex flex-col"
+              className="bg-[#FBF6EC] border border-bark/15 rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl hover:border-orange hover:-translate-y-1.5 transition-all duration-300 cursor-pointer group flex flex-col"
             >
               {/* Document Preview Image Thumbnail */}
               <div className="h-64 sm:h-72 bg-[#20140B] relative border-b border-bark/15 overflow-hidden flex items-center justify-center p-3 select-none">

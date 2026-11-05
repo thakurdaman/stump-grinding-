@@ -51,14 +51,18 @@ export const FaqAccordion: React.FC = () => {
                   />
                 </button>
 
-                {isOpen && (
-                  <div
-                    id={`faq-answer-${idx}`}
-                    className="px-6 pb-6 pt-1 text-sm sm:text-base text-bark/85 leading-relaxed border-t border-bark/5"
-                  >
-                    {faq.answer}
+                <div
+                  id={`faq-answer-${idx}`}
+                  className={`grid transition-[grid-template-rows,opacity] duration-300 ease-out ${
+                    isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                  }`}
+                >
+                  <div className="overflow-hidden">
+                    <div className="px-6 pb-6 pt-1 text-sm sm:text-base text-bark/85 leading-relaxed border-t border-bark/5">
+                      {faq.answer}
+                    </div>
                   </div>
-                )}
+                </div>
               </div>
             );
           })}

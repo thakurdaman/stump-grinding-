@@ -50,7 +50,7 @@ const ComparisonCard: React.FC<SingleSliderProps> = ({ item }) => {
           className="absolute top-0 bottom-0 w-0.5 bg-white shadow-[0_0_10px_rgba(0,0,0,0.5)] pointer-events-none"
           style={{ left: `${sliderPos}%` }}
         >
-          <div className="absolute top-1/2 -translate-y-1/2 -left-4 w-8 h-8 rounded-full bg-white text-bark flex items-center justify-center shadow-xl border-2 border-orange/80">
+          <div className="absolute top-1/2 -translate-y-1/2 -left-4 w-8 h-8 rounded-full bg-white text-bark flex items-center justify-center shadow-xl border-2 border-orange/80 animate-pulse-subtle">
             <SlidersHorizontal size={14} className="text-bark" />
           </div>
         </div>

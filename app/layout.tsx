@@ -1,5 +1,5 @@
 import type { Metadata } from 'next';
-import { Fraunces, Inter } from 'next/font/google';
+import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/config/site';
 import { Analytics } from '@/components/Analytics';
@@ -9,12 +9,15 @@ const fraunces = Fraunces({
   subsets: ['latin'],
   variable: '--font-fraunces',
   display: 'swap',
+  weight: ['400', '600', '700', '800', '900'],
+  style: ['normal', 'italic'],
 });
 
-const inter = Inter({
+const plusJakartaSans = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter',
+  variable: '--font-sans',
   display: 'swap',
+  weight: ['400', '500', '600', '700', '800'],
 });
 
 export const metadata: Metadata = {
@@ -79,7 +82,7 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${fraunces.variable} ${inter.variable} scroll-smooth`}>
+    <html lang="en" className={`${fraunces.variable} ${plusJakartaSans.variable} scroll-smooth`}>
       <head>
         <script
           type="application/ld+json"

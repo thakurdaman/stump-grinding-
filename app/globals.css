@@ -6,6 +6,20 @@
   body {
     background-color: #FBF6EC;
     color: #33241B;
+    letter-spacing: -0.012em;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Headings typography refinement - muscular, craftsman proportions */
+  h1, h2, h3, h4, h5, h6 {
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+
+  /* Clean tabular numbers for quotes, pricing, and calculators */
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
   }
 
   /* Custom focus outline */
@@ -110,4 +124,59 @@
 .animate-float-3d {
   animation: floatGentle 6s ease-in-out infinite;
 }
+
+/* Subtle badge pulse */
+@keyframes badgePulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 2px 6px rgba(232, 115, 26, 0.35); }
+  50% { transform: scale(1.05); box-shadow: 0 4px 14px rgba(232, 115, 26, 0.6); }
+}
+.animate-badge-pulse {
+  animation: badgePulse 2.6s ease-in-out infinite;
+}
+
+/* High-taste button shimmer sweep on primary CTAs */
+.btn-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+.btn-shimmer::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 40%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.24) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(25deg);
+  animation: btnSweep 4.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  pointer-events: none;
+}
+@keyframes btnSweep {
+  0%, 65% { left: -60%; }
+  100% { left: 160%; }
+}
+
+/* Card hover lift with soft elevation shadow */
+.card-hover-lift {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+}
+.card-hover-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 32px -8px rgba(51, 36, 27, 0.12), 0 4px 12px -2px rgba(51, 36, 27, 0.06);
+}
+
+/* Entrance animation utilities */
+.reveal-fade-up {
+  animation: fadeInUp 0.75s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.reveal-delay-1 { animation-delay: 0.1s; }
+.reveal-delay-2 { animation-delay: 0.2s; }
+.reveal-delay-3 { animation-delay: 0.3s; }
+.reveal-delay-4 { animation-delay: 0.4s; }
+
 
