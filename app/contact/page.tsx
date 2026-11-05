@@ -100,7 +100,7 @@ export default function ContactPage() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Marcus Vance"
+                    placeholder="e.g. Mike Davis"
                     className="w-full px-4 py-3 rounded-lg border border-bark/20 bg-white text-bark text-sm focus:outline-none focus:ring-2 focus:ring-orange"
                   />
                 </div>

@@ -475,7 +475,7 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 8B: REAL OPERATOR TESTIMONIALS
+            SECTION 8B: REAL OPERATOR TESTIMONIALS (Removed mock testimonials; ready for real buyer feedback)
         ========================================================================= */}
         <Testimonials />
 

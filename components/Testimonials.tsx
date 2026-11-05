@@ -15,44 +15,7 @@ interface TestimonialItem {
   rating?: number;
 }
 
-const INITIAL_TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: 'dan-m',
-    name: 'Dan Miller',
-    role: 'Owner, Miller Tree & Stump',
-    location: 'Canton, OH',
-    equipment: 'Vermeer SC30TX',
-    highlight: 'Added $1,250 to my first weekend',
-    quote:
-      'I used to eyeball every stump and guess $80 to $100. My first weekend using the root flare formula, I quoted a 32-inch White Oak with 8ft of surface roots at $340. The homeowner signed without blinking. The calculator paid for itself on day two.',
-    verifiedOperator: true,
-    rating: 5,
-  },
-  {
-    id: 'marcus-v',
-    name: 'Marcus Vance',
-    role: 'Operator, Apex Timber & Clearing',
-    location: 'Dallas, TX',
-    equipment: 'Carlton SP4012',
-    highlight: 'Waiver saved me from a $1,400 repair dispute',
-    quote:
-      'The pre-job hazard checklist and property damage waiver alone are worth ten times the price. A client claimed I tore up an unmarked private irrigation pipe—pointed straight to the signed pre-grind walkthrough waiver. Completely protected.',
-    verifiedOperator: true,
-    rating: 5,
-  },
-  {
-    id: 'cody-h',
-    name: 'Cody Henderson',
-    role: 'Founder, Solo Stump Works',
-    location: 'Savannah, GA',
-    equipment: 'Bandit SG-40',
-    highlight: 'Landed 6 subcontractor jobs in week one',
-    quote:
-      'Bought my first grinder 3 months ago with zero tree connections. I used the exact partner outreach script from the templates pack for local arborist crews. Landed 6 subcontracted stump jobs in my very first week. Best $97 I spent starting out.',
-    verifiedOperator: true,
-    rating: 5,
-  },
-];
+const INITIAL_TESTIMONIALS: TestimonialItem[] = [];
 
 export function Testimonials() {
   const [reviews, setReviews] = useState<TestimonialItem[]>(INITIAL_TESTIMONIALS);
@@ -152,6 +115,10 @@ export function Testimonials() {
       setIsSubmitting(false);
     }
   };
+
+  if (reviews.length === 0 && !showForm) {
+    return null;
+  }
 
   return (
     <section id="reviews" className="py-20 bg-[#FBF6EC] border-t border-bark/10">
