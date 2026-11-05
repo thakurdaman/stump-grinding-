@@ -35,6 +35,14 @@ export async function POST(req: Request) {
 
     // In production with Resend:
     if (process.env.RESEND_API_KEY) {
+      const fromEmail =
+        process.env.RESEND_FROM_EMAIL ||
+        `${SITE_CONFIG.name} <orders@${new URL(SITE_CONFIG.url).hostname}>`;
+      const recipientEmail =
+        process.env.CONTACT_RECIPIENT_EMAIL ||
+        process.env.SUPPORT_EMAIL ||
+        'damanthakur2016@gmail.com';
+
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -42,8 +50,8 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: `${SITE_CONFIG.name} Helpdesk <contact@${new URL(SITE_CONFIG.url).hostname}>`,
-          to: [SITE_CONFIG.supportEmail],
+          from: fromEmail,
+          to: [recipientEmail],
           reply_to: email,
           subject: `Contact Form Inquiry from ${name}`,
           text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
