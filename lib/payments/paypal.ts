@@ -88,6 +88,43 @@ export class PayPalProvider implements PaymentProvider {
     };
   }
 
+  async captureOrder(orderId: string): Promise<any> {
+    const token = await this.getAccessToken();
+    const res = await fetch(`${this.getBaseUrl()}/v2/checkout/orders/${orderId}/capture`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({}),
+    });
+
+    if (!res.ok) {
+      const errorText = await res.text();
+      // If already captured, fetch order details instead
+      if (res.status === 422 && errorText.includes('ORDER_ALREADY_CAPTURED')) {
+        return this.getOrder(orderId);
+      }
+      throw new Error(`PayPal order capture failed: ${res.status} ${errorText}`);
+    }
+
+    return await res.json();
+  }
+
+  async getOrder(orderId: string): Promise<any> {
+    const token = await this.getAccessToken();
+    const res = await fetch(`${this.getBaseUrl()}/v2/checkout/orders/${orderId}`, {
+      method: 'GET',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) {
+      throw new Error(`PayPal get order failed: ${res.status} ${await res.text()}`);
+    }
+    return await res.json();
+  }
+
   async verifyWebhook(req: Request): Promise<WebhookResult> {
     const webhookId = process.env.PAYPAL_WEBHOOK_ID;
     if (!webhookId) {

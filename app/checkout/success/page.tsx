@@ -2,9 +2,10 @@ import React from 'react';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
-import { validateToken } from '@/lib/orders';
+import { validateToken, createOrFulfillOrder } from '@/lib/orders';
 import { db } from '@/lib/db';
 import { SITE_CONFIG } from '@/config/site';
+import { PayPalProvider } from '@/lib/payments/paypal';
 import { CheckCircle2, Mail, ShieldCheck, ArrowRight, RefreshCw, Lock } from 'lucide-react';
 
 export const dynamic = 'force-dynamic';
@@ -27,9 +28,46 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
     if (res.success) {
       orderData = res.order;
     } else {
-      const order = await db.order.findFirst({
+      let order = await db.order.findFirst({
         where: { providerOrderId: searchParams.token },
       });
+
+      // If PayPal redirect returned order token and order is not yet registered
+      if (!order && process.env.PAYMENT_PROVIDER === 'paypal') {
+        try {
+          const paypal = new PayPalProvider();
+          const capture = await paypal.captureOrder(searchParams.token);
+          const customIdStr =
+            capture?.purchase_units?.[0]?.custom_id ||
+            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
+          const custom = customIdStr ? JSON.parse(customIdStr) : {};
+          const payerEmail = custom.email || capture?.payer?.email_address;
+          const versionId = custom.version_id;
+          const amount = parseFloat(
+            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value ||
+              capture?.purchase_units?.[0]?.amount?.value ||
+              '0'
+          );
+          const currency =
+            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.currency_code ||
+            capture?.purchase_units?.[0]?.amount?.currency_code ||
+            'USD';
+
+          if (payerEmail && versionId) {
+            order = await createOrFulfillOrder({
+              email: payerEmail,
+              versionId,
+              amount,
+              currency,
+              provider: 'paypal',
+              providerOrderId: searchParams.token,
+            });
+          }
+        } catch (captureErr) {
+          console.warn('PayPal auto-capture error on success redirect:', captureErr);
+        }
+      }
+
       if (order) {
         const tokenRes = await validateToken(order.downloadToken);
         if (tokenRes.success) {
