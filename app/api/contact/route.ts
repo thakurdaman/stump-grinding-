@@ -35,14 +35,13 @@ export async function POST(req: Request) {
 
     // In production with Resend:
     if (process.env.RESEND_API_KEY) {
-      const fromEmail =
-        process.env.RESEND_FROM_EMAIL ||
-        `${SITE_CONFIG.name} <orders@${new URL(SITE_CONFIG.url).hostname}>`;
+      const supportFromEmail = `${SITE_CONFIG.name} Support <support@${new URL(SITE_CONFIG.url).hostname}>`;
       const recipientEmail =
         process.env.CONTACT_RECIPIENT_EMAIL ||
         process.env.SUPPORT_EMAIL ||
         'damanthakur2016@gmail.com';
 
+      // 1. Forward the inquiry to your administration inbox
       await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
@@ -50,13 +49,33 @@ export async function POST(req: Request) {
           Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: fromEmail,
+          from: supportFromEmail,
           to: [recipientEmail],
           reply_to: email,
           subject: `Contact Form Inquiry from ${name}`,
           text: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
         }),
       });
+
+      // 2. Send an immediate professional acknowledgment to the customer from support@stumpgrindingplaybook.com
+      try {
+        await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.RESEND_API_KEY}`,
+          },
+          body: JSON.stringify({
+            from: supportFromEmail,
+            to: [email],
+            reply_to: 'support@stumpgrindingplaybook.com',
+            subject: `We received your message — ${SITE_CONFIG.name} Support`,
+            text: `Hi ${name},\n\nThank you for reaching out. We have received your inquiry:\n\n"${message}"\n\nOur support team will review your message and reply back to you at this email address within 24 hours.\n\nWarm regards,\nCustomer Support Team\n${SITE_CONFIG.name}\nsupport@${new URL(SITE_CONFIG.url).hostname}`,
+          }),
+        });
+      } catch (ackErr) {
+        console.warn('Customer auto-acknowledgment email failed:', ackErr);
+      }
     } else {
       console.log('\n--- [CONTACT FORM SUBMISSION] ---');
       console.log(`From: ${name} <${email}>`);
