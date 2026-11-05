@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import { Star, Wrench, MessageSquarePlus, CheckCircle2, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Star, Wrench, MessageSquarePlus, CheckCircle2, ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface TestimonialItem {
   id: string;
@@ -84,6 +84,53 @@ export function Testimonials() {
       // LocalStorage suppressed or unavailable
     }
   }, []);
+
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const scrollTo = (index: number) => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const targetChild = container.children[index] as HTMLElement;
+    if (targetChild) {
+      container.scrollTo({
+        left: targetChild.offsetLeft - container.offsetLeft,
+        behavior: 'smooth',
+      });
+      setActiveIndex(index);
+    }
+  };
+
+  const handlePrev = () => {
+    if (activeIndex > 0) {
+      scrollTo(activeIndex - 1);
+    }
+  };
+
+  const handleNext = () => {
+    if (activeIndex < reviews.length - 1) {
+      scrollTo(activeIndex + 1);
+    }
+  };
+
+  const handleScroll = () => {
+    if (!scrollRef.current) return;
+    const container = scrollRef.current;
+    const scrollPos = container.scrollLeft;
+    let closestIndex = 0;
+    let minDiff = Infinity;
+
+    Array.from(container.children).forEach((child, idx) => {
+      const el = child as HTMLElement;
+      const diff = Math.abs(el.offsetLeft - container.offsetLeft - scrollPos);
+      if (diff < minDiff) {
+        minDiff = diff;
+        closestIndex = idx;
+      }
+    });
+
+    setActiveIndex(closestIndex);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -354,53 +401,103 @@ export function Testimonials() {
           </div>
         )}
 
-        {/* Reviews Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((item) => (
-            <div
-              key={item.id}
-              className="bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 card-hover-lift"
+        {/* Reviews Carousel (Swipeable on Mobile) / Grid on Desktop */}
+        <div className="relative">
+          {/* Mobile Previous Button */}
+          {activeIndex > 0 && (
+            <button
+              onClick={handlePrev}
+              className="md:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Previous operator review"
+              title="Previous review"
             >
-              <div className="space-y-4">
-                {/* Rating stars */}
-                <div className="flex items-center gap-1 text-orange">
-                  {[1, 2, 3, 4, 5].map((starIdx) => (
-                    <Star
-                      key={starIdx}
-                      size={16}
-                      fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
-                      stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
-                    />
-                  ))}
-                </div>
+              <ChevronLeft size={22} />
+            </button>
+          )}
 
-                {/* Highlight callout */}
-                <p className="font-serif font-bold text-bark text-base leading-snug">
-                  &ldquo;{item.highlight}&rdquo;
-                </p>
+          {/* Mobile Next Button */}
+          {activeIndex < reviews.length - 1 && (
+            <button
+              onClick={handleNext}
+              className="md:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+              aria-label="Next operator review"
+              title="Next review"
+            >
+              <ChevronRight size={22} />
+            </button>
+          )}
 
-                {/* Quote body */}
-                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
-                  {item.quote}
-                </p>
-              </div>
+          {/* Swipeable Track on Mobile, 3-Col Grid on Desktop */}
+          <div
+            ref={scrollRef}
+            onScroll={handleScroll}
+            className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-2 md:pb-0 no-scrollbar px-1"
+            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+          >
+            {reviews.map((item) => (
+              <div
+                key={item.id}
+                className="w-full flex-shrink-0 snap-center md:flex-shrink md:w-auto flex"
+              >
+                <div className="w-full bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 card-hover-lift">
+                  <div className="space-y-4">
+                    {/* Rating stars */}
+                    <div className="flex items-center gap-1 text-orange">
+                      {[1, 2, 3, 4, 5].map((starIdx) => (
+                        <Star
+                          key={starIdx}
+                          size={16}
+                          fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
+                          stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
+                        />
+                      ))}
+                    </div>
 
-              {/* Author footer & equipment info */}
-              <div className="pt-6 mt-6 border-t border-bark/10 space-y-1.5">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-serif font-bold text-bark text-sm">{item.name}</h4>
-                    <p className="text-[11px] text-wood-dark">{item.role}</p>
+                    {/* Highlight callout */}
+                    <p className="font-serif font-bold text-bark text-base leading-snug">
+                      &ldquo;{item.highlight}&rdquo;
+                    </p>
+
+                    {/* Quote body */}
+                    <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                      {item.quote}
+                    </p>
                   </div>
-                  <span className="text-[11px] font-semibold text-bark/60">{item.location}</span>
-                </div>
 
-                <div className="flex items-center gap-1.5 text-[11px] font-mono text-orange/90 bg-sand/60 px-2.5 py-1 rounded-md border border-bark/5">
-                  <Wrench size={12} className="shrink-0" />
-                  <span>Equipment: {item.equipment}</span>
+                  {/* Author footer & equipment info */}
+                  <div className="pt-6 mt-6 border-t border-bark/10 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-serif font-bold text-bark text-sm">{item.name}</h4>
+                        <p className="text-[11px] text-wood-dark">{item.role}</p>
+                      </div>
+                      <span className="text-[11px] font-semibold text-bark/60">{item.location}</span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-orange/90 bg-sand/60 px-2.5 py-1 rounded-md border border-bark/5">
+                      <Wrench size={12} className="shrink-0" />
+                      <span>Equipment: {item.equipment}</span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Mobile Navigation Dots */}
+        <div className="flex md:hidden items-center justify-center gap-2 mt-5">
+          {reviews.map((item, idx) => (
+            <button
+              key={item.id}
+              onClick={() => scrollTo(idx)}
+              className={`h-2.5 rounded-full transition-all duration-300 ${
+                activeIndex === idx
+                  ? 'w-8 bg-orange'
+                  : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+              }`}
+              aria-label={`Jump to review ${idx + 1}`}
+            />
           ))}
         </div>
       </div>
