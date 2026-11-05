@@ -244,7 +244,7 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
   // If Resend API key is configured, send live email
   if (process.env.RESEND_API_KEY) {
     try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The Stump Grinding Playbook <onboarding@resend.dev>';
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The First 10 Stumps System <orders@stumpgrindingplaybook.com>';
       const resendPayload: any = {
         from: fromEmail,
         to: [to],
@@ -363,7 +363,7 @@ If you did not request this verification code, you can safely ignore this email.
 
   if (process.env.RESEND_API_KEY) {
     try {
-      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The Stump Grinding Playbook <onboarding@resend.dev>';
+      const fromEmail = process.env.RESEND_FROM_EMAIL || 'The First 10 Stumps System <orders@stumpgrindingplaybook.com>';
       const res = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
