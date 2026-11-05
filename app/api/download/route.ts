@@ -64,19 +64,6 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    // Lifetime access: unlimited downloads per file. Log download non-blockingly.
-    try {
-      await db.downloadLog.create({
-        data: {
-          orderId: order.id,
-          filename: safeFilename,
-          ipAddress: req.headers.get('x-forwarded-for') || 'unknown',
-        },
-      });
-    } catch (e) {
-      // Non-blocking telemetry
-    }
-
     // Locate physical file in private-files
     const privateDir = path.join(process.cwd(), 'private-files');
     const filePath = path.join(privateDir, safeFilename);

@@ -1,5 +1,11 @@
 import dns from 'dns';
+import crypto from 'crypto';
 import { sendVerificationCodeEmail } from './email';
+
+const OTP_SECRET =
+  process.env.ADMIN_SECRET_KEY ||
+  process.env.PAYPAL_CLIENT_SECRET ||
+  'stump-grinding-otp-salt-key';
 
 export interface EmailVerificationResult {
   valid: boolean;
@@ -64,23 +70,23 @@ const codeStore = new Map<string, CodeRecord>();
  * E.g., 'jlkdoihakdh', 'asdfghjkl', 'qwertzuiop'
  */
 export function checkGibberishLocalPart(rawLocal: string): { isGibberish: boolean; reason?: string } {
-  const local = rawLocal.toLowerCase().replace(/[0-9._-]/g, '');
-  if (local.length < 4) return { isGibberish: false };
+  const clean = (rawLocal || '').toLowerCase().trim();
+  if (clean.length < 4) return { isGibberish: false };
 
   // 1. Repeated character mash: e.g. aaaa, xxxx, jjjj
-  if (/(.)\1{3,}/.test(local)) {
+  if (/(.)\1{3,}/.test(clean)) {
     return { isGibberish: true, reason: 'Repeated character sequence detected' };
   }
 
-  // 2. Keyboard row mash patterns (home-row, top-row, diagonal mash)
+  // 2. Keyboard row mash patterns (4+ characters)
   const mashPatterns = [
     'asdf', 'sdfg', 'dfgh', 'fghj', 'ghjk', 'hjkl', 'jkl;', 'lkjh', 'kjhg', 'jhgf', 'hgfd', 'gfds',
     'qwer', 'wert', 'erty', 'rtyu', 'tyui', 'yuio', 'uiop', 'poiuy', 'oiuyt', 'iuytr', 'uytre',
     'zxcv', 'xcvb', 'cvbn', 'vbnm', 'mnbv', 'nbvc', 'bvcx',
-    'jlkd', 'kdh', 'hkdh', 'jlkdoi', 'hakdh', 'dsaf', 'fdsa', 'asdfgh'
+    'jlkd', 'hkdh', 'jlkdoi', 'hakdh', 'dsaf', 'fdsa', 'asdfgh'
   ];
   for (const pattern of mashPatterns) {
-    if (local.includes(pattern)) {
+    if (clean.includes(pattern)) {
       return {
         isGibberish: true,
         reason: `Random keyboard sequence ("${pattern}") detected in username`,
@@ -88,26 +94,30 @@ export function checkGibberishLocalPart(rawLocal: string): { isGibberish: boolea
     }
   }
 
-  // 3. 5+ consecutive consonants (virtually impossible in real human names)
-  if (/[bcdfghjklmnpqrstvwxz]{5,}/i.test(local)) {
-    return { isGibberish: true, reason: 'Unnatural sequence of consecutive consonants' };
-  }
-
-  // 4. 4 consecutive consonants unless starting with known language blends (sch, str, chr)
-  const cons4 = local.match(/[bcdfghjklmnpqrstvwxz]{4,}/g);
-  if (cons4) {
-    const allowed = ['sch', 'str', 'chr', 'ngth', 'rcht', 'mpst', 'mpt', 'nct', 'ght'];
-    for (const c of cons4) {
-      if (!allowed.some((a) => c.includes(a))) {
-        return { isGibberish: true, reason: `Unnatural consonant cluster "${c}"` };
+  // 3. Check segments separated by dots, hyphens, underscores, or digits
+  const segments = clean.split(/[0-9._-]+/).filter((s) => s.length >= 3);
+  for (const seg of segments) {
+    // 5+ consecutive consonants in any single segment
+    if (/[bcdfghjklmnpqrstvwxz]{5,}/i.test(seg)) {
+      return { isGibberish: true, reason: 'Unnatural sequence of consecutive consonants' };
+    }
+    // 4 consecutive consonants unless containing known blends
+    const cons4 = seg.match(/[bcdfghjklmnpqrstvwxz]{4,}/g);
+    if (cons4) {
+      const allowed = ['sch', 'str', 'chr', 'ngth', 'rcht', 'mpst', 'mpt', 'nct', 'ght', 'ndst', 'rld', 'rth'];
+      for (const c of cons4) {
+        if (!allowed.some((a) => c.includes(a))) {
+          return { isGibberish: true, reason: `Unnatural consonant cluster "${c}"` };
+        }
       }
     }
   }
 
-  // 5. Very low vowel count on long strings (>7 chars with 0 or only 1 vowel)
-  const vowels = local.match(/[aeiouy]/g) || [];
-  if (local.length >= 8 && vowels.length <= 1) {
-    return { isGibberish: true, reason: 'Insufficient vowels for a genuine email username' };
+  // 4. Very low vowel count on long unbroken strings (>7 chars with 0 or only 1 vowel)
+  const unbroken = clean.replace(/[0-9._-]/g, '');
+  const vowels = unbroken.match(/[aeiouy]/g) || [];
+  if (unbroken.length >= 8 && vowels.length <= 1) {
+    return { isGibberish: true, reason: 'Username lacks natural vowel distribution' };
   }
 
   return { isGibberish: false };
@@ -263,7 +273,13 @@ export async function verifyEmail(rawEmail: string): Promise<EmailVerificationRe
 /**
  * Generate and send a 6-digit verification code to the customer's actual inbox
  */
-export async function sendVerificationCode(rawEmail: string): Promise<{ success: boolean; message: string; demoCode?: string; error?: string }> {
+export async function sendVerificationCode(rawEmail: string): Promise<{
+  success: boolean;
+  message: string;
+  demoCode?: string;
+  sessionToken?: string;
+  error?: string;
+}> {
   const email = (rawEmail || '').trim().toLowerCase();
 
   // Validate format and ensure not gibberish before generating code
@@ -280,6 +296,21 @@ export async function sendVerificationCode(rawEmail: string): Promise<{ success:
   const code = Math.floor(100000 + Math.random() * 900000).toString();
   const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
+  // Stateless HMAC signature so verification works across serverless container instances
+  const signature = crypto
+    .createHmac('sha256', OTP_SECRET)
+    .update(`${email}:${code}:${expiresAt}`)
+    .digest('hex');
+  const sessionToken = `${expiresAt}.${signature}`;
+
+  // Prune expired entries to prevent memory leak
+  if (codeStore.size > 200) {
+    const now = Date.now();
+    codeStore.forEach((val, key) => {
+      if (now > val.expiresAt) codeStore.delete(key);
+    });
+  }
+
   codeStore.set(email, {
     code,
     expiresAt,
@@ -295,6 +326,7 @@ export async function sendVerificationCode(rawEmail: string): Promise<{ success:
   return {
     success: true,
     message: `6-digit verification code sent to ${email}.`,
+    sessionToken,
     demoCode: isDemo ? code : undefined,
   };
 }
@@ -302,10 +334,55 @@ export async function sendVerificationCode(rawEmail: string): Promise<{ success:
 /**
  * Check the 6-digit verification code submitted by the user
  */
-export function checkVerificationCode(rawEmail: string, inputCode: string): { success: boolean; verified: boolean; message: string } {
+export function checkVerificationCode(
+  rawEmail: string,
+  inputCode: string,
+  sessionToken?: string
+): { success: boolean; verified: boolean; message: string } {
   const email = (rawEmail || '').trim().toLowerCase();
-  const record = codeStore.get(email);
+  const cleanInput = (inputCode || '').trim();
 
+  // Allow standard demo bypass in testing if DEMO_MODE="true"
+  if (process.env.DEMO_MODE === 'true' && cleanInput === '123456') {
+    return {
+      success: true,
+      verified: true,
+      message: `Mailbox confirmed! Lifetime access & payment receipt will arrive safely at ${email}.`,
+    };
+  }
+
+  // 1. Stateless HMAC signature verification (handles multi-instance serverless)
+  if (sessionToken && sessionToken.includes('.')) {
+    const [expiresAtStr, sig] = sessionToken.split('.');
+    const expiresAt = parseInt(expiresAtStr, 10);
+    if (!isNaN(expiresAt)) {
+      if (Date.now() > expiresAt) {
+        return {
+          success: false,
+          verified: false,
+          message: 'The verification code has expired. Please request a new code.',
+        };
+      }
+      const expected = crypto
+        .createHmac('sha256', OTP_SECRET)
+        .update(`${email}:${cleanInput}:${expiresAt}`)
+        .digest('hex');
+
+      if (
+        sig.length === expected.length &&
+        crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected))
+      ) {
+        return {
+          success: true,
+          verified: true,
+          message: `Mailbox confirmed! Lifetime access & payment receipt will arrive safely at ${email}.`,
+        };
+      }
+    }
+  }
+
+  // 2. Fallback to in-memory store
+  const record = codeStore.get(email);
   if (!record) {
     return {
       success: false,
@@ -323,10 +400,7 @@ export function checkVerificationCode(rawEmail: string, inputCode: string): { su
     };
   }
 
-  const cleanInput = (inputCode || '').trim();
-
-  // Allow standard demo bypass in testing if DEMO_MODE="true"
-  if (cleanInput === record.code || (process.env.DEMO_MODE === 'true' && cleanInput === '123456')) {
+  if (cleanInput === record.code) {
     record.verified = true;
     codeStore.set(email, record);
     return {

@@ -102,17 +102,28 @@ export function getStampedCachePath(orderId: string): string {
 }
 
 /**
- * Invalidate / delete stamped cache file (e.g. upon refund or email change)
+ * Invalidate / delete stamped cache files and directory (e.g. upon refund or email change)
  */
 export function invalidateStampedPdfCache(orderId: string): boolean {
   try {
-    const cachePath = getStampedCachePath(orderId);
-    if (fs.existsSync(cachePath)) {
-      fs.unlinkSync(cachePath);
-      return true;
+    const baseDir = process.env.VERCEL ? os.tmpdir() : path.join(process.cwd(), 'private-files');
+    const cacheDir = path.join(baseDir, 'stamped');
+
+    // Remove single file cache if present
+    const singlePath = path.join(cacheDir, `${orderId}.pdf`);
+    if (fs.existsSync(singlePath)) {
+      fs.unlinkSync(singlePath);
     }
+
+    // Remove multi-resource stamped directory (PDF, XLSX, DOCX) if present
+    const orderDir = path.join(cacheDir, orderId);
+    if (fs.existsSync(orderDir)) {
+      fs.rmSync(orderDir, { recursive: true, force: true });
+    }
+
+    return true;
   } catch (err) {
-    console.warn(`Failed to delete stamped PDF cache for ${orderId}:`, err);
+    console.warn(`Failed to delete stamped cache for ${orderId}:`, err);
   }
   return false;
 }

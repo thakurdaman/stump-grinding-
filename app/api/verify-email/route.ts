@@ -18,7 +18,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
-    const { email = '', action, code } = body;
+    const { email = '', action, code, sessionToken } = body;
 
     if (action === 'send-code') {
       const res = await sendVerificationCode(email);
@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     }
 
     if (action === 'check-code') {
-      const res = checkVerificationCode(email, code);
+      const res = checkVerificationCode(email, code, sessionToken);
       return NextResponse.json(res);
     }
 

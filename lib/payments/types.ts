@@ -16,6 +16,7 @@ export interface CheckoutResult {
 export interface WebhookResult {
   valid: boolean;
   eventType?: string;
+  resource?: any;
   order?: {
     providerOrderId: string;
     email: string;

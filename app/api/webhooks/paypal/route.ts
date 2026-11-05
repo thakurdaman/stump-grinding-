@@ -27,9 +27,22 @@ export async function POST(req: Request) {
       result.eventType === 'PAYMENT.CAPTURE.REVERSED'
     ) {
       try {
-        const providerOrderId = (result as any).resource?.id || (result as any).order?.providerOrderId;
-        if (providerOrderId) {
-          const order = await db.order.findFirst({ where: { providerOrderId } });
+        const resource = result.resource;
+        const upLink = resource?.links?.find((l: any) => l.rel === 'up')?.href;
+        const captureIdFromLink = upLink ? upLink.split('/').pop() : null;
+        const candidateIds = [
+          resource?.id,
+          resource?.parent_payment,
+          captureIdFromLink,
+          result.order?.providerOrderId,
+        ].filter(Boolean) as string[];
+
+        if (candidateIds.length > 0) {
+          const order = await db.order.findFirst({
+            where: {
+              providerOrderId: { in: candidateIds },
+            },
+          });
           if (order) {
             await markOrderRefunded(order.id);
           }

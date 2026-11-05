@@ -164,22 +164,24 @@ export class PayPalProvider implements PaymentProvider {
     }
 
     const event = JSON.parse(rawBody);
+    const resource = event.resource;
+
     if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
-      const resource = event.resource;
-      const custom = resource.custom_id ? JSON.parse(resource.custom_id) : {};
+      const custom = resource?.custom_id ? JSON.parse(resource.custom_id) : {};
       return {
         valid: true,
         eventType: event.event_type,
+        resource,
         order: {
-          providerOrderId: resource.id,
-          email: custom.email || resource.payer?.email_address,
+          providerOrderId: resource?.id,
+          email: custom.email || resource?.payer?.email_address,
           versionId: custom.version_id,
-          amount: parseFloat(resource.amount?.value || '0'),
-          currency: (resource.amount?.currency_code || 'USD').toUpperCase(),
+          amount: parseFloat(resource?.amount?.value || '0'),
+          currency: (resource?.amount?.currency_code || 'USD').toUpperCase(),
         },
       };
     }
 
-    return { valid: true, eventType: event.event_type };
+    return { valid: true, eventType: event.event_type, resource };
   }
 }

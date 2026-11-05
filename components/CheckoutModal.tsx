@@ -39,6 +39,7 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
   const [isSendingCode, setIsSendingCode] = useState(false);
   const [isVerifyingCode, setIsVerifyingCode] = useState(false);
   const [codeError, setCodeError] = useState<string | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
   const checkTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Real-time live email deliverability verification (Syntax, Gibberish, Typo, DNS MX)
@@ -128,6 +129,10 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
         return;
       }
 
+      if (data.sessionToken) {
+        setSessionToken(data.sessionToken);
+      }
+
       setVerification((prev) => ({
         ...prev,
         status: 'code_sent',
@@ -152,7 +157,12 @@ export const CheckoutModal: React.FC<CheckoutModalProps> = ({ product, onClose }
       const res = await fetch('/api/verify-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ action: 'check-code', email: trimmed, code: otpCode.trim() }),
+        body: JSON.stringify({
+          action: 'check-code',
+          email: trimmed,
+          code: otpCode.trim(),
+          sessionToken,
+        }),
       });
 
       const data = await res.json();

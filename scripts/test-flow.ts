@@ -5,7 +5,7 @@ import crypto from 'crypto';
 import { db } from '../lib/db';
 import { PDFDocument } from 'pdf-lib';
 import { PRODUCTS, isFileAllowedForProduct } from '../config/products';
-import { stampPdfWithBuyerEmail } from '../lib/stamper';
+import { stampPdf } from '../lib/pdf/stampPdf';
 import { validateToken, resendOrderLinks } from '../lib/orders';
 
 async function runTestSuite() {
@@ -65,7 +65,11 @@ async function runTestSuite() {
   const pages = pdfDoc.getPages();
   assert(pages.length > 0, 'PDF must contain pages');
 
-  const stampedBytes = await stampPdfWithBuyerEmail(playbookFile, 'john.operator@test.com');
+  const stampedBytes = await stampPdf({
+    inputPath: playbookFile,
+    email: 'john.operator@test.com',
+    orderId: 'ord_test_flow',
+  });
   assert(stampedBytes && stampedBytes.length > 100, 'Stamped PDF bytes must be generated');
 
   // Verify that the stamped PDF is a valid PDF document that can be reloaded
