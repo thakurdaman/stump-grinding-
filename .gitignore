@@ -38,6 +38,7 @@ Thumbs.db
 .idea/
 
 .vercel
+.agent/
 /private-files/stamped/
 /private-files/sample-stamped.pdf
 /public/stamped-previews/
