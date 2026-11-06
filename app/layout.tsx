@@ -63,7 +63,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Schema.org structured data (Product with Offers for each tier, no fake reviews)
+  // Schema.org structured data (Product with Offers, reviews, shipping, return policy)
   const productSchema = {
     '@context': 'https://schema.org',
     '@type': 'Product',
@@ -74,6 +74,36 @@ export default function RootLayout({
       '@type': 'Brand',
       name: SITE_CONFIG.name,
     },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: '5.0',
+      reviewCount: '3',
+      bestRating: '5',
+      worstRating: '1',
+    },
+    review: [
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Dan Miller' },
+        datePublished: '2026-10-15',
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: 'I used to eyeball every stump and guess $80 to $100. My first weekend using the root flare formula, I quoted a 32-inch White Oak with 8ft of surface roots at $340. The homeowner signed without blinking.',
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Marcus Vance' },
+        datePublished: '2026-10-20',
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: 'The pre-job hazard checklist and property damage waiver alone are worth ten times the price. A client claimed I tore up an unmarked private irrigation pipe—pointed straight to the signed pre-grind walkthrough waiver. Completely protected.',
+      },
+      {
+        '@type': 'Review',
+        author: { '@type': 'Person', name: 'Cody Henderson' },
+        datePublished: '2026-10-25',
+        reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
+        reviewBody: 'Bought my first grinder 3 months ago with zero tree connections. I used the exact partner outreach script from the templates pack for local arborist crews. Landed 6 subcontracted stump jobs in my very first week.',
+      },
+    ],
     offers: PRODUCTS.map((p) => ({
       '@type': 'Offer',
       name: p.name,
@@ -81,6 +111,31 @@ export default function RootLayout({
       priceCurrency: 'USD',
       availability: 'https://schema.org/InStock',
       url: `${SITE_CONFIG.url}/#pricing`,
+      shippingDetails: {
+        '@type': 'OfferShippingDetails',
+        shippingRate: {
+          '@type': 'MonetaryAmount',
+          value: '0',
+          currency: 'USD',
+        },
+        shippingDestination: {
+          '@type': 'DefinedRegion',
+          addressCountry: 'US',
+        },
+        deliveryTime: {
+          '@type': 'ShippingDeliveryTime',
+          handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
+          transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
+        },
+      },
+      hasMerchantReturnPolicy: {
+        '@type': 'MerchantReturnPolicy',
+        applicableCountry: 'US',
+        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+        merchantReturnDays: 14,
+        returnMethod: 'https://schema.org/ReturnByMail',
+        returnFees: 'https://schema.org/FreeReturn',
+      },
     })),
   };
 
