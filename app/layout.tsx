@@ -4,6 +4,7 @@ import './globals.css';
 import { SITE_CONFIG } from '@/config/site';
 import { Analytics } from '@/components/Analytics';
 import { PRODUCTS } from '@/config/products';
+import { FAQS } from '@/config/faqs';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -53,6 +54,14 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  alternates: {
+    canonical: '/',
+  },
+  icons: {
+    icon: '/favicon.svg',
+    shortcut: '/favicon.svg',
+    apple: '/favicon.svg',
+  },
   verification: {
     google: 'pHtFzBmjyE5xr_ijVZo-TJyzqbQ4F5W-I_VNZAkFDzI',
   },
@@ -63,10 +72,26 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Schema.org structured data (Product with Offers, reviews, shipping, return policy)
+  // Schema.org structured data (Organization, Product with Offers, FAQPage rich snippets)
+  const organizationSchema = {
+    '@type': 'Organization',
+    '@id': `${SITE_CONFIG.url}/#organization`,
+    name: SITE_CONFIG.name,
+    url: SITE_CONFIG.url,
+    logo: `${SITE_CONFIG.url}/images/cover.jpg`,
+    email: SITE_CONFIG.supportEmail,
+    contactPoint: {
+      '@type': 'ContactPoint',
+      email: SITE_CONFIG.supportEmail,
+      contactType: 'customer support',
+      areaServed: 'US',
+      availableLanguage: 'English',
+    },
+  };
+
   const productSchema = {
-    '@context': 'https://schema.org',
     '@type': 'Product',
+    '@id': `${SITE_CONFIG.url}/#product`,
     name: 'The First 10 Stumps System',
     description: SITE_CONFIG.description,
     image: `${SITE_CONFIG.url}/images/cover.jpg`,
@@ -139,12 +164,30 @@ export default function RootLayout({
     })),
   };
 
+  const faqSchema = {
+    '@type': 'FAQPage',
+    '@id': `${SITE_CONFIG.url}/#faq`,
+    mainEntity: FAQS.map((faq) => ({
+      '@type': 'Question',
+      name: faq.question,
+      acceptedAnswer: {
+        '@type': 'Answer',
+        text: faq.answer,
+      },
+    })),
+  };
+
+  const graphSchema = {
+    '@context': 'https://schema.org',
+    '@graph': [organizationSchema, productSchema, faqSchema],
+  };
+
   return (
     <html lang="en" className={`${fraunces.variable} ${plusJakartaSans.variable} scroll-smooth`}>
       <head>
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(graphSchema) }}
         />
       </head>
       <body className="font-sans bg-[#FBF6EC] text-bark antialiased min-h-screen flex flex-col selection:bg-orange/20 selection:text-bark">

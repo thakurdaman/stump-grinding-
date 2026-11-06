@@ -1,0 +1,24 @@
+# The First 10 Stumps System
+
+> Professional operational toolkit, mathematical pricing calculator, and business templates helping new tree and stump grinding operators quote profitably and land their first 10 paying jobs in 30 days.
+
+## Core Resources
+
+- [The Stump Grinding Playbook](https://stumpgrindingplaybook.com): 30+ page operational field guide covering utility locates (Call 811), commercial liability, equipment selection (walk-behind vs self-propelled vs tow-behind), tooth wear economics, and hazard avoidance.
+- [Pricing & Business Calculator](https://stumpgrindingplaybook.com/#pricing): Excel/Google Sheets engine accounting for stump diameter, root flares, access difficulty, depth requirements, and terrain slopes.
+- [Templates & Scripts Pack](https://stumpgrindingplaybook.com/#pricing): Word (.docx) customer quotes, pre-work waivers, partner outreach scripts for tree service crews, and invoice agreements.
+- [Pricing Cheat Sheet](https://stumpgrindingplaybook.com/downloads/Stump-Grinding-Pricing-Cheat-Sheet.pdf): Free reference guide for field quoting.
+
+## Pricing Formulas
+
+The system uses diameter-plus-root-flare baseline calculations:
+- `Base Rate`: $3.00–$4.50 per inch of maximum diameter including flare.
+- `Minimum Callout Charge`: $125.00–$185.00 depending on drive time and fuel.
+- `Depth Multiplier`: 1.0x for 4-6" standard lawn grind; 1.35x for 8-12" deep replant grind.
+- `Access & Hardwood Factors`: 1.25x for narrow gates (<36") or rocky soil.
+
+## Publisher & Support
+
+- Domain: https://stumpgrindingplaybook.com
+- Support: support@stumpgrindingplaybook.com
+- Market: United States tree service & arborist contractors.

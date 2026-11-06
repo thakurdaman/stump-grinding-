@@ -23,6 +23,8 @@ const ComparisonCard: React.FC<SingleSliderProps> = ({ item }) => {
           <img
             src={item.afterImage}
             alt={`${item.title} - After Grinding`}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <span className="absolute bottom-3 right-3 z-10 px-3 py-1 rounded bg-black/80 text-forest-light font-mono text-[11px] font-bold uppercase tracking-wider shadow">
@@ -38,6 +40,8 @@ const ComparisonCard: React.FC<SingleSliderProps> = ({ item }) => {
           <img
             src={item.beforeImage}
             alt={`${item.title} - Before Grinding`}
+            loading="lazy"
+            decoding="async"
             className="w-full h-full object-cover"
           />
           <span className="absolute bottom-3 left-3 z-10 px-3 py-1 rounded bg-orange text-white font-mono text-[11px] font-bold uppercase tracking-wider shadow">
