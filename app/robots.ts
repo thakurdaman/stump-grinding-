@@ -10,6 +10,11 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/api/', '/download/', '/checkout/success'],
       },
       {
+        userAgent: ['Googlebot', 'Googlebot-Image'],
+        allow: '/',
+        disallow: ['/api/', '/download/', '/checkout/success'],
+      },
+      {
         userAgent: [
           'GPTBot',
           'ChatGPT-User',
