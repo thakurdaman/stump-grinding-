@@ -66,7 +66,12 @@ export class RazorpayProvider implements PaymentProvider {
     const hmac = crypto.createHmac('sha256', secret);
     const expectedSig = hmac.update(rawBody).digest('hex');
 
-    if (expectedSig !== signature) {
+    const expectedBuf = Buffer.from(expectedSig);
+    const signatureBuf = Buffer.from(signature);
+    if (
+      expectedBuf.length !== signatureBuf.length ||
+      !crypto.timingSafeEqual(expectedBuf, signatureBuf)
+    ) {
       return { valid: false, error: 'Razorpay signature mismatch' };
     }
 

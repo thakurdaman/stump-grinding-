@@ -28,9 +28,14 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
     if (res.success) {
       orderData = res.order;
     } else {
-      let order = await db.order.findFirst({
-        where: { providerOrderId: searchParams.token },
-      });
+      let order = null;
+      try {
+        order = await db.order.findFirst({
+          where: { providerOrderId: searchParams.token },
+        });
+      } catch (dbErr) {
+        console.warn('DB lookup failed on success token:', dbErr);
+      }
 
       // If PayPal redirect returned order token and order is not yet registered
       if (!order && process.env.PAYMENT_PROVIDER === 'paypal') {
@@ -79,14 +84,18 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
   // Attempt resolution by provider session_id or demo order
   if (!orderData && searchParams.session_id) {
-    const order = await db.order.findFirst({
-      where: { providerOrderId: searchParams.session_id },
-    });
-    if (order) {
-      const res = await validateToken(order.downloadToken);
-      if (res.success) {
-        orderData = res.order;
+    try {
+      const order = await db.order.findFirst({
+        where: { providerOrderId: searchParams.session_id },
+      });
+      if (order) {
+        const res = await validateToken(order.downloadToken);
+        if (res.success) {
+          orderData = res.order;
+        }
       }
+    } catch (sessionErr) {
+      console.warn('DB lookup failed on session_id:', sessionErr);
     }
   }
 

@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
       rating: Number(rating) >= 1 && Number(rating) <= 5 ? Number(rating) : 5,
       highlight: String(highlight).slice(0, 150),
       quote: String(quote).slice(0, 1000),
-      verifiedOperator: true,
+      verifiedOperator: false,
       createdAt: new Date().toISOString(),
     };
 

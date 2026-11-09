@@ -82,6 +82,16 @@ async function runTests() {
     false,
     'Real name should not be flagged as gibberish'
   );
+  assert.strictEqual(
+    checkGibberishLocalPart('firststump').isGibberish,
+    false,
+    'Stump business names like firststump should not be flagged as gibberish'
+  );
+  assert.strictEqual(
+    checkGibberishLocalPart('mcclure').isGibberish,
+    false,
+    'Common surnames like mcclure should not be flagged as gibberish'
+  );
   console.log('   ✓ Email gibberish filter passed.');
 
   // Test 4: Stateless OTP code generation & verification

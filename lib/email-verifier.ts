@@ -5,7 +5,11 @@ import { sendVerificationCodeEmail } from './email';
 const OTP_SECRET =
   process.env.ADMIN_SECRET_KEY ||
   process.env.PAYPAL_CLIENT_SECRET ||
-  'stump-grinding-otp-salt-key';
+  (process.env.NODE_ENV === 'production'
+    ? (() => {
+        throw new Error('ADMIN_SECRET_KEY or PAYPAL_CLIENT_SECRET required for OTP signing.');
+      })()
+    : 'stump-grinding-otp-salt-key');
 
 export interface EmailVerificationResult {
   valid: boolean;
@@ -78,46 +82,20 @@ export function checkGibberishLocalPart(rawLocal: string): { isGibberish: boolea
     return { isGibberish: true, reason: 'Repeated character sequence detected' };
   }
 
-  // 2. Keyboard row mash patterns (4+ characters)
+  // 2. Obvious keyboard row mash patterns (5+ consecutive keys)
   const mashPatterns = [
-    'asdf', 'sdfg', 'dfgh', 'fghj', 'ghjk', 'hjkl', 'jkl;', 'lkjh', 'kjhg', 'jhgf', 'hgfd', 'gfds',
-    'qwer', 'wert', 'erty', 'rtyu', 'tyui', 'yuio', 'uiop', 'poiuy', 'oiuyt', 'iuytr', 'uytre',
-    'zxcv', 'xcvb', 'cvbn', 'vbnm', 'mnbv', 'nbvc', 'bvcx',
-    'jlkd', 'hkdh', 'jlkdoi', 'hakdh', 'dsaf', 'fdsa', 'asdfgh'
+    'asdfg', 'sdfgh', 'dfghj', 'fghjk', 'ghjkl',
+    'qwert', 'werty', 'ertyu', 'rtyui', 'tyuio', 'yuiop',
+    'zxcvb', 'xcvbn', 'cvbnm',
+    'jlkdoi', 'hakdh', 'asdfgh'
   ];
   for (const pattern of mashPatterns) {
     if (clean.includes(pattern)) {
       return {
         isGibberish: true,
-        reason: `Random keyboard sequence ("${pattern}") detected in username`,
+        reason: `Random keyboard mash ("${pattern}") detected in username`,
       };
     }
-  }
-
-  // 3. Check segments separated by dots, hyphens, underscores, or digits
-  const segments = clean.split(/[0-9._-]+/).filter((s) => s.length >= 3);
-  for (const seg of segments) {
-    // 5+ consecutive consonants in any single segment
-    if (/[bcdfghjklmnpqrstvwxz]{5,}/i.test(seg)) {
-      return { isGibberish: true, reason: 'Unnatural sequence of consecutive consonants' };
-    }
-    // 4 consecutive consonants unless containing known blends
-    const cons4 = seg.match(/[bcdfghjklmnpqrstvwxz]{4,}/g);
-    if (cons4) {
-      const allowed = ['sch', 'str', 'chr', 'ngth', 'rcht', 'mpst', 'mpt', 'nct', 'ght', 'ndst', 'rld', 'rth'];
-      for (const c of cons4) {
-        if (!allowed.some((a) => c.includes(a))) {
-          return { isGibberish: true, reason: `Unnatural consonant cluster "${c}"` };
-        }
-      }
-    }
-  }
-
-  // 4. Very low vowel count on long unbroken strings (>7 chars with 0 or only 1 vowel)
-  const unbroken = clean.replace(/[0-9._-]/g, '');
-  const vowels = unbroken.match(/[aeiouy]/g) || [];
-  if (unbroken.length >= 8 && vowels.length <= 1) {
-    return { isGibberish: true, reason: 'Username lacks natural vowel distribution' };
   }
 
   return { isGibberish: false };

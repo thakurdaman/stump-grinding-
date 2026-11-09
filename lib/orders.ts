@@ -22,7 +22,11 @@ export interface ValidatedOrder {
 const TOKEN_SECRET =
   process.env.ADMIN_SECRET_KEY ||
   process.env.PAYPAL_CLIENT_SECRET ||
-  'stump-grinding-secret-salt-key-2025';
+  (process.env.NODE_ENV === 'production'
+    ? (() => {
+        throw new Error('ADMIN_SECRET_KEY or PAYPAL_CLIENT_SECRET required for token signing.');
+      })()
+    : 'stump-grinding-secret-salt-key-2025');
 
 // 100 years = true lifetime validity
 const LIFETIME_DAYS = 36500;
@@ -154,20 +158,45 @@ export async function createOrFulfillOrder({
     });
   }
 
+  // Calculate total attachment size (Resend safely accepts up to ~10MB)
+  const totalAttachmentBytes = attachments.reduce((sum, a) => sum + (a.content.length * 0.75), 0);
+  const safeAttachments = totalAttachmentBytes < 8 * 1024 * 1024 ? attachments : [];
+
   // Send official proof of payment receipt and lifetime access email with attached resources
-  await sendDownloadLinkEmail({
-    to: order.email,
-    orderId: order.id,
-    productName: product.name,
-    downloadUrl,
-    amount,
-    currency,
-    provider,
-    providerOrderId,
-    expiresInDays: LIFETIME_DAYS,
-    attachments,
-    directDownloadLinks,
-  });
+  try {
+    const emailResult = await sendDownloadLinkEmail({
+      to: order.email,
+      orderId: order.id,
+      productName: product.name,
+      downloadUrl,
+      amount,
+      currency,
+      provider,
+      providerOrderId,
+      expiresInDays: LIFETIME_DAYS,
+      attachments: safeAttachments,
+      directDownloadLinks,
+    });
+
+    if (!emailResult.success && safeAttachments.length > 0) {
+      console.warn('Email with attachments failed; retrying delivery email without binary attachments...');
+      await sendDownloadLinkEmail({
+        to: order.email,
+        orderId: order.id,
+        productName: product.name,
+        downloadUrl,
+        amount,
+        currency,
+        provider,
+        providerOrderId,
+        expiresInDays: LIFETIME_DAYS,
+        attachments: [],
+        directDownloadLinks,
+      });
+    }
+  } catch (emailErr) {
+    console.error('sendDownloadLinkEmail error:', emailErr);
+  }
 
   return order;
 }

@@ -70,7 +70,7 @@ export async function POST(req: Request) {
             to: [email],
             reply_to: 'support@stumpgrindingplaybook.com',
             subject: `We received your message — ${SITE_CONFIG.name} Support`,
-            text: `Hi ${name},\n\nThank you for reaching out. We have received your inquiry:\n\n"${message}"\n\nOur support team will review your message and reply back to you at this email address within 24 hours.\n\nWarm regards,\nCustomer Support Team\n${SITE_CONFIG.name}\nsupport@${new URL(SITE_CONFIG.url).hostname}`,
+            text: `Hi ${name},\n\nThank you for reaching out to ${SITE_CONFIG.name}. We have received your message. Our support team will review your inquiry and reply back to you at this email address within 24 hours.\n\nWarm regards,\nCustomer Support Team\n${SITE_CONFIG.name}\nsupport@${new URL(SITE_CONFIG.url).hostname}`,
           }),
         });
       } catch (ackErr) {

@@ -1,13 +1,23 @@
 import { NextResponse } from 'next/server';
+import crypto from 'crypto';
 import { db } from '@/lib/db';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(req: Request) {
   const authHeader = req.headers.get('authorization');
-  const expectedKey = process.env.ADMIN_SECRET_KEY || 'stump-admin-secret-change-in-production';
+  const expectedKey = process.env.ADMIN_SECRET_KEY;
 
-  if (!authHeader || authHeader !== `Bearer ${expectedKey}`) {
+  if (!expectedKey) {
+    return NextResponse.json({ error: 'ADMIN_SECRET_KEY not configured.' }, { status: 500 });
+  }
+
+  const expectedHeader = `Bearer ${expectedKey}`;
+  if (
+    !authHeader ||
+    authHeader.length !== expectedHeader.length ||
+    !crypto.timingSafeEqual(Buffer.from(authHeader), Buffer.from(expectedHeader))
+  ) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 

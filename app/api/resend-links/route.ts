@@ -26,7 +26,6 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: 'If an active order was found for that email address, fresh download links have been sent to your inbox.',
-      found: result.success,
     });
   } catch (error: any) {
     console.error('Resend Links API error:', error);

@@ -115,6 +115,36 @@ export default async function DownloadTokenPage({ params }: DownloadPageProps) {
                 Resend Files to {order.email}
               </Link>
             </div>
+
+            {/* Direct Instant Download Links */}
+            {order.allowedFiles && order.allowedFiles.length > 0 && (
+              <div className="space-y-3 pt-4 border-t border-bark/10 text-left">
+                <div className="text-xs font-bold uppercase tracking-wider text-bark/60">
+                  Instant Browser Download:
+                </div>
+                <div className="flex flex-col gap-2">
+                  {order.allowedFiles.map((file) => (
+                    <a
+                      key={file.filename}
+                      href={`/api/download?token=${params.token}&file=${encodeURIComponent(file.filename)}`}
+                      className="flex items-center justify-between p-3.5 rounded-xl border border-bark/15 hover:border-orange bg-sand/20 hover:bg-orange/5 transition-all group"
+                    >
+                      <div className="flex items-center gap-3">
+                        <span className="text-xs font-bold uppercase px-2 py-0.5 rounded bg-bark/10 text-bark font-mono">
+                          {file.format}
+                        </span>
+                        <span className="text-sm font-bold text-bark group-hover:text-orange transition-colors">
+                          {file.name}
+                        </span>
+                      </div>
+                      <span className="text-xs font-bold text-orange">
+                        Download &darr;
+                      </span>
+                    </a>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
 
           <div className="text-center text-xs text-wood-dark">
