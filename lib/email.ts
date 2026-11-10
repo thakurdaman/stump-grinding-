@@ -31,7 +31,7 @@ export async function sendDownloadLinkEmail({
   orderId,
   productName,
   downloadUrl,
-  amount = 47,
+  amount = 121,
   currency = 'USD',
   provider = 'PayPal',
   providerOrderId,
@@ -106,137 +106,251 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
 
   const linksHtml = directDownloadLinks.length > 0
     ? `
-      <div style="background-color: #ffffff; border: 1px solid #EADCCF; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-        <h3 style="margin: 0 0 12px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #684128; border-bottom: 1px solid #EADCCF; padding-bottom: 8px;">
+      <div style="margin: 24px 0;">
+        <div style="font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #5A3E2B; margin-bottom: 12px;">
           Your Licensed Resources (Direct Download):
-        </h3>
-        <p style="font-size: 12px; color: #7A6252; margin: 0 0 14px 0;">
-          Each file is individually stamped with your verified email (<strong style="color: #33241B;">${to}</strong>) and order ID (<strong style="color: #33241B;">${orderId}</strong>) for lifetime digital ownership.
-        </p>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          ${directDownloadLinks.map(l => `
-            <div style="padding: 12px; background-color: #FBF6EC; border: 1px solid #E5D5C5; border-radius: 6px; margin-bottom: 8px;">
-              <div style="font-weight: bold; font-size: 14px; color: #33241B; margin-bottom: 4px;">
-                ${l.name}
-              </div>
-              <a href="${l.url}" style="background-color: #E8731A; color: #ffffff; text-decoration: none; padding: 8px 18px; font-size: 12px; font-weight: bold; border-radius: 4px; display: inline-block; margin-top: 6px;">
-                Download ${l.format} &rarr;
-              </a>
-            </div>
-          `).join('')}
         </div>
+        ${directDownloadLinks.map(l => `
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; margin-bottom: 12px; background-color: #FFFFFF; border: 1px solid #E2D9CC; border-radius: 8px;">
+            <tr>
+              <td style="padding: 16px;">
+                <div style="margin-bottom: 6px;">
+                  <span style="display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 700; color: #2E5E3E; background-color: #EAF2EC; border-radius: 4px; font-family: -apple-system, BlinkMacSystemFont, monospace;">
+                    ${l.format}
+                  </span>
+                </div>
+                <div style="font-size: 15px; font-weight: 700; color: #1C130D; margin-bottom: 4px; line-height: 1.3;">
+                  ${l.name}
+                </div>
+                <div style="font-size: 12px; color: #7A6252; margin-bottom: 12px; line-height: 1.4;">
+                  Individually watermarked &amp; stamped for <strong style="color: #1C130D;">${to}</strong>
+                </div>
+                <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                  <tr>
+                    <td align="center">
+                      <a href="${l.url}" class="mobile-btn" style="display: block; width: 100%; box-sizing: border-box; background-color: #E8731A; color: #FFFFFF; text-decoration: none; padding: 13px 20px; font-size: 14px; font-weight: 700; border-radius: 6px; text-align: center; box-shadow: 0 2px 4px rgba(232, 115, 26, 0.25);">
+                        Download ${l.format} &darr;
+                      </a>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </table>
+        `).join('')}
       </div>
     `
     : `
       <!-- Action Button -->
       <div style="text-align: center; margin: 28px 0;">
-        <a href="${downloadUrl}" style="background-color: #E8731A; color: #ffffff; text-decoration: none; padding: 14px 32px; font-size: 15px; font-weight: bold; border-radius: 6px; display: inline-block; box-shadow: 0 3px 8px rgba(232, 115, 26, 0.3);">
-          Download Your Files (Lifetime Access) &rarr;
-        </a>
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+          <tr>
+            <td align="center">
+              <a href="${downloadUrl}" class="mobile-btn" style="display: block; width: 100%; max-width: 380px; box-sizing: border-box; background-color: #E8731A; color: #FFFFFF; text-decoration: none; padding: 15px 28px; font-size: 15px; font-weight: 700; border-radius: 6px; text-align: center; box-shadow: 0 3px 8px rgba(232, 115, 26, 0.3);">
+                Download Your Files (Lifetime Access) &rarr;
+              </a>
+            </td>
+          </tr>
+        </table>
       </div>
     `;
 
   const htmlBody = `
 <!DOCTYPE html>
-<html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <title>Proof of Payment & Lifetime Access</title>
+  <style type="text/css">
+    body, table, td, p, a, li { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+    table { border-collapse: collapse !important; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #F6F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C130D; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
+      .mobile-padding { padding: 20px 16px !important; }
+      .mobile-header-padding { padding: 20px 16px !important; }
+      .mobile-btn { display: block !important; width: 100% !important; box-sizing: border-box !important; text-align: center !important; }
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 20px; background-color: #FBF6EC; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #33241B;">
-  <div style="max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #E5D5C5; overflow: hidden; box-shadow: 0 4px 12px rgba(51, 36, 27, 0.08);">
-    
-    <!-- Header Banner -->
-    <div style="background-color: #33241B; padding: 24px; text-align: center; border-bottom: 3px solid #E8731A;">
-      <h1 style="color: #FBF6EC; margin: 0; font-size: 20px; font-weight: bold; letter-spacing: 0.5px;">
-        ${SITE_CONFIG.name}
-      </h1>
-      <p style="color: #E8731A; margin: 6px 0 0 0; font-size: 13px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">
-        Official Proof of Payment &bull; Paid in Full
-      </p>
-    </div>
+<body style="margin: 0; padding: 20px 8px; background-color: #F6F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C130D;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td align="center">
+        
+        <!-- Main Email Container -->
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 580px; width: 100%; background-color: #FFFFFF; border-radius: 12px; border: 1px solid #E2D9CC; overflow: hidden; box-shadow: 0 4px 16px rgba(28, 19, 13, 0.06);">
+          
+          <!-- Header Banner -->
+          <tr>
+            <td class="mobile-header-padding" style="background-color: #1C130D; padding: 26px 20px; text-align: center; border-bottom: 3px solid #E8731A;">
+              <div style="font-size: 18px; font-weight: 800; color: #FBF6EC; letter-spacing: 0.5px; line-height: 1.3;">
+                ${SITE_CONFIG.name}
+              </div>
+              <div style="display: inline-block; margin-top: 8px; padding: 4px 12px; background-color: rgba(232, 115, 26, 0.2); border: 1px solid rgba(232, 115, 26, 0.5); border-radius: 20px; font-size: 11px; font-weight: 700; color: #FF9B4E; text-transform: uppercase; letter-spacing: 0.8px;">
+                Official Proof of Payment &bull; Paid in Full
+              </div>
+            </td>
+          </tr>
 
-    <!-- Main Content -->
-    <div style="padding: 28px;">
-      
-      <!-- Confirmation Intro -->
-      <p style="font-size: 15px; line-height: 1.5; margin: 0 0 20px 0;">
-        Hello,
-      </p>
-      <p style="font-size: 15px; line-height: 1.5; margin: 0 0 20px 0;">
-        Thank you for your purchase of <strong>${productName}</strong>. Your payment via <strong>${provider.toUpperCase()}</strong> has been successfully processed and verified.
-      </p>
+          <!-- Main Body -->
+          <tr>
+            <td class="mobile-padding" style="padding: 26px 22px;">
+              
+              <!-- Greeting & Summary -->
+              <div style="font-size: 15px; line-height: 1.5; margin-bottom: 16px; color: #1C130D;">
+                Hello,
+              </div>
+              <div style="font-size: 15px; line-height: 1.5; margin-bottom: 22px; color: #3A2B20;">
+                Thank you for your purchase of <strong style="color: #1C130D;">${productName}</strong>. Your payment via <strong style="color: #1C130D;">${provider.toUpperCase()}</strong> has been processed successfully.
+              </div>
 
-      <!-- Proof of Payment Receipt Card -->
-      <div style="background-color: #F9F5EE; border: 1px solid #EADCCF; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
-        <h3 style="margin: 0 0 14px 0; font-size: 14px; text-transform: uppercase; letter-spacing: 0.5px; color: #684128; border-bottom: 1px solid #EADCCF; padding-bottom: 8px;">
-          Payment Receipt Summary
-        </h3>
-        <table style="width: 100%; border-collapse: collapse; font-size: 13px; line-height: 1.8;">
+              <!-- Payment Receipt Card -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; background-color: #FAF6EF; border: 1px solid #E2D9CC; border-radius: 8px; margin-bottom: 22px; overflow: hidden;">
+                <tr>
+                  <td style="padding: 14px 16px; border-bottom: 1px solid #E2D9CC; background-color: #F4EDE1;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td>
+                          <span style="font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.6px; color: #5A3E2B;">
+                            Payment Receipt Summary
+                          </span>
+                        </td>
+                        <td align="right">
+                          <span style="display: inline-block; padding: 2px 8px; font-size: 11px; font-weight: 700; color: #1E4620; background-color: #D7F0DB; border-radius: 4px;">
+                            &check; Confirmed
+                          </span>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding: 16px;">
+                    
+                    <!-- Line 1: Receipt Number -->
+                    <div style="border-bottom: 1px solid #EBE4D8; padding-bottom: 10px; margin-bottom: 10px;">
+                      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8A7263; margin-bottom: 3px;">
+                        Receipt Number
+                      </div>
+                      <div style="font-size: 14px; font-weight: 700; color: #1C130D;">
+                        ${receiptNum}
+                      </div>
+                    </div>
+
+                    <!-- Line 2: Order / Transaction ID -->
+                    <div style="border-bottom: 1px solid #EBE4D8; padding-bottom: 10px; margin-bottom: 10px;">
+                      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8A7263; margin-bottom: 3px;">
+                        Transaction / Order ID
+                      </div>
+                      <div style="font-size: 13px; font-family: -apple-system, BlinkMacSystemFont, monospace; font-weight: 600; color: #1C130D; word-break: break-all; overflow-wrap: anywhere;">
+                        ${transactionId}
+                      </div>
+                    </div>
+
+                    <!-- Line 3: Payment Method & Date -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-bottom: 1px solid #EBE4D8; padding-bottom: 10px; margin-bottom: 10px;">
+                      <tr>
+                        <td style="width: 50%; vertical-align: top; padding-bottom: 10px;">
+                          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8A7263; margin-bottom: 3px;">
+                            Payment Method
+                          </div>
+                          <div style="font-size: 13px; font-weight: 700; color: #2E5E3E;">
+                            ${provider.toUpperCase()} (Verified)
+                          </div>
+                        </td>
+                        <td style="width: 50%; vertical-align: top; padding-bottom: 10px;">
+                          <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8A7263; margin-bottom: 3px;">
+                            Date of Purchase
+                          </div>
+                          <div style="font-size: 13px; font-weight: 600; color: #1C130D;">
+                            ${currentDate}
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+
+                    <!-- Line 4: Billed To -->
+                    <div style="border-bottom: 1px solid #EBE4D8; padding-bottom: 10px; margin-bottom: 12px;">
+                      <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; color: #8A7263; margin-bottom: 3px;">
+                        Billed To
+                      </div>
+                      <div style="font-size: 13px; font-weight: 600; color: #1C130D; word-break: break-all; overflow-wrap: anywhere;">
+                        ${to}
+                      </div>
+                    </div>
+
+                    <!-- Line 5: Total Amount Paid -->
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #EFE6D7; border-radius: 6px; padding: 12px 14px;">
+                      <tr>
+                        <td style="font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; color: #1C130D;">
+                          Total Amount Paid:
+                        </td>
+                        <td align="right" style="font-size: 18px; font-weight: 900; color: #E8731A;">
+                          ${formattedPrice}
+                        </td>
+                      </tr>
+                    </table>
+
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Lifetime Access Banner -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse; background-color: #EAF2EC; border-left: 4px solid #2E5E3E; border-radius: 6px; margin-bottom: 22px;">
+                <tr>
+                  <td style="padding: 14px 16px;">
+                    <div style="font-size: 13px; line-height: 1.4; color: #1E4620; font-weight: 700; margin-bottom: 4px;">
+                      &#10003; Lifetime Access Active &mdash; No Expiration
+                    </div>
+                    <div style="font-size: 12px; line-height: 1.5; color: #2E5E3E;">
+                      Your resources have NO expiration date. You can open, download, and re-download them anytime on any phone, tablet, or computer.
+                    </div>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Download Links Section -->
+              ${linksHtml}
+
+              <!-- Recommended Starting Order -->
+              <div style="font-size: 13px; line-height: 1.6; color: #5A3E2B; border-top: 1px solid #E2D9CC; padding-top: 18px; margin-top: 24px;">
+                <strong style="color: #1C130D;">Recommended Starting Order:</strong>
+                <ol style="margin: 8px 0 0 0; padding-left: 20px; color: #3A2B20;">
+                  <li style="margin-bottom: 4px;"><strong>The Stump Grinding Playbook (PDF)</strong> &mdash; master pricing formulas &amp; utility contracts</li>
+                  <li style="margin-bottom: 4px;"><strong>The Pricing Calculator (Excel)</strong> &mdash; calibrate local machine rates &amp; tooth wear</li>
+                  <li style="margin-bottom: 4px;"><strong>Templates &amp; Customer Scripts (Word)</strong> &mdash; insert business name &amp; quote jobs</li>
+                </ol>
+              </div>
+
+              <div style="font-size: 11px; color: #8A7263; margin-top: 20px; line-height: 1.5;">
+                * Note: Please keep this email for your tax and accounting records as official proof of business education and software tooling expense.
+              </div>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
           <tr>
-            <td style="color: #7A6252;">Receipt Number:</td>
-            <td style="text-align: right; font-weight: bold; color: #33241B;">${receiptNum}</td>
+            <td style="background-color: #F4EDE1; padding: 18px 20px; text-align: center; border-top: 1px solid #E2D9CC; font-size: 12px; color: #7A6252; line-height: 1.5;">
+              Questions or need support? Reply directly to <a href="mailto:${SITE_CONFIG.supportEmail}" style="color: #E8731A; text-decoration: none; font-weight: 700;">${SITE_CONFIG.supportEmail}</a>
+              <div style="margin-top: 4px; font-size: 11px; color: #8A7263;">
+                &copy; ${new Date().getFullYear()} ${SITE_CONFIG.name}. All rights reserved.
+              </div>
+            </td>
           </tr>
-          <tr>
-            <td style="color: #7A6252;">Transaction / Order ID:</td>
-            <td style="text-align: right; font-family: monospace; color: #33241B;">${transactionId}</td>
-          </tr>
-          <tr>
-            <td style="color: #7A6252;">Payment Method:</td>
-            <td style="text-align: right; font-weight: 600; color: #2E5E3E;">${provider.toUpperCase()} (Verified)</td>
-          </tr>
-          <tr>
-            <td style="color: #7A6252;">Date:</td>
-            <td style="text-align: right; color: #33241B;">${currentDate}</td>
-          </tr>
-          <tr>
-            <td style="color: #7A6252;">Billed To:</td>
-            <td style="text-align: right; color: #33241B;">${to}</td>
-          </tr>
-          <tr style="border-top: 1px dashed #D9C2B0; padding-top: 8px;">
-            <td style="padding-top: 8px; font-weight: bold; color: #33241B; font-size: 14px;">Total Amount Paid:</td>
-            <td style="padding-top: 8px; text-align: right; font-weight: bold; color: #E8731A; font-size: 16px;">${formattedPrice}</td>
-          </tr>
+
         </table>
-      </div>
 
-      <!-- Lifetime Access Banner -->
-      <div style="background-color: #EAF2EC; border-left: 4px solid #2E5E3E; padding: 14px 18px; border-radius: 4px; margin-bottom: 24px;">
-        <p style="margin: 0; font-size: 13px; line-height: 1.5; color: #20442D; font-weight: 600;">
-          &#10003; Lifetime Access Guarantee:
-        </p>
-        <p style="margin: 4px 0 0 0; font-size: 12px; line-height: 1.5; color: #2E5E3E;">
-          Your resources are delivered directly to your email with NO expiration date. You can open, download, and re-download them today, next year, or 2+ years from now anytime, anywhere.
-        </p>
-      </div>
-
-      <!-- Download Links Section -->
-      ${linksHtml}
-
-      <!-- Recommended Starting Order -->
-      <div style="font-size: 13px; line-height: 1.6; color: #684128; border-top: 1px solid #EFE4CE; padding-top: 18px; margin-top: 24px;">
-        <strong>Recommended Starting Order:</strong>
-        <ol style="margin: 8px 0 0 0; padding-left: 20px;">
-          <li><strong>The Stump Grinding Playbook (PDF)</strong> &mdash; master the pricing formulas &amp; contracts</li>
-          <li><strong>The Pricing Calculator (Excel)</strong> &mdash; set your local machine rates and tooth wear funds</li>
-          <li><strong>Templates &amp; Customer Scripts (Word)</strong> &mdash; plug in your business name and quote jobs</li>
-        </ol>
-      </div>
-
-      <p style="font-size: 11px; color: #8C786A; margin-top: 24px; line-height: 1.5;">
-        * Note: Please retain this email for your tax and bookkeeping records as proof of business trade education and tooling expense.
-      </p>
-
-    </div>
-
-    <!-- Footer -->
-    <div style="background-color: #F5EFE6; padding: 16px 24px; text-align: center; border-top: 1px solid #EADCCF; font-size: 12px; color: #7A6252;">
-      Questions or need support? Reply to <a href="mailto:${SITE_CONFIG.supportEmail}" style="color: #E8731A; text-decoration: none;">${SITE_CONFIG.supportEmail}</a>
-      <br/>
-      &copy; ${new Date().getFullYear()} ${SITE_CONFIG.name}. All rights reserved.
-    </div>
-
-  </div>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `.trim();
@@ -321,42 +435,62 @@ If you did not request this verification code, you can safely ignore this email.
 
   const htmlBody = `
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
   <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="supported-color-schemes" content="light dark" />
   <title>Email Verification Code</title>
+  <style type="text/css">
+    body, table, td, p, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+    table { border-collapse: collapse !important; }
+    body { margin: 0 !important; padding: 0 !important; width: 100% !important; background-color: #F6F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C130D; }
+    @media only screen and (max-width: 600px) {
+      .email-container { width: 100% !important; max-width: 100% !important; border-radius: 0 !important; }
+      .mobile-padding { padding: 22px 16px !important; }
+    }
+  </style>
 </head>
-<body style="margin: 0; padding: 20px; background-color: #FBF6EC; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #33241B;">
-  <div style="max-width: 500px; margin: 0 auto; background-color: #ffffff; border-radius: 12px; border: 1px solid #E5D5C5; overflow: hidden; box-shadow: 0 4px 12px rgba(51, 36, 27, 0.08);">
-    
-    <div style="background-color: #33241B; padding: 20px; text-align: center; border-bottom: 3px solid #E8731A;">
-      <h1 style="color: #FBF6EC; margin: 0; font-size: 18px; font-weight: bold;">
-        ${SITE_CONFIG.name}
-      </h1>
-      <p style="color: #E8731A; margin: 4px 0 0 0; font-size: 12px; font-weight: 600; text-transform: uppercase;">
-        Live Mailbox Verification
-      </p>
-    </div>
-
-    <div style="padding: 28px 24px; text-align: center;">
-      <p style="font-size: 14px; color: #684128; margin: 0 0 16px 0;">
-        Enter this 6-digit code to verify your delivery mailbox and confirm lifetime access delivery:
-      </p>
-
-      <div style="display: inline-block; padding: 14px 28px; background-color: #FBF6EC; border: 2px dashed #E8731A; border-radius: 8px; font-family: monospace; font-size: 32px; font-weight: bold; letter-spacing: 6px; color: #33241B; margin: 8px 0 20px 0;">
-        ${code}
-      </div>
-
-      <p style="font-size: 12px; color: #8A5A3B; margin: 0;">
-        This code expires in 10 minutes. If you did not enter your email on our site, please ignore this message.
-      </p>
-    </div>
-
-    <div style="background-color: #FBF6EC; padding: 14px; text-align: center; font-size: 11px; color: #8A5A3B; border-top: 1px solid #E5D5C5;">
-      &copy; ${new Date().getFullYear()} ${SITE_CONFIG.name}. All rights reserved.
-    </div>
-
-  </div>
+<body style="margin: 0; padding: 20px 8px; background-color: #F6F2EB; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; color: #1C130D;">
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="width: 100%; border-collapse: collapse;">
+    <tr>
+      <td align="center">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" class="email-container" style="max-width: 480px; width: 100%; background-color: #FFFFFF; border-radius: 12px; border: 1px solid #E2D9CC; overflow: hidden; box-shadow: 0 4px 16px rgba(28, 19, 13, 0.06);">
+          <tr>
+            <td style="background-color: #1C130D; padding: 22px 20px; text-align: center; border-bottom: 3px solid #E8731A;">
+              <div style="font-size: 18px; font-weight: 800; color: #FBF6EC; line-height: 1.3;">
+                ${SITE_CONFIG.name}
+              </div>
+              <div style="display: inline-block; margin-top: 6px; padding: 3px 10px; background-color: rgba(232, 115, 26, 0.2); border: 1px solid rgba(232, 115, 26, 0.5); border-radius: 20px; font-size: 11px; font-weight: 700; color: #FF9B4E; text-transform: uppercase; letter-spacing: 0.8px;">
+                Live Mailbox Verification
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="mobile-padding" style="padding: 26px 20px; text-align: center;">
+              <div style="font-size: 15px; color: #3A2B20; line-height: 1.5; margin-bottom: 16px;">
+                Enter this 6-digit confirmation code on checkout to verify your delivery email:
+              </div>
+              <div style="display: inline-block; padding: 12px 22px; background-color: #FAF6EF; border: 2px dashed #E8731A; border-radius: 8px; font-family: -apple-system, BlinkMacSystemFont, monospace; font-size: 30px; font-weight: 800; letter-spacing: 6px; color: #1C130D; margin-bottom: 18px;">
+                ${code}
+              </div>
+              <div style="font-size: 12px; color: #8A7263; line-height: 1.5;">
+                This code expires in 10 minutes. If you did not enter your email on our website, you can safely ignore this message.
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td style="background-color: #F4EDE1; padding: 14px; text-align: center; font-size: 11px; color: #8A7263; border-top: 1px solid #E2D9CC;">
+              &copy; ${new Date().getFullYear()} ${SITE_CONFIG.name}. All rights reserved.
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
 </body>
 </html>
   `.trim();
