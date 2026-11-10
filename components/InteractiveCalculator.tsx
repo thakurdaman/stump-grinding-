@@ -281,7 +281,7 @@ Estimated Net Profit Kept: ~$${netProfit} (${marginPercent}% margin)
                 href="#pricing"
                 className="w-full py-3 px-4 rounded-xl bg-orange hover:bg-orange-hover text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow transition-all"
               >
-                <span>Get Full Excel Quoter &amp; Playbook ($47)</span>
+                <span>Get the Full Kit ($121)</span>
                 <ArrowRight size={14} />
               </a>
             </div>

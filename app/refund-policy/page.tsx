@@ -42,14 +42,14 @@ export default function RefundPolicyPage() {
                 1. 14-Day Money-Back Guarantee (Full Kit Only)
               </h3>
               <p>
-                We provide an up-to-14-day money-back guarantee exclusively on the <strong>Full Kit ($97)</strong> tier. If you purchase the Full Kit and decide within 14 calendar days of purchase that the system does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
+                We provide an up-to-14-day money-back guarantee exclusively on the <strong>Full Kit ($121)</strong> tier. If you purchase the Full Kit and decide within 14 calendar days of purchase that the system does not meet your operational needs, you are entitled to a full 100% refund of your purchase price.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">
                 2. Standalone Tiers (Non-Refundable)
               </h3>
               <p>
-                Due to the immediate digital delivery and non-returnable nature of downloadable digital materials, individual standalone tiers—specifically the <strong>Playbook Only ($47)</strong> and the <strong>Calculator + Templates ($67)</strong>—are final sale and are not eligible for refunds.
+                Due to the immediate digital delivery and non-returnable nature of downloadable digital materials, individual standalone tiers—specifically the <strong>Playbook Only ($87)</strong> and the <strong>Calculator + Templates ($67)</strong>—are final sale and are not eligible for refunds.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">

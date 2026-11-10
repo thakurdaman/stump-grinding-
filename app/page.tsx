@@ -508,7 +508,7 @@ export default function HomePage() {
                   <span className="text-xs font-semibold text-forest font-sans">Field Math</span>
                 </div>
                 <h4 className="font-serif font-bold text-bark text-lg">
-                  Average US Stump Grind: $185–$350 | Complete Kit: $97
+                  Average US Stump Grind: $185–$350 | Complete Kit: $121
                 </h4>
                 <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
                   This entire kit pays for itself before you even finish grinding your very first oak root flare. One single properly calculated quote prevents giving away hundreds in underpriced labor and dull cutter teeth.
