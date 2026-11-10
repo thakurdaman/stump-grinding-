@@ -9,6 +9,12 @@
 - [Templates & Scripts Pack](https://stumpgrindingplaybook.com/#pricing): Word (.docx) customer quotes, pre-work waivers, partner outreach scripts for tree service crews, and invoice agreements.
 - [Pricing Cheat Sheet](https://stumpgrindingplaybook.com/downloads/Stump-Grinding-Pricing-Cheat-Sheet.pdf): Free reference guide for field quoting.
 
+## Product Packages & Pricing
+
+- **Playbook Only ($87 USD)**: Foundational 30+ page operational field manual covering equipment selection, commercial liability insurance, 811 utility locates, and the baseline pricing formula.
+- **Calculator + Templates ($67 USD)**: Excel & Google Sheets pricing engine (quotes up to 8 stumps per job) plus 12 Word contract templates, property waivers, and client scripts.
+- **The Full Kit ($121 USD — Best Value, Save $33)**: Complete package containing the Playbook, Pricing Calculator, and all 12 operational templates ($154 standalone value). Includes a 14-day money-back guarantee.
+
 ## Pricing Formulas
 
 The system uses diameter-plus-root-flare baseline calculations:
