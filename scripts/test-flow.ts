@@ -33,7 +33,7 @@ async function runTestSuite() {
     data: {
       email: 'john.operator@test.com',
       versionId: 'playbook-only',
-      amount: 47.0,
+      amount: 87.0,
       currency: 'USD',
       provider: 'demo',
       providerOrderId: 'demo_test_order_' + Date.now(),
@@ -43,7 +43,7 @@ async function runTestSuite() {
     },
   });
   assert(order1.id, 'Order 1 must be created in SQLite');
-  console.log('✔ [2/7] Verified demo order creation and SQLite persistence ($47 Playbook Only)');
+  console.log('✔ [2/7] Verified demo order creation and SQLite persistence ($87 Playbook Only)');
 
   // Test 3: Version Isolation Entitlement Check (Each tier delivers ONLY its own files)
   assert.strictEqual(isFileAllowedForProduct('playbook-only', 'The-Stump-Grinding-Playbook.pdf'), true);
@@ -87,7 +87,7 @@ async function runTestSuite() {
     data: {
       email: expiredEmail,
       versionId: 'full-kit',
-      amount: 97.0,
+      amount: 121.0,
       currency: 'USD',
       provider: 'demo',
       providerOrderId: 'demo_expired_order_' + Date.now(),

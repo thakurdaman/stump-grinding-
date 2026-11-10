@@ -190,6 +190,15 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
             {/* Action Buttons */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
+              {orderData?.downloadToken && (
+                <Link
+                  href={`/download/${orderData.downloadToken}`}
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-forest hover:bg-forest/90 text-white text-sm font-bold shadow transition-all"
+                >
+                  <ArrowRight size={16} />
+                  Access Your Downloads Now
+                </Link>
+              )}
               <a
                 href={`mailto:${deliveryEmail}`}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3.5 rounded-xl bg-orange hover:bg-orange-hover text-white text-sm font-bold shadow transition-all"

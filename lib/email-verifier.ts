@@ -270,8 +270,8 @@ export async function sendVerificationCode(rawEmail: string): Promise<{
     };
   }
 
-  // Generate a cryptographically random 6-digit code
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
+  // Generate a cryptographically secure random 6-digit code
+  const code = crypto.randomInt(100000, 1000000).toString();
   const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes
 
   // Stateless HMAC signature so verification works across serverless container instances

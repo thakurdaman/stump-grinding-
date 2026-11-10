@@ -14,11 +14,11 @@ async function testE2E() {
   const privateDir = path.join(process.cwd(), 'private-files');
 
   // --- 1. Tier 1: Playbook Only ---
-  console.log('1. Testing "Playbook Only" ($47)...');
+  console.log('1. Testing "Playbook Only" ($87)...');
   const order1 = await createOrFulfillOrder({
     email: buyerEmail,
     versionId: 'playbook-only',
-    amount: 47,
+    amount: 87,
     provider: 'demo',
     providerOrderId: 'demo_pb_' + Date.now(),
   });
@@ -63,11 +63,11 @@ async function testE2E() {
   console.log('   ✓ Confirmed: Zero PDF files delivered. Stamping is not applied.');
 
   // --- 3. Tier 3: Full Kit ---
-  console.log('\n3. Testing "Full Kit" ($97)...');
+  console.log('\n3. Testing "Full Kit" ($121)...');
   const order3 = await createOrFulfillOrder({
     email: buyerEmail,
     versionId: 'full-kit',
-    amount: 97,
+    amount: 121,
     provider: 'demo',
     providerOrderId: 'demo_full_' + Date.now(),
   });
