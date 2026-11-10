@@ -77,10 +77,9 @@ Item:             ${productName}
 Quantity:         1
 Total Amount:     ${formattedPrice}
 
-YOUR WATERMARKED & LICENSED FILES:
+YOUR DOWNLOAD FILES:
 -------------------------------------------------------------------
-All files have been individually licensed and trademarked exclusively to:
-${to} (Order ${orderId})
+Files licensed under Order: ${orderId}
 
 YOUR LIFETIME ACCESS DOWNLOAD LINKS:
 -------------------------------------------------------------------
@@ -119,11 +118,8 @@ Reply directly to ${SITE_CONFIG.supportEmail} or visit our website.
                     ${l.format}
                   </span>
                 </div>
-                <div style="font-size: 15px; font-weight: 700; color: #1C130D; margin-bottom: 4px; line-height: 1.3;">
+                <div style="font-size: 15px; font-weight: 700; color: #1C130D; margin-bottom: 14px; line-height: 1.3;">
                   ${l.name}
-                </div>
-                <div style="font-size: 12px; color: #7A6252; margin-bottom: 12px; line-height: 1.4;">
-                  Individually watermarked &amp; stamped for <strong style="color: #1C130D;">${to}</strong>
                 </div>
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
                   <tr>
