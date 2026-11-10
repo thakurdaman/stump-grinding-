@@ -150,7 +150,7 @@ This runs 7 automated assertions verifying token expiration, tier file boundarie
 - [ ] **Switch off Demo Mode**: Set `DEMO_MODE="false"` in your production environment variables.
 - [ ] **Test Live Sandbox**: Run a 100%-off coupon or $1 test transaction on your chosen provider to verify webhook signatures.
 - [ ] **Domain & SSL**: Point your custom domain and verify HTTPS certificates.
-- [ ] **Export Leads**: Retrieve captured cheat sheet emails at `/api/admin/leads?format=csv` using your `ADMIN_SECRET_KEY`.
+- [ ] **Export Leads**: Retrieve captured cheat sheet emails at `/api/admin/leads?format=csv` using your `ADMIN_SECRET_KEY`. **Security:** Set `ADMIN_SECRET_KEY` to a minimum 32-character random string (e.g., `openssl rand -hex 32`). This key also signs all customer download tokens and OTP codes — do **not** share it or store it in source control.
 
 ---
 

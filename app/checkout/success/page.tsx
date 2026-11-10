@@ -39,37 +39,48 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
 
       // If PayPal redirect returned order token and order is not yet registered
       if (!order && process.env.PAYMENT_PROVIDER === 'paypal') {
+        // Check DB first to avoid double-capture on page refresh (idempotency guard)
         try {
-          const paypal = new PayPalProvider();
-          const capture = await paypal.captureOrder(searchParams.token);
-          const customIdStr =
-            capture?.purchase_units?.[0]?.custom_id ||
-            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
-          const custom = customIdStr ? JSON.parse(customIdStr) : {};
-          const payerEmail = custom.email || capture?.payer?.email_address;
-          const versionId = custom.version_id;
-          const amount = parseFloat(
-            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value ||
-              capture?.purchase_units?.[0]?.amount?.value ||
-              '0'
-          );
-          const currency =
-            capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.currency_code ||
-            capture?.purchase_units?.[0]?.amount?.currency_code ||
-            'USD';
+          order = await db.order.findFirst({
+            where: { providerOrderId: searchParams.token },
+          });
+        } catch (dbErr) {
+          console.warn('DB idempotency check failed:', dbErr);
+        }
 
-          if (payerEmail && versionId) {
-            order = await createOrFulfillOrder({
-              email: payerEmail,
-              versionId,
-              amount,
-              currency,
-              provider: 'paypal',
-              providerOrderId: searchParams.token,
-            });
+        if (!order) {
+          try {
+            const paypal = new PayPalProvider();
+            const capture = await paypal.captureOrder(searchParams.token);
+            const customIdStr =
+              capture?.purchase_units?.[0]?.custom_id ||
+              capture?.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
+            const custom = customIdStr ? JSON.parse(customIdStr) : {};
+            const payerEmail = custom.email || capture?.payer?.email_address;
+            const versionId = custom.version_id;
+            const amount = parseFloat(
+              capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.value ||
+                capture?.purchase_units?.[0]?.amount?.value ||
+                '0'
+            );
+            const currency =
+              capture?.purchase_units?.[0]?.payments?.captures?.[0]?.amount?.currency_code ||
+              capture?.purchase_units?.[0]?.amount?.currency_code ||
+              'USD';
+
+            if (payerEmail && versionId) {
+              order = await createOrFulfillOrder({
+                email: payerEmail,
+                versionId,
+                amount,
+                currency,
+                provider: 'paypal',
+                providerOrderId: searchParams.token,
+              });
+            }
+          } catch (captureErr) {
+            console.warn('PayPal auto-capture error on success redirect:', captureErr);
           }
-        } catch (captureErr) {
-          console.warn('PayPal auto-capture error on success redirect:', captureErr);
         }
       }
 

@@ -4,10 +4,9 @@ import { sendVerificationCodeEmail } from './email';
 
 const OTP_SECRET =
   process.env.ADMIN_SECRET_KEY ||
-  process.env.PAYPAL_CLIENT_SECRET ||
   (process.env.NODE_ENV === 'production'
     ? (() => {
-        throw new Error('ADMIN_SECRET_KEY or PAYPAL_CLIENT_SECRET required for OTP signing.');
+        throw new Error('ADMIN_SECRET_KEY is required in production for OTP signing.');
       })()
     : 'stump-grinding-otp-salt-key');
 
@@ -396,10 +395,20 @@ export function checkVerificationCode(
 }
 
 /**
- * Verify whether an email address has completed the code check
+ * Verify whether an email address has completed the code check.
+ * Uses the stateless HMAC session token so it works across serverless containers.
+ * shortcut: in-memory codeStore fallback works only within a single container instance; use sessionToken path for multi-instance deploys.
  */
-export function isEmailVerified(rawEmail: string): boolean {
+export function isEmailVerified(rawEmail: string, sessionToken?: string, inputCode?: string): boolean {
   const email = (rawEmail || '').trim().toLowerCase();
+
+  // Stateless path: validate session token + code without in-memory state
+  if (sessionToken && inputCode) {
+    const result = checkVerificationCode(email, inputCode, sessionToken);
+    return result.verified;
+  }
+
+  // Fallback: in-memory store (works only within same container instance)
   const record = codeStore.get(email);
   return !!record && record.verified && Date.now() <= record.expiresAt;
 }

@@ -21,10 +21,9 @@ export interface ValidatedOrder {
 
 const TOKEN_SECRET =
   process.env.ADMIN_SECRET_KEY ||
-  process.env.PAYPAL_CLIENT_SECRET ||
   (process.env.NODE_ENV === 'production'
     ? (() => {
-        throw new Error('ADMIN_SECRET_KEY or PAYPAL_CLIENT_SECRET required for token signing.');
+        throw new Error('ADMIN_SECRET_KEY is required in production for signing download tokens. Set it to a 32+ character random string.');
       })()
     : 'stump-grinding-secret-salt-key-2025');
 
@@ -180,7 +179,7 @@ export async function createOrFulfillOrder({
 
     if (!emailResult.success && safeAttachments.length > 0) {
       console.warn('Email with attachments failed; retrying delivery email without binary attachments...');
-      await sendDownloadLinkEmail({
+      const retryResult = await sendDownloadLinkEmail({
         to: order.email,
         orderId: order.id,
         productName: product.name,
@@ -193,6 +192,9 @@ export async function createOrFulfillOrder({
         attachments: [],
         directDownloadLinks,
       });
+      if (!retryResult.success) {
+        console.error('sendDownloadLinkEmail retry also failed — buyer may not have received email:', retryResult.error);
+      }
     }
   } catch (emailErr) {
     console.error('sendDownloadLinkEmail error:', emailErr);
@@ -381,7 +383,11 @@ export async function resendOrderLinks(rawEmail: string): Promise<{ success: boo
       });
     }
 
-    await sendDownloadLinkEmail({
+    // Guard: Resend safely accepts up to ~10MB; skip binary attachments if oversized
+    const totalAttachmentBytes = attachments.reduce((sum, a) => sum + a.content.length * 0.75, 0);
+    const safeAttachments = totalAttachmentBytes < 8 * 1024 * 1024 ? attachments : [];
+
+    const resendResult = await sendDownloadLinkEmail({
       to: order.email,
       orderId: order.id,
       productName: product ? product.name : order.versionId,
@@ -391,9 +397,12 @@ export async function resendOrderLinks(rawEmail: string): Promise<{ success: boo
       provider: order.provider,
       providerOrderId: order.providerOrderId || undefined,
       expiresInDays: LIFETIME_DAYS,
-      attachments,
+      attachments: safeAttachments,
       directDownloadLinks,
     });
+    if (!resendResult.success) {
+      console.error('resendOrderLinks email failed for order', order.id, resendResult.error);
+    }
   }
 
   return { success: true, count: orders.length };

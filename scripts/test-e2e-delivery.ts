@@ -82,8 +82,8 @@ async function testE2E() {
 
   // Verify PDF is stamped and Excel / Word are unchanged
   const fullPdfFile = res3.order.allowedFiles.find(f => f.format === 'PDF')!;
-  const fullExcelFile = res3.order.allowedFiles.find(f => f.format === 'Excel')!;
-  const fullWordFile = res3.order.allowedFiles.find(f => f.format === 'Word')!;
+  const fullExcelFile = res3.order.allowedFiles.find(f => f.format === 'EXCEL')!;
+  const fullWordFile = res3.order.allowedFiles.find(f => f.format === 'WORD')!;
 
   const fullPdfBytes = await stampPdf({
     inputPath: path.join(privateDir, fullPdfFile.filename),

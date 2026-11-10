@@ -2,7 +2,7 @@ export interface ProductFile {
   id: string;
   name: string;
   filename: string;
-  format: 'PDF' | 'Excel' | 'Word';
+  format: 'PDF' | 'EXCEL' | 'WORD';
   sizeApprox: string;
   description: string;
 }
@@ -20,7 +20,7 @@ export const PRODUCT_FILES: Record<string, ProductFile> = {
     id: 'calculator',
     name: 'Stump Grinding Pricing & Business Calculator',
     filename: 'Stump-Grinding-Pricing-Calculator.xlsx',
-    format: 'Excel',
+    format: 'EXCEL',
     sizeApprox: '1.8 MB',
     description: 'Dynamic spreadsheet (Excel & Google Sheets compatible) to quote up to 8 stumps with terrain, flare, and rock adjustments.',
   },
@@ -28,7 +28,7 @@ export const PRODUCT_FILES: Record<string, ProductFile> = {
     id: 'templates',
     name: 'Templates & Scripts Pack (12 Ready-To-Use Files)',
     filename: 'Stump-Grinding-Templates-and-Scripts-Pack.docx',
-    format: 'Word',
+    format: 'WORD',
     sizeApprox: '950 KB',
     description: 'Quotes, invoices, service agreement, safety checklists, cold call/text scripts, and referral outreach messages.',
   },

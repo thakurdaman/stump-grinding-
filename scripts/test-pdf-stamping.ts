@@ -161,7 +161,7 @@ async function runTests() {
 
   // Tier 3: full-kit
   const fullFiles = getFilesForProduct('full-kit');
-  console.log(`✓ full-kit: ${fullFiles.length} files (PDF included: ${fullFiles.some(f => f.format === 'PDF')}, Excel included: ${fullFiles.some(f => f.format === 'Excel')}, Word included: ${fullFiles.some(f => f.format === 'Word')})`);
+  console.log(`✓ full-kit: ${fullFiles.length} files (PDF included: ${fullFiles.some(f => f.format === 'PDF')}, Excel included: ${fullFiles.some(f => f.format === 'EXCEL')}, Word included: ${fullFiles.some(f => f.format === 'WORD')})`);
   if (fullFiles.length !== 3) {
     throw new Error('Full kit must include all 3 commercial deliverables');
   }

@@ -3,7 +3,15 @@ import { PayPalProvider } from '@/lib/payments/paypal';
 import { createOrFulfillOrder, markOrderRefunded } from '@/lib/orders';
 import { db } from '@/lib/db';
 
+const MAX_BODY_BYTES = 1 * 1024 * 1024; // 1 MB — legitimate PayPal events are <10 KB
+
 export async function POST(req: Request) {
+  // Reject oversized bodies before reading to prevent memory DoS
+  const contentLength = parseInt(req.headers.get('content-length') || '0', 10);
+  if (contentLength > MAX_BODY_BYTES) {
+    return NextResponse.json({ error: 'Payload too large' }, { status: 413 });
+  }
+
   try {
     const provider = new PayPalProvider();
     const result = await provider.verifyWebhook(req);

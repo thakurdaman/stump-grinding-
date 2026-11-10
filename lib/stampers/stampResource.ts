@@ -31,6 +31,7 @@ export async function stampResource({
 
   const ext = path.extname(filename).toLowerCase();
   const baseCacheDir = process.env.VERCEL ? os.tmpdir() : privateDir;
+  // shortcut: Vercel tmpdir is per-container so cache always misses cold starts; upgrade to Vercel Blob when downloads exceed ~100/day
   const cacheDir = path.join(baseCacheDir, 'stamped', orderId);
   const cachePath = path.join(cacheDir, filename);
 
