@@ -1,0 +1,4 @@
+-- Enable Row Level Security (RLS) on all tables exposed to PostgREST
+ALTER TABLE IF EXISTS public."Order" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public."DownloadLog" ENABLE ROW LEVEL SECURITY;
+ALTER TABLE IF EXISTS public."Lead" ENABLE ROW LEVEL SECURITY;

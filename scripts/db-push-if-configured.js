@@ -6,6 +6,9 @@ if (url && !url.includes('localhost') && (url.startsWith('postgres://') || url.s
   console.log('Connecting to cloud PostgreSQL database and pushing Prisma schema...');
   try {
     execSync('npx prisma db push', { stdio: 'inherit' });
+    console.log('Enabling Row Level Security (RLS) on public schema tables...');
+    execSync('npx prisma db execute --file ./scripts/enable-rls.sql --schema prisma/schema.prisma', { stdio: 'inherit' });
+    console.log('Row Level Security (RLS) successfully applied.');
   } catch (err) {
     console.warn('Prisma db push warning:', err.message);
   }
