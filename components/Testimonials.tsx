@@ -32,6 +32,7 @@ export function Testimonials() {
   const [rating, setRating] = useState(5);
   const [highlight, setHighlight] = useState('');
   const [quote, setQuote] = useState('');
+  const [honeypot, setHoneypot] = useState('');
   const [formError, setFormError] = useState('');
 
   // Load any previously submitted local reviews on mount, filtering out old placeholders
@@ -132,11 +133,17 @@ export function Testimonials() {
 
     try {
       // Send to server API
-      await fetch('/api/reviews', {
+      const res = await fetch('/api/reviews', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newReview),
+        body: JSON.stringify({ ...newReview, honeypot }),
       });
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        setFormError(errData.error || 'Failed to submit review. Please try again.');
+        return;
+      }
 
       // Update local state and persistence
       const updatedReviews = [newReview, ...reviews];
@@ -159,6 +166,7 @@ export function Testimonials() {
       setEquipment('');
       setHighlight('');
       setQuote('');
+      setHoneypot('');
       setRating(5);
     } catch {
       setFormError('Failed to submit review. Please try again.');
@@ -222,6 +230,18 @@ export function Testimonials() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Spam protection: hidden honeypot */}
+              <input
+                type="text"
+                name="honeypot"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+                className="hidden"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+              />
+
               {formError && (
                 <div className="p-3 rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
                   {formError}

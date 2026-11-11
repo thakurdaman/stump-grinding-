@@ -28,9 +28,11 @@ export const StickyMobileCta: React.FC<StickyMobileCtaProps> = ({
                 ${featuredTier.regularPrice}
               </span>
             )}
-            <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange/15 text-orange">
-              Save $33
-            </span>
+            {featuredTier.regularPrice && featuredTier.regularPrice > featuredTier.price && (
+              <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-orange/15 text-orange">
+                Save ${featuredTier.regularPrice - featuredTier.price}
+              </span>
+            )}
           </div>
         </div>
 
