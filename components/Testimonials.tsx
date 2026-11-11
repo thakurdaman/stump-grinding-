@@ -477,12 +477,6 @@ export function Testimonials() {
               </p>
             </div>
           </>
-        ) : !showForm ? (
-          <div className="max-w-xl mx-auto text-center p-8 rounded-2xl bg-sand/30 border border-bark/10">
-            <p className="text-sm text-bark/80 font-sans leading-relaxed">
-              No field reviews submitted yet. Have you put the playbook into action? Click above to share your real experience.
-            </p>
-          </div>
         ) : null}
       </div>
     </section>
