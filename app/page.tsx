@@ -531,8 +531,10 @@ export default function HomePage() {
                   >
                     {/* Badge */}
                     {tier.badge && (
-                      <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-orange text-white text-xs font-bold uppercase tracking-wider shadow animate-badge-pulse">
-                        {tier.badge}
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
+                        <span className="animate-offer-slant px-3.5 py-1.5 rounded-md bg-gradient-to-r from-orange to-orange-hover text-white text-[11px] sm:text-xs font-black uppercase tracking-wider border border-white/25 shadow-md">
+                          {tier.badge}
+                        </span>
                       </div>
                     )}
 
@@ -547,14 +549,21 @@ export default function HomePage() {
                       </div>
 
                       {/* Price */}
-                      <div className="py-6 flex items-baseline gap-2">
+                      <div className="py-6 flex items-baseline gap-2 flex-wrap">
                         <span className={`font-serif text-4xl sm:text-5xl font-bold ${isHighlight ? 'text-[#FBF6EC]' : 'text-bark'} tabular-nums`}>
                           ${tier.price}
                         </span>
                         {tier.regularPrice && (
-                          <span className="text-sm line-through text-sand/50 ml-1 tabular-nums">
-                            ${tier.regularPrice}
-                          </span>
+                          <div className="flex items-center gap-1.5 ml-1">
+                            <span className="text-sm line-through text-sand/50 tabular-nums">
+                              ${tier.regularPrice}
+                            </span>
+                            {tier.regularPrice > tier.price && (
+                              <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-bold tracking-tight bg-orange/20 text-orange border border-orange/30">
+                                Save ${tier.regularPrice - tier.price}
+                              </span>
+                            )}
+                          </div>
                         )}
                       </div>
 

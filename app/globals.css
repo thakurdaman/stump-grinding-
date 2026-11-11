@@ -125,13 +125,29 @@
   animation: floatGentle 6s ease-in-out infinite;
 }
 
-/* Subtle badge pulse */
+/* Subtle badge pulse & slant offer animations */
 @keyframes badgePulse {
   0%, 100% { transform: scale(1); box-shadow: 0 2px 6px rgba(232, 115, 26, 0.35); }
   50% { transform: scale(1.05); box-shadow: 0 4px 14px rgba(232, 115, 26, 0.6); }
 }
 .animate-badge-pulse {
   animation: badgePulse 2.6s ease-in-out infinite;
+}
+
+@keyframes offerSlantFloat {
+  0%, 100% {
+    transform: rotate(-3deg) translateY(0) scale(1);
+    box-shadow: 0 4px 12px rgba(232, 115, 26, 0.4);
+  }
+  50% {
+    transform: rotate(-3deg) translateY(-2px) scale(1.04);
+    box-shadow: 0 8px 20px rgba(232, 115, 26, 0.65);
+  }
+}
+.animate-offer-slant {
+  display: inline-flex;
+  transform-origin: center;
+  animation: offerSlantFloat 3s ease-in-out infinite;
 }
 
 /* High-taste button shimmer sweep on primary CTAs */

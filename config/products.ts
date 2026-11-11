@@ -89,7 +89,7 @@ export const PRODUCTS: ProductTier[] = [
     tagline: 'Everything you need to price accurately, work safely, and stay profitable.',
     price: 121,
     regularPrice: 154,
-    badge: 'Best Value — Save $33',
+    badge: 'Best Value',
     isPopular: true,
     fileIds: ['playbook', 'calculator', 'templates'],
     description: 'The Playbook, the Pricing Calculator, and all 12 operational templates. Total package.',
