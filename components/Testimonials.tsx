@@ -15,44 +15,8 @@ interface TestimonialItem {
   rating?: number;
 }
 
-const INITIAL_TESTIMONIALS: TestimonialItem[] = [
-  {
-    id: 'dan-m',
-    name: 'Dan Miller',
-    role: 'Miller Tree & Stump',
-    location: 'Canton, OH',
-    equipment: 'Vermeer SC30TX',
-    highlight: 'Added $1,250 to my first weekend',
-    quote:
-      'I used to eyeball every stump and guess $80 to $100. My first weekend using the root flare formula, I quoted a 32-inch White Oak with 8ft of surface roots at $340. The homeowner signed without blinking. The calculator paid for itself on day two.',
-    verifiedOperator: false,
-    rating: 5,
-  },
-  {
-    id: 'marcus-v',
-    name: 'Marcus Vance',
-    role: 'Apex Timber & Clearing',
-    location: 'Dallas, TX',
-    equipment: 'Carlton SP4012',
-    highlight: 'Waiver saved me from a $1,400 repair dispute',
-    quote:
-      'The pre-job hazard checklist and property damage waiver alone are worth ten times the price. A client claimed I tore up an unmarked private irrigation pipe—pointed straight to the signed pre-grind walkthrough waiver. Completely protected.',
-    verifiedOperator: false,
-    rating: 5,
-  },
-  {
-    id: 'cody-h',
-    name: 'Cody Henderson',
-    role: 'Solo Stump Works',
-    location: 'Savannah, GA',
-    equipment: 'Bandit SG-40',
-    highlight: 'Landed 6 subcontractor jobs in week one',
-    quote:
-      'Bought my first grinder 3 months ago with zero tree connections. I used the exact partner outreach script from the templates pack for local arborist crews. Landed 6 subcontracted stump jobs in my very first week. Best $97 I spent starting out.',
-    verifiedOperator: false,
-    rating: 5,
-  },
-];
+// Initial testimonials start empty so only genuine buyer reviews are shown
+const INITIAL_TESTIMONIALS: TestimonialItem[] = [];
 
 export function Testimonials() {
   const [reviews, setReviews] = useState<TestimonialItem[]>(INITIAL_TESTIMONIALS);
@@ -70,14 +34,17 @@ export function Testimonials() {
   const [quote, setQuote] = useState('');
   const [formError, setFormError] = useState('');
 
-  // Load any previously submitted local reviews on mount
+  // Load any previously submitted local reviews on mount, filtering out old placeholders
   useEffect(() => {
     try {
       const stored = localStorage.getItem('stump_user_reviews');
       if (stored) {
         const parsed = JSON.parse(stored);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setReviews([...parsed, ...INITIAL_TESTIMONIALS]);
+          const genuine = parsed.filter(
+            (r: TestimonialItem) => r.id !== 'dan-m' && r.id !== 'marcus-v' && r.id !== 'cody-h'
+          );
+          setReviews(genuine);
         }
       }
     } catch {
@@ -200,10 +167,6 @@ export function Testimonials() {
     }
   };
 
-  if (reviews.length === 0 && !showForm) {
-    return null;
-  }
-
   return (
     <section id="reviews" className="py-20 bg-[#FBF6EC] border-t border-bark/10">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -217,7 +180,7 @@ export function Testimonials() {
             Field-Tested on Real Jobs Across America
           </h2>
           <p className="text-bark/80 text-base leading-relaxed">
-            See how solo operators and commercial tree care crews use these tools to protect their cutter teeth, avoid underbidding, and book profitable work.
+            Have you put the playbook, pricing calculator, or templates to work on real job sites? Share your field experience and review below.
           </p>
 
           {/* Action to leave a review */}
@@ -230,7 +193,7 @@ export function Testimonials() {
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-sand border border-wood/40 text-bark hover:bg-wood/20 hover:border-orange font-sans text-xs font-bold transition-all shadow-sm"
             >
               <MessageSquarePlus size={16} className="text-orange" />
-              <span>{showForm ? 'Close Review Form' : 'Bought the Playbook? Leave Your Field Review'}</span>
+              <span>{showForm ? 'Close Review Form' : 'Bought the Playbook? Leave Your Real Review'}</span>
             </button>
           </div>
         </div>
@@ -402,111 +365,125 @@ export function Testimonials() {
         )}
 
         {/* Reviews Carousel (Swipeable on Mobile) / Grid on Desktop */}
-        <div className="relative">
-          {/* Mobile Previous Button */}
-          {activeIndex > 0 && (
-            <button
-              onClick={handlePrev}
-              className="md:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
-              aria-label="Previous operator review"
-              title="Previous review"
-            >
-              <ChevronLeft size={22} />
-            </button>
-          )}
+        {reviews.length > 0 ? (
+          <>
+            <div className="relative">
+              {/* Mobile Previous Button */}
+              {activeIndex > 0 && (
+                <button
+                  onClick={handlePrev}
+                  className="md:hidden absolute -left-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+                  aria-label="Previous operator review"
+                  title="Previous review"
+                >
+                  <ChevronLeft size={22} />
+                </button>
+              )}
 
-          {/* Mobile Next Button */}
-          {activeIndex < reviews.length - 1 && (
-            <button
-              onClick={handleNext}
-              className="md:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
-              aria-label="Next operator review"
-              title="Next review"
-            >
-              <ChevronRight size={22} />
-            </button>
-          )}
+              {/* Mobile Next Button */}
+              {activeIndex < reviews.length - 1 && (
+                <button
+                  onClick={handleNext}
+                  className="md:hidden absolute -right-2 top-1/2 -translate-y-1/2 z-30 w-10 h-10 rounded-full bg-cream/95 backdrop-blur-sm border-2 border-bark/25 hover:border-orange hover:bg-orange hover:text-white text-bark shadow-xl flex items-center justify-center transition-all duration-200 active:scale-90 focus:outline-none cursor-pointer"
+                  aria-label="Next operator review"
+                  title="Next review"
+                >
+                  <ChevronRight size={22} />
+                </button>
+              )}
 
-          {/* Swipeable Track on Mobile, 3-Col Grid on Desktop */}
-          <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-2 md:pb-0 no-scrollbar px-1"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-          >
-            {reviews.map((item) => (
+              {/* Swipeable Track on Mobile, 3-Col Grid on Desktop */}
               <div
-                key={item.id}
-                className="w-full flex-shrink-0 snap-center md:flex-shrink md:w-auto flex"
+                ref={scrollRef}
+                onScroll={handleScroll}
+                className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-2 md:pb-0 no-scrollbar px-1"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
               >
-                <div className="w-full bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 card-hover-lift">
-                  <div className="space-y-4">
-                    {/* Rating stars */}
-                    <div className="flex items-center gap-1 text-orange">
-                      {[1, 2, 3, 4, 5].map((starIdx) => (
-                        <Star
-                          key={starIdx}
-                          size={16}
-                          fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
-                          stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
-                        />
-                      ))}
-                    </div>
+                {reviews.map((item) => (
+                  <div
+                    key={item.id}
+                    className="w-full flex-shrink-0 snap-center md:flex-shrink md:w-auto flex"
+                  >
+                    <div className="w-full bg-sand/30 border border-bark/15 hover:border-wood rounded-2xl p-7 flex flex-col justify-between shadow-sm transition-all duration-200 card-hover-lift">
+                      <div className="space-y-4">
+                        {/* Rating stars */}
+                        <div className="flex items-center gap-1 text-orange">
+                          {[1, 2, 3, 4, 5].map((starIdx) => (
+                            <Star
+                              key={starIdx}
+                              size={16}
+                              fill={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? '#E8731A' : 'none'}
+                              stroke={starIdx <= Math.max(1, Math.min(5, Math.round(Number(item.rating) || 5))) ? 'none' : '#E8731A'}
+                            />
+                          ))}
+                        </div>
 
-                    {/* Highlight callout */}
-                    <p className="font-serif font-bold text-bark text-base leading-snug">
-                      &ldquo;{item.highlight}&rdquo;
-                    </p>
+                        {/* Highlight callout */}
+                        <p className="font-serif font-bold text-bark text-base leading-snug">
+                          &ldquo;{item.highlight}&rdquo;
+                        </p>
 
-                    {/* Quote body */}
-                    <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
-                      {item.quote}
-                    </p>
-                  </div>
-
-                  {/* Author footer & equipment info */}
-                  <div className="pt-6 mt-6 border-t border-bark/10 space-y-1.5">
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <h4 className="font-serif font-bold text-bark text-sm">{item.name}</h4>
-                        <p className="text-[11px] text-wood-dark">{item.role}</p>
+                        {/* Quote body */}
+                        <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                          {item.quote}
+                        </p>
                       </div>
-                      <span className="text-[11px] font-semibold text-bark/60">{item.location}</span>
-                    </div>
 
-                    <div className="flex items-center gap-1.5 text-[11px] font-mono text-orange/90 bg-sand/60 px-2.5 py-1 rounded-md border border-bark/5">
-                      <Wrench size={12} className="shrink-0" />
-                      <span>Equipment: {item.equipment}</span>
+                      {/* Author footer & equipment info */}
+                      <div className="pt-6 mt-6 border-t border-bark/10 space-y-1.5">
+                        <div className="flex items-center justify-between">
+                          <div>
+                            <h4 className="font-serif font-bold text-bark text-sm">{item.name}</h4>
+                            <p className="text-[11px] text-wood-dark">{item.role}</p>
+                          </div>
+                          <span className="text-[11px] font-semibold text-bark/60">{item.location}</span>
+                        </div>
+
+                        {item.equipment && (
+                          <div className="flex items-center gap-1.5 text-[11px] font-mono text-orange/90 bg-sand/60 px-2.5 py-1 rounded-md border border-bark/5">
+                            <Wrench size={12} className="shrink-0" />
+                            <span>Equipment: {item.equipment}</span>
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            {/* Mobile Navigation Dots */}
+            {reviews.length > 1 && (
+              <div className="flex md:hidden items-center justify-center gap-2 mt-5">
+                {reviews.map((item, idx) => (
+                  <button
+                    key={item.id}
+                    onClick={() => scrollTo(idx)}
+                    className={`h-2.5 rounded-full transition-all duration-300 ${
+                      activeIndex === idx
+                        ? 'w-8 bg-orange'
+                        : 'w-2.5 bg-bark/20 hover:bg-bark/40'
+                    }`}
+                    aria-label={`Jump to review ${idx + 1}`}
+                  />
+                ))}
+              </div>
+            )}
+
+            {/* Disclaimer Note */}
+            <div className="text-center pt-8 mt-6 border-t border-bark/10">
+              <p className="text-xs text-wood-dark font-sans">
+                Individual results vary. No income is guaranteed.
+              </p>
+            </div>
+          </>
+        ) : !showForm ? (
+          <div className="max-w-xl mx-auto text-center p-8 rounded-2xl bg-sand/30 border border-bark/10">
+            <p className="text-sm text-bark/80 font-sans leading-relaxed">
+              No field reviews submitted yet. Have you put the playbook into action? Click above to share your real experience.
+            </p>
           </div>
-        </div>
-
-        {/* Mobile Navigation Dots */}
-        <div className="flex md:hidden items-center justify-center gap-2 mt-5">
-          {reviews.map((item, idx) => (
-            <button
-              key={item.id}
-              onClick={() => scrollTo(idx)}
-              className={`h-2.5 rounded-full transition-all duration-300 ${
-                activeIndex === idx
-                  ? 'w-8 bg-orange'
-                  : 'w-2.5 bg-bark/20 hover:bg-bark/40'
-              }`}
-              aria-label={`Jump to review ${idx + 1}`}
-            />
-          ))}
-        </div>
-
-        {/* Disclaimer Note */}
-        <div className="text-center pt-8 mt-6 border-t border-bark/10">
-          <p className="text-xs text-wood-dark font-sans">
-            Individual results vary. No income is guaranteed.
-          </p>
-        </div>
+        ) : null}
       </div>
     </section>
   );
