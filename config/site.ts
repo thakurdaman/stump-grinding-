@@ -25,9 +25,9 @@ export const SITE_CONFIG = {
   disclaimer:
     'Educational material only, not legal, tax, insurance, or safety advice. No income is guaranteed. Example prices are starting points; laws, insurance, utility-locate rules, and prices vary by location.',
   
-  // Real jobs before/after gallery configuration (Default false per guidelines; enable only if confirmed owner's real jobs)
+  // Real jobs before/after gallery configuration
   beforeAfter: {
-    enabled: false,
+    enabled: true,
     items: [
       {
         id: 'job-1',

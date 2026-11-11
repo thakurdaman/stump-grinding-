@@ -89,7 +89,7 @@ export const PRODUCTS: ProductTier[] = [
     tagline: 'New to stump grinding? Start here.',
     price: 121,
     regularPrice: 154,
-    badge: 'Best Value',
+    badge: 'Best Value — Save $33',
     isPopular: true,
     fileIds: ['playbook', 'calculator', 'templates'],
     description: 'The Playbook, the Pricing Calculator, and all 12 operational templates. Total 3-part beginner system.',

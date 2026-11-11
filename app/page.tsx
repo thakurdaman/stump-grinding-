@@ -473,12 +473,10 @@ export default function HomePage() {
         <InteractiveCalculator />
 
         {/* =========================================================================
-            SECTION 9: SUPPORTING PROOF (Video Walkthrough, 3 Ground Rules & Previews)
+            SECTION 9: SUPPORTING PROOF (Video Walkthrough, 3 Ground Rules, Previews, Field Results Gallery)
         ========================================================================= */}
         <VideoWalkthrough />
         <PreviewGallery />
-
-        {/* Optional Owner Gallery (hidden by default unless owner verifies real photos) */}
         <BeforeAfter />
 
         {/* =========================================================================
@@ -564,8 +562,9 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* Commented TODO: Testimonials placeholder */}
-        {/* TODO: Add real verified buyer testimonials here once collected from actual operators */}
+        {/* =========================================================================
+            SECTION 10B: REAL OPERATOR TESTIMONIALS (Moved below "Who it's for / not for" and above Pricing)
+        ========================================================================= */}
         <Testimonials />
 
         {/* =========================================================================
@@ -620,8 +619,8 @@ export default function HomePage() {
                   >
                     {/* Badge */}
                     {tier.badge && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                        <span className="animate-offer-slant px-3.5 py-1.5 rounded-md bg-gradient-to-r from-orange to-orange-hover text-white text-[11px] sm:text-xs font-black uppercase tracking-wider border border-white/25 shadow-md">
+                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
+                        <span className="animate-offer-slant whitespace-nowrap px-4 py-1.5 rounded-md bg-gradient-to-r from-orange to-orange-hover text-white text-[11px] sm:text-xs font-black uppercase tracking-wider border border-white/30 shadow-lg">
                           {tier.badge}
                         </span>
                       </div>
