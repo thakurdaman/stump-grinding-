@@ -133,6 +133,10 @@ export const BeforeAfter: React.FC = () => {
     setActiveIndex(closestIndex);
   };
 
+  if (!SITE_CONFIG.beforeAfter?.enabled) {
+    return null;
+  }
+
   return (
     <section id="real-jobs" className="py-20 bg-cream border-t border-bark/10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">

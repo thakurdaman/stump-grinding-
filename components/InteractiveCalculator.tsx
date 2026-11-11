@@ -68,13 +68,13 @@ Estimated Net Profit Kept: ~$${netProfit} (${marginPercent}% margin)
         <div className="text-center space-y-3 mb-12">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand border border-wood/30 text-bark text-xs font-bold uppercase tracking-wider">
             <Calculator size={15} className="text-orange" />
-            <span>Interactive Quoting Engine</span>
+            <span>Try the calculator</span>
           </div>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
-            Test the Pricing Formula Live
+            Know What to Charge: Interactive Quote Preview
           </h2>
           <p className="text-bark/80 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
-            Move the sliders to see how diameter, wood hardness, root flares, and gate access change your quote and your real take-home margin.
+            Move the sliders to see how diameter, wood hardness, root flares, and gate access calculate a quote. All figures are educational starting points; your local market, equipment, and fuel costs set your actual pricing.
           </p>
         </div>
 

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { TreeRing } from './TreeRing';
+import { SITE_CONFIG } from '@/config/site';
 import { Menu, X } from 'lucide-react';
 
 export const Header: React.FC = () => {
@@ -21,27 +22,33 @@ export const Header: React.FC = () => {
           </div>
           <div className="flex flex-col">
             <span className="font-serif font-bold text-lg sm:text-xl text-bark tracking-tight leading-tight">
-              The First 10 Stumps System
+              {SITE_CONFIG.shortName}
             </span>
             <span className="text-[11px] font-sans uppercase tracking-wider text-wood font-medium">
-              Field Manual &amp; Pricing Engine
+              Beginner Edition &bull; 3-Part System
             </span>
           </div>
         </Link>
 
         {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
+        <nav className="hidden md:flex items-center gap-7">
+          <Link
+            href="#what-youll-learn"
+            className="text-sm font-semibold text-bark/80 hover:text-orange transition-colors focus:outline-none focus:ring-2 focus:ring-orange rounded"
+          >
+            What you&apos;ll learn
+          </Link>
           <Link
             href="#inside"
             className="text-sm font-semibold text-bark/80 hover:text-orange transition-colors focus:outline-none focus:ring-2 focus:ring-orange rounded"
           >
-            What&apos;s Inside
+            What&apos;s inside
           </Link>
           <Link
             href="#pricing"
             className="text-sm font-semibold text-bark/80 hover:text-orange transition-colors focus:outline-none focus:ring-2 focus:ring-orange rounded"
           >
-            Versions & Pricing
+            Pricing
           </Link>
           <Link
             href="#faq"
@@ -53,7 +60,7 @@ export const Header: React.FC = () => {
             href="#pricing"
             className="inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-orange text-white text-sm font-bold shadow-sm hover:bg-orange-hover hover:-translate-y-0.5 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform active:scale-95 btn-shimmer"
           >
-            Get The System
+            Get the System
           </Link>
         </nav>
 
@@ -74,18 +81,25 @@ export const Header: React.FC = () => {
       {mobileMenuOpen && (
         <div className="md:hidden border-b border-bark/10 bg-[#FBF6EC] px-4 pt-3 pb-6 space-y-3">
           <Link
+            href="#what-youll-learn"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 text-base font-semibold text-bark hover:bg-sand rounded-md"
+          >
+            What you&apos;ll learn
+          </Link>
+          <Link
             href="#inside"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 text-base font-semibold text-bark hover:bg-sand rounded-md"
           >
-            What&apos;s Inside
+            What&apos;s inside
           </Link>
           <Link
             href="#pricing"
             onClick={() => setMobileMenuOpen(false)}
             className="block px-3 py-2 text-base font-semibold text-bark hover:bg-sand rounded-md"
           >
-            Versions & Pricing
+            Pricing
           </Link>
           <Link
             href="#faq"
@@ -100,7 +114,7 @@ export const Header: React.FC = () => {
               onClick={() => setMobileMenuOpen(false)}
               className="block w-full text-center py-3 rounded-lg bg-orange text-white font-bold text-sm shadow hover:bg-orange-hover"
             >
-              Get The First 10 Stumps System &rarr;
+              Get the System &rarr;
             </Link>
           </div>
         </div>

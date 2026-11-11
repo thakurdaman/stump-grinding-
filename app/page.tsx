@@ -14,6 +14,9 @@ import { InteractiveCalculator } from '@/components/InteractiveCalculator';
 import { VideoWalkthrough } from '@/components/VideoWalkthrough';
 import { Testimonials } from '@/components/Testimonials';
 import { ShareWidget } from '@/components/ShareWidget';
+import { TimelineStepper } from '@/components/TimelineStepper';
+import { PlaybookChaptersAccordion } from '@/components/PlaybookChaptersAccordion';
+import { StickyMobileCta } from '@/components/StickyMobileCta';
 import { PRODUCTS, ProductTier } from '@/config/products';
 import { trackEvent } from '@/components/Analytics';
 import {
@@ -30,10 +33,15 @@ import {
   Fuel,
   Wrench,
   Clock,
+  Sparkles,
+  PhoneCall,
+  CheckCircle2,
 } from 'lucide-react';
 
 export default function HomePage() {
   const [selectedProduct, setSelectedProduct] = useState<ProductTier | null>(null);
+
+  const fullKitTier = PRODUCTS.find((p) => p.id === 'full-kit') || PRODUCTS[2];
 
   const handleBuyClick = (product: ProductTier) => {
     trackEvent('click_buy', { productId: product.id, price: product.price });
@@ -44,7 +52,7 @@ export default function HomePage() {
     <>
       <Header />
 
-      <main className="flex-1">
+      <main className="flex-1 pb-16 md:pb-0">
         {/* =========================================================================
             SECTION 2: HERO
         ========================================================================= */}
@@ -56,78 +64,73 @@ export default function HomePage() {
 
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-              {/* Copy */}
+              {/* Copy (Left) */}
               <div className="lg:col-span-7 space-y-6">
-                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider reveal-fade-up">
-                  <TreeRing size={16} strokeColor="#E8731A" />
-                  <span>Built for Trades Guys &bull; Weekend &amp; Full-Time</span>
-                </div>
-
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14] reveal-fade-up reveal-delay-1">
-                  Stop guessing stump prices. Quote every job like a pro and book your first 10 paying stump jobs in 30 days.
-                </h1>
-
-                <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl reveal-fade-up reveal-delay-2">
-                  The pricing calculator, quote scripts, and door-knock templates for new stump grinders. Built for trades guys, not &ldquo;entrepreneurs.&rdquo;
+                {/* Small line above headline */}
+                <p className="text-xs sm:text-sm font-semibold text-wood-dark tracking-wide uppercase font-sans">
+                  The beginner&apos;s step-by-step system for starting a stump grinding business: playbook, pricing calculator, and ready-to-send scripts.
                 </p>
 
-                {/* Primary CTA button directly below subline */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-1 reveal-fade-up reveal-delay-3">
+                {/* H1 */}
+                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14]">
+                  Start a stump grinding business even if you&apos;ve never touched a grinder.
+                </h1>
+
+                {/* Subhead */}
+                <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl">
+                  Test the demand for under $100, price jobs in minutes, and know exactly what to say to tree companies.
+                </p>
+
+                {/* Badges */}
+                <div className="flex flex-wrap items-center gap-2 pt-1">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
+                    <Check size={14} className="text-forest" />
+                    No experience needed
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
+                    <Check size={14} className="text-orange" />
+                    Step by step
+                  </span>
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
+                    <Check size={14} className="text-forest" />
+                    Start part-time
+                  </span>
+                </div>
+
+                {/* Primary CTAs */}
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
                   <a
                     href="#pricing"
                     onClick={() => trackEvent('view_versions')}
                     className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 btn-shimmer"
                   >
-                    <span>Get The First 10 Stumps System &rarr;</span>
+                    <span>Get the Beginner System &rarr;</span>
                   </a>
                   <a
-                    href="#inside"
+                    href="#path"
                     className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-sand/60 hover:bg-sand border border-bark/15 text-bark font-bold text-base hover:-translate-y-0.5 hover:border-bark/30 active:scale-95 transition-all"
                   >
-                    <span>See what&apos;s inside</span>
+                    <span>See your first 30 days</span>
                   </a>
                 </div>
 
-                {/* What's Included (short bullet list below the hero) */}
-                <div className="pt-2 reveal-fade-up reveal-delay-3">
-                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark font-sans block mb-2.5">
-                    What&apos;s Included:
-                  </span>
-                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs sm:text-sm text-bark/90 font-medium">
-                    <li className="flex items-center gap-2">
-                      <Check className="text-forest shrink-0" size={17} />
-                      <span>Stump pricing calculator (spreadsheet)</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="text-forest shrink-0" size={17} />
-                      <span>Quote and pitch scripts</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="text-forest shrink-0" size={17} />
-                      <span>Door-knock and outreach templates</span>
-                    </li>
-                    <li className="flex items-center gap-2">
-                      <Check className="text-forest shrink-0" size={17} />
-                      <span>Step-by-step playbook PDF</span>
-                    </li>
-                  </ul>
-                </div>
-
-                {/* Trust line */}
-                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10 reveal-fade-up reveal-delay-4">
+                {/* Fine Print */}
+                <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10">
                   <span className="flex items-center gap-1.5 text-forest font-bold">
                     <ShieldCheck size={18} /> Instant download
                   </span>
                   <span>•</span>
-                  <span>14-day money-back guarantee (Full Kit)</span>
+                  <span>14-day money-back guarantee on the Full Kit</span>
+                  <span>•</span>
+                  <span>Educational material, no income guarantees</span>
                   <span>•</span>
                   <span>Written for US operators</span>
                 </div>
               </div>
 
-              {/* Hero Art / Cover Card */}
+              {/* Visual (Right): One Mockup Showing All Three Parts Together */}
               <div className="lg:col-span-5">
-                <div className="relative mx-auto max-w-md lg:max-w-none reveal-fade-up reveal-delay-2">
+                <div className="relative mx-auto max-w-md lg:max-w-none">
                   {/* Decorative backdrop */}
                   <div className="absolute -inset-2 bg-sand rounded-2xl rotate-1 border border-wood/30 shadow-sm" />
 
@@ -135,39 +138,45 @@ export default function HomePage() {
                     <div className="flex items-start justify-between border-b border-wood-dark/40 pb-5">
                       <div>
                         <span className="text-[11px] font-bold uppercase tracking-widest text-orange font-sans">
-                          Field Manual &amp; Software
+                          Complete 3-Part Beginner System
                         </span>
                         <h2 className="font-serif text-2xl font-bold text-[#FBF6EC] mt-1">
-                          The First 10 Stumps System
+                          The Stump Grinding Playbook
                         </h2>
                       </div>
                       <TreeRing size={42} strokeColor="#E8731A" />
                     </div>
 
-                    <div className="space-y-3 text-sm text-sand/85">
-                      <div className="flex items-center gap-3">
-                        <FileSpreadsheet size={18} className="text-forest-light shrink-0" />
-                        <span>Stump pricing calculator (spreadsheet)</span>
+                    <div className="space-y-3.5 text-sm text-sand/85">
+                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
+                        <BookOpen size={20} className="text-orange shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[#FBF6EC] text-xs">Part 1: The Playbook (52 Pages)</p>
+                          <p className="text-[11px] text-sand/70">So you know what to do on Day 1, Day 7 &amp; Day 30.</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <FileText size={18} className="text-wood-light shrink-0" />
-                        <span>Quote and pitch scripts</span>
+
+                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
+                        <FileSpreadsheet size={20} className="text-forest-light shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[#FBF6EC] text-xs">Part 2: The Pricing Calculator</p>
+                          <p className="text-[11px] text-sand/70">So you know what to charge for diameter, root flares &amp; obstacles.</p>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        <FileText size={18} className="text-orange shrink-0" />
-                        <span>Door-knock and outreach templates</span>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <BookOpen size={18} className="text-forest-light shrink-0" />
-                        <span>Step-by-step playbook PDF</span>
+
+                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
+                        <FileText size={20} className="text-sand shrink-0 mt-0.5" />
+                        <div>
+                          <p className="font-bold text-[#FBF6EC] text-xs">Part 3: 12 Templates &amp; Scripts</p>
+                          <p className="text-[11px] text-sand/70">So you know what to say to homeowners and tree services.</p>
+                        </div>
                       </div>
                     </div>
 
-                    {/* Quick Preview Box */}
-                    <div className="bg-wood-dark/40 rounded-xl p-4 border border-sand/10 text-xs space-y-1">
-                      <p className="font-bold text-[#FBF6EC]">Built for Trades Guys</p>
+                    <div className="bg-wood-dark/40 rounded-xl p-3.5 border border-sand/10 text-xs space-y-1">
+                      <p className="font-bold text-[#FBF6EC]">Instant Digital Access</p>
                       <p className="text-sand/70">
-                        Compatible with all devices. Instant delivery to your email.
+                        PDF handbook, Excel/Google Sheets calculator, and Word templates sent to your email immediately.
                       </p>
                     </div>
 
@@ -175,7 +184,7 @@ export default function HomePage() {
                       href="#pricing"
                       className="w-full py-3.5 rounded-lg bg-orange hover:bg-orange-hover text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors"
                     >
-                      <span>Get The First 10 Stumps System</span>
+                      <span>Get the Beginner System</span>
                       <ArrowRight size={16} />
                     </a>
                   </div>
@@ -186,53 +195,46 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 3: THE PROBLEM
+            SECTION 3: "ONE SYSTEM, THREE PARTS" STRIP
         ========================================================================= */}
-        <section className="py-20 bg-cream">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-            <div className="space-y-3">
-              <span className="text-xs font-bold tracking-widest uppercase text-wood-dark font-sans">
-                The Trap
+        <section className="py-12 bg-sand/40 border-b border-bark/10">
+          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-6">
+              <span className="text-xs font-bold uppercase tracking-widest text-wood-dark font-sans">
+                One System, Three Parts
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
-                Most new operators don&apos;t fail at grinding. They fail at the math.
-              </h2>
             </div>
-
-            <div className="prose prose-lg text-bark/85 leading-relaxed space-y-4">
-              <p>
-                You buy a machine or rent one for the weekend. A homeowner calls about a backyard pine stump. You pace it off, guess <em>&quot;looks like a $100 job,&quot;</em> shake hands, and unload the cutter.
-              </p>
-              <p>
-                Then reality hits. The stump has four thick lateral surface roots you didn&apos;t see under the leaves. You hit river rock buried three inches deep and dull two $15 cutter teeth. You spend an extra hour chasing the root flare so the homeowner can replant grass.
-              </p>
-              <p>
-                By the time you blow off the driveway, pack the ramps, and burn $20 in truck and cutter fuel, you made less per hour than a fast-food drive-through worker. You were busy all afternoon, but you barely broke even.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
-                <Fuel className="text-orange" size={24} />
-                <h4 className="font-serif font-bold text-bark text-base">Unaccounted Fuel &amp; Drive</h4>
-                <p className="text-xs text-bark/75">
-                  Truck transit, trailering, and machine run-time quietly drain your margin before the wheel even spins.
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {/* Part 1 */}
+              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
+                <div className="w-12 h-12 rounded-xl bg-orange/15 text-orange flex items-center justify-center mx-auto mb-3">
+                  <BookOpen size={24} />
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">The Playbook</h3>
+                <p className="text-sm text-bark/80 leading-relaxed font-sans">
+                  So you know exactly <strong>what to do</strong> at every step of starting and operating.
                 </p>
               </div>
 
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
-                <Wrench className="text-wood-dark" size={24} />
-                <h4 className="font-serif font-bold text-bark text-base">Hidden Tooth Wear</h4>
-                <p className="text-xs text-bark/75">
-                  Buried gravel, chain link fences, and root dirt dull teeth fast. If your quote doesn&apos;t build replacement teeth in, you pay out of pocket.
+              {/* Part 2 */}
+              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
+                <div className="w-12 h-12 rounded-xl bg-forest/15 text-forest flex items-center justify-center mx-auto mb-3">
+                  <FileSpreadsheet size={24} />
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">The Pricing Calculator</h3>
+                <p className="text-sm text-bark/80 leading-relaxed font-sans">
+                  So you know exactly <strong>what to charge</strong> without guessing or leaving money in the dirt.
                 </p>
               </div>
 
-              <div className="bg-sand/40 border border-bark/10 rounded-xl p-5 space-y-2 card-hover-lift">
-                <Clock className="text-forest" size={24} />
-                <h4 className="font-serif font-bold text-bark text-base">Underestimated Chasing</h4>
-                <p className="text-xs text-bark/75">
-                  Grinding the core takes 15 minutes; grinding 8 feet of surface roots takes 45. Never quote without measuring the collar.
+              {/* Part 3 */}
+              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
+                <div className="w-12 h-12 rounded-xl bg-wood/20 text-wood-dark flex items-center justify-center mx-auto mb-3">
+                  <FileText size={24} />
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">Templates &amp; Scripts</h3>
+                <p className="text-sm text-bark/80 leading-relaxed font-sans">
+                  So you know exactly <strong>what to say</strong> to customers and contractor partners.
                 </p>
               </div>
             </div>
@@ -240,148 +242,225 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 4: INTERACTIVE LIVE PRICING ENGINE
+            SECTION 4: "YOUR PATH: DAY 1, DAY 7, DAY 30" (Timeline Stepper)
         ========================================================================= */}
-        <InteractiveCalculator />
+        <TimelineStepper />
 
         {/* =========================================================================
-            SECTION 5: WHAT'S INSIDE
+            SECTION 5: "WHAT YOU'LL BE ABLE TO DO" (4 items)
         ========================================================================= */}
-        <section id="inside" className="py-20 bg-[#FBF6EC]">
+        <section id="what-youll-learn" className="py-20 bg-cream border-b border-bark/10">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+            <div className="max-w-2xl mx-auto text-center space-y-3">
+              <span className="text-xs font-bold tracking-widest uppercase text-forest font-sans">
+                Core Skills
+              </span>
+              <h2 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
+                What You&apos;ll Be Able to Do
+              </h2>
+              <p className="text-bark/80 text-base leading-relaxed">
+                Four practical capabilities you take away from the three-part system:
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <div className="bg-sand/35 border border-bark/15 rounded-2xl p-6 sm:p-7 space-y-3 card-hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-orange/15 text-orange flex items-center justify-center font-bold">
+                  1
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">
+                  Test your local market before buying equipment
+                </h3>
+                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                  Validate that real homeowners in your zip codes want stumps removed before investing thousands in machinery or trailers.
+                </p>
+              </div>
+
+              <div className="bg-sand/35 border border-bark/15 rounded-2xl p-6 sm:p-7 space-y-3 card-hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-forest/15 text-forest flex items-center justify-center font-bold">
+                  2
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">
+                  Quote a stump in under 5 minutes
+                </h3>
+                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                  Input ground-level diameter, root flare inches, and gate clearance into your spreadsheet to generate a reliable price right on site.
+                </p>
+              </div>
+
+              <div className="bg-sand/35 border border-bark/15 rounded-2xl p-6 sm:p-7 space-y-3 card-hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-wood/20 text-wood-dark flex items-center justify-center font-bold">
+                  3
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">
+                  Send ready-to-use outreach messages to tree companies
+                </h3>
+                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                  Reach local arborists and landscapers who cut trees down but prefer subbing out the messy stump grinding work to a reliable specialist.
+                </p>
+              </div>
+
+              <div className="bg-sand/35 border border-bark/15 rounded-2xl p-6 sm:p-7 space-y-3 card-hover-lift">
+                <div className="w-10 h-10 rounded-xl bg-orange/15 text-orange flex items-center justify-center font-bold">
+                  4
+                </div>
+                <h3 className="font-serif font-bold text-xl text-bark">
+                  Run a job safely, from the 811 call to the final walkthrough
+                </h3>
+                <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                  Protect buried pipes, cables, and nearby fences. Learn the standard 811 utility locate procedures and pre-grind property inspection protocols.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SECTION 6: SHORT BRIDGE (Replaces "The Trap")
+        ========================================================================= */}
+        <section className="py-14 bg-sand/30 border-b border-bark/10">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-3">
+            <span className="text-xs font-bold tracking-widest uppercase text-wood-dark font-sans">
+              The Setup Order
+            </span>
+            <p className="font-serif text-xl sm:text-2xl font-bold text-bark leading-snug">
+              Most beginners guess at pricing and skip the boring steps like insurance and utility locates. This system gives you the exact order to do things in so you build a safe, structured business from day one.
+            </p>
+          </div>
+        </section>
+
+        {/* =========================================================================
+            SECTION 7: WHAT'S INSIDE (Three Cards in Exact Order: a, b, c)
+        ========================================================================= */}
+        <section id="inside" className="py-20 bg-[#FBF6EC] border-b border-bark/10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="max-w-2xl mx-auto text-center space-y-3 mb-16">
               <span className="text-xs font-bold tracking-widest uppercase text-forest font-sans">
                 The Inventory
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
-                Everything Inside the Toolkit
+                Everything Inside the System
               </h2>
               <p className="text-bark/80 text-base leading-relaxed">
-                Three purpose-built assets designed to get you quoting with total confidence from day one.
+                The Playbook leads the system, supported by the pricing spreadsheet and ready-to-use document pack.
               </p>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {/* Asset 1: Playbook */}
-              <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+              {/* Card a: The Playbook */}
+              <div className="bg-sand/30 border-2 border-orange/40 rounded-2xl p-7 flex flex-col justify-between hover:border-orange transition-colors card-hover-lift shadow-sm">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-orange/15 text-orange flex items-center justify-center">
                     <BookOpen size={24} />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark">
-                    Asset #1 • 30+ Pages
-                  </span>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold uppercase tracking-wider text-orange font-mono">
+                      Lead Asset • 52 Pages
+                    </span>
+                    <span className="text-[11px] font-bold px-2 py-0.5 rounded bg-orange text-white">
+                      The Star
+                    </span>
+                  </div>
                   <h3 className="font-serif text-2xl font-bold text-bark">
                     The Stump Grinding Playbook
                   </h3>
-                  <p className="text-sm text-bark/80 leading-relaxed">
-                    The core operational handbook. Covers equipment selection, commercial insurance, utility locates, quoting math, and safety checklists.
+                  <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                    The complete 52-page operational guide. Includes a 7-day first-job plan and a 30-day action plan covering business setup, machinery, Call 811 rules, and job execution.
                   </p>
 
-                  <ul className="space-y-2 pt-2 text-xs text-bark/85">
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Legal setup, business insurance &amp; inland marine policy tips</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Equipment breakdown: walk-behind vs track vs tow-behind</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Mandatory Call 811 utility locate procedures &amp; liability</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Quoting formulas with full worked math examples</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>30-day action plan for landing your first 5 paid jobs</span>
-                    </li>
-                  </ul>
+                  {/* Accordion grouped by stage */}
+                  <PlaybookChaptersAccordion />
                 </div>
               </div>
 
-              {/* Asset 2: Calculator */}
+              {/* Card b: The Pricing & Business Calculator */}
               <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-forest/15 text-forest flex items-center justify-center">
                     <FileSpreadsheet size={24} />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark">
-                    Asset #2 • Excel &amp; Sheets
+                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark font-mono">
+                    Supporting Asset • Excel &amp; Sheets
                   </span>
                   <h3 className="font-serif text-2xl font-bold text-bark">
                     Pricing &amp; Business Calculator
                   </h3>
-                  <p className="text-sm text-bark/80 leading-relaxed">
-                    Never second-guess on a customer&apos;s lawn. Enter stump measurements and site conditions to instantly get minimum profitable rates.
+                  <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                    Pre-built spreadsheet ready for Microsoft Excel and Google Sheets on your phone. Here is what every tab does:
                   </p>
 
-                  <ul className="space-y-2 pt-2 text-xs text-bark/85">
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Quote up to 8 stumps simultaneously on one sheet</span>
+                  <ul className="space-y-2.5 pt-2 text-xs text-bark/85 font-sans">
+                    <li className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-bark/10">
+                      <span className="font-mono font-bold text-forest shrink-0">Quote:</span>
+                      <span>Enter diameter and site conditions to generate an instant client quote for up to 8 stumps.</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Multipliers for root flare, rocky soil, tight gates, and slopes</span>
+                    <li className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-bark/10">
+                      <span className="font-mono font-bold text-forest shrink-0">Settings:</span>
+                      <span>Set your local gas price, hourly labor target, minimum trip fee, and trailer transit rate.</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Direct job profit and break-even revenue calculators</span>
+                    <li className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-bark/10">
+                      <span className="font-mono font-bold text-forest shrink-0">JobProfit:</span>
+                      <span>Subtracts fuel, machine wear, teeth buffers, and transit to calculate your take-home net per job.</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Built-in local settings tab to enter your hourly target &amp; gas rate</span>
+                    <li className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-bark/10">
+                      <span className="font-mono font-bold text-forest shrink-0">BreakEven:</span>
+                      <span>Calculates exactly how many stumps you need to grind each month to cover insurance and equipment costs.</span>
                     </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Runs cleanly on Microsoft Excel and Google Sheets</span>
+                    <li className="flex items-start gap-2 bg-white/60 p-2 rounded-lg border border-bark/10">
+                      <span className="font-mono font-bold text-forest shrink-0">Tracker:</span>
+                      <span>Log every completed job, date, client phone, paid amount, and referral source in one running list.</span>
                     </li>
                   </ul>
                 </div>
               </div>
 
-              {/* Asset 3: Templates */}
+              {/* Card c: Templates & Scripts Pack */}
               <div className="bg-sand/30 border border-bark/15 rounded-2xl p-7 flex flex-col justify-between hover:border-wood transition-colors card-hover-lift">
                 <div className="space-y-4">
                   <div className="w-12 h-12 rounded-xl bg-wood/20 text-wood-dark flex items-center justify-center">
                     <FileText size={24} />
                   </div>
-                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark">
-                    Asset #3 • 12 Word Docs
+                  <span className="text-xs font-bold uppercase tracking-wider text-wood-dark font-mono">
+                    Supporting Asset • 12 Word Docs
                   </span>
                   <h3 className="font-serif text-2xl font-bold text-bark">
                     Templates &amp; Scripts Pack
                   </h3>
-                  <p className="text-sm text-bark/80 leading-relaxed">
-                    Copy-and-paste service contracts, safety walkthroughs, customer quote sheets, and phone scripts ready for your business name.
+                  <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
+                    12 ready-to-use Word documents organized into three practical groups:
                   </p>
 
-                  <ul className="space-y-2 pt-2 text-xs text-bark/85">
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Sample Service Agreement &amp; Damage Liability Waiver</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Professional Quote &amp; Invoice Word templates</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Pre-job hazard checklist &amp; daily machine inspection logs</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Inbound phone &amp; text message answering scripts</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <Check size={16} className="text-forest shrink-0 mt-0.5" />
-                      <span>Door hanger copy, 10 social posts &amp; partner outreach</span>
-                    </li>
-                  </ul>
+                  <div className="space-y-3 pt-2 text-xs text-bark/85 font-sans">
+                    {/* What to send */}
+                    <div className="bg-white/60 p-2.5 rounded-lg border border-bark/10 space-y-1">
+                      <p className="font-bold text-wood-dark uppercase text-[11px] font-mono">What to send:</p>
+                      <ul className="space-y-1 pl-1">
+                        <li>• Professional Quote Form (.docx)</li>
+                        <li>• Standard Invoice Template (.docx)</li>
+                        <li>• Service Agreement &amp; Property Damage Liability Waiver</li>
+                      </ul>
+                    </div>
+
+                    {/* What to check */}
+                    <div className="bg-white/60 p-2.5 rounded-lg border border-bark/10 space-y-1">
+                      <p className="font-bold text-wood-dark uppercase text-[11px] font-mono">What to check:</p>
+                      <ul className="space-y-1 pl-1">
+                        <li>• Pre-Job Property &amp; Hazard Inspection Checklist</li>
+                        <li>• Daily Machine Inspection &amp; Teeth Wear Log</li>
+                        <li>• Call 811 Utility Locate Protocol &amp; Verification Sheet</li>
+                      </ul>
+                    </div>
+
+                    {/* What to say */}
+                    <div className="bg-white/60 p-2.5 rounded-lg border border-bark/10 space-y-1">
+                      <p className="font-bold text-wood-dark uppercase text-[11px] font-mono">What to say:</p>
+                      <ul className="space-y-1 pl-1">
+                        <li>• Inbound Phone &amp; Text Answering Scripts</li>
+                        <li>• Tree Company &amp; Arborist Partnership Outreach Message</li>
+                        <li>• Door Hanger Copy, 10 Social Posts &amp; 5-Star Review Request</li>
+                      </ul>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -389,22 +468,21 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 5B: 90-SECOND VIDEO WALKTHROUGH
+            SECTION 8: "KNOW WHAT TO CHARGE" (Interactive Quoting Engine)
+        ========================================================================= */}
+        <InteractiveCalculator />
+
+        {/* =========================================================================
+            SECTION 9: SUPPORTING PROOF (Video Walkthrough, 3 Ground Rules & Previews)
         ========================================================================= */}
         <VideoWalkthrough />
-
-        {/* =========================================================================
-            SECTION 6: PREVIEWS
-        ========================================================================= */}
         <PreviewGallery />
 
-        {/* =========================================================================
-            SECTION 7: REAL JOBS (BeforeAfter)
-        ========================================================================= */}
+        {/* Optional Owner Gallery (hidden by default unless owner verifies real photos) */}
         <BeforeAfter />
 
         {/* =========================================================================
-            SECTION 8: WHO IT'S FOR & NOT FOR
+            SECTION 10: WHO IT'S FOR / WHO IT'S NOT FOR
         ========================================================================= */}
         <section className="py-20 bg-sand/30 border-t border-bark/10">
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -413,10 +491,10 @@ export default function HomePage() {
                 Fit &amp; Suitability
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl font-bold text-bark tracking-tight">
-                Is This Right for You?
+                Who It&apos;s For / Who It&apos;s Not For
               </h2>
               <p className="text-bark/80 text-base leading-relaxed">
-                We believe in total transparency. Here is who will benefit from this toolkit, and who should not buy it.
+                Clear expectations before you buy:
               </p>
             </div>
 
@@ -430,18 +508,22 @@ export default function HomePage() {
                   <h3 className="font-serif font-bold text-xl text-bark">Who this is for</h3>
                 </div>
 
-                <ul className="space-y-3 text-sm text-bark/85 leading-relaxed">
+                <ul className="space-y-3 text-sm text-bark/85 leading-relaxed font-sans">
                   <li className="flex items-start gap-2.5">
                     <Check size={18} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>Beginners in the US</strong> looking to start a serious stump grinding side hustle or dedicated small service business.</span>
+                    <span><strong>Complete beginners</strong> who want a structured, step-by-step roadmap from day 1 to day 30.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check size={18} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>Tree service and landscaping company owners</strong> adding stump grinding as a profitable service line without guessing on pricing.</span>
+                    <span><strong>Side hustlers keeping their day job</strong> who want to run weekend or evening jobs with clear safety checklists.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <Check size={18} className="text-forest shrink-0 mt-0.5" />
-                    <span><strong>Recent grinder buyers</strong> who have the equipment in the trailer but lack a structured pricing sheet and customer acquisition pipeline.</span>
+                    <span><strong>Tree and landscape workers</strong> adding stump grinding as a new service without guessing on pricing formulas.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <Check size={18} className="text-forest shrink-0 mt-0.5" />
+                    <span><strong>New grinder owners</strong> who have machine access but need quotes, contracts, and outreach messages ready to go.</span>
                   </li>
                 </ul>
               </div>
@@ -455,18 +537,26 @@ export default function HomePage() {
                   <h3 className="font-serif font-bold text-xl text-bark">Who this is NOT for</h3>
                 </div>
 
-                <ul className="space-y-3 text-sm text-bark/85 leading-relaxed">
+                <ul className="space-y-3 text-sm text-bark/85 leading-relaxed font-sans">
                   <li className="flex items-start gap-2.5">
                     <AlertTriangle size={18} className="text-orange shrink-0 mt-0.5" />
-                    <span><strong>Anyone looking for guaranteed income or get-rich-quick claims.</strong> Physical trade businesses require hard labor, maintenance, and hustle.</span>
+                    <span><strong>Anyone wanting money without physical work.</strong> Operating a stump grinder requires manual labor, machine maintenance, and proper gear.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <AlertTriangle size={18} className="text-orange shrink-0 mt-0.5" />
-                    <span><strong>Operators outside the United States.</strong> While math formulas apply anywhere, the insurance, 811 utility regulations, and legal agreements are strictly US-specific.</span>
+                    <span><strong>Anyone unwilling to follow safety rules.</strong> Flying debris, underground utilities (811), and high-RPM cutter wheels require strict discipline.</span>
                   </li>
                   <li className="flex items-start gap-2.5">
                     <AlertTriangle size={18} className="text-orange shrink-0 mt-0.5" />
-                    <span><strong>Those seeking legal counsel.</strong> The included contracts are starting drafts, not substitutes for a local attorney&apos;s review.</span>
+                    <span><strong>Anyone wanting guaranteed income.</strong> Earnings depend on local demand, equipment reliability, and your own sales effort.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <AlertTriangle size={18} className="text-orange shrink-0 mt-0.5" />
+                    <span><strong>Operators outside the US.</strong> While pricing math translates, insurance rules, 811 locate laws, and contracts are written for US operators.</span>
+                  </li>
+                  <li className="flex items-start gap-2.5">
+                    <AlertTriangle size={18} className="text-orange shrink-0 mt-0.5" />
+                    <span><strong>Anyone wanting legal advice.</strong> The provided templates are starting operational drafts, not a replacement for an attorney.</span>
                   </li>
                 </ul>
               </div>
@@ -474,13 +564,12 @@ export default function HomePage() {
           </div>
         </section>
 
-        {/* =========================================================================
-            SECTION 8B: REAL OPERATOR TESTIMONIALS (Removed mock testimonials; ready for real buyer feedback)
-        ========================================================================= */}
+        {/* Commented TODO: Testimonials placeholder */}
+        {/* TODO: Add real verified buyer testimonials here once collected from actual operators */}
         <Testimonials />
 
         {/* =========================================================================
-            SECTION 9: VERSIONS AND PRICING
+            SECTION 11: PRICING
         ========================================================================= */}
         <section id="pricing" className="py-24 bg-[#FBF6EC] border-t border-bark/10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -492,26 +581,26 @@ export default function HomePage() {
                 Choose the Right Tier for Your Operation
               </h2>
               <p className="text-bark/80 text-base leading-relaxed">
-                One-time purchase in USD. Keep everything forever with instant download access.
+                One-time purchase in USD. Instant digital delivery with lifetime access.
               </p>
             </div>
 
-            {/* High-Converting ROI Banner: Pays for itself on Job #1 */}
-            <div className="max-w-3xl mx-auto mb-14 bg-sand/60 border-2 border-orange/40 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
-              <div className="w-14 h-14 rounded-2xl bg-orange text-white flex items-center justify-center shrink-0 shadow-md">
-                <TrendingUp size={28} />
+            {/* Beginner Market Context Banner (Replaces removed ROI claim) */}
+            <div className="max-w-3xl mx-auto mb-14 bg-sand/60 border border-wood/30 rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row items-center gap-5 text-center sm:text-left">
+              <div className="w-12 h-12 rounded-xl bg-forest/20 text-forest flex items-center justify-center shrink-0">
+                <DollarSign size={26} />
               </div>
               <div className="space-y-1">
                 <div className="flex items-center justify-center sm:justify-start gap-2">
-                  <span className="text-[11px] font-bold uppercase tracking-wider text-orange font-sans">Immediate Positive ROI</span>
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-forest font-sans">Market Context</span>
                   <span className="text-xs text-bark/40">•</span>
-                  <span className="text-xs font-semibold text-forest font-sans">Field Math</span>
+                  <span className="text-xs font-semibold text-wood-dark font-sans">Pricing Guidance</span>
                 </div>
-                <h4 className="font-serif font-bold text-bark text-lg">
-                  Average US Stump Grind: $185–$350 | Complete Kit: $121
+                <h4 className="font-serif font-bold text-bark text-base sm:text-lg">
+                  Understanding Stump Pricing
                 </h4>
                 <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
-                  This entire kit pays for itself before you even finish grinding your very first oak root flare. One single properly calculated quote prevents giving away hundreds in underpriced labor and dull cutter teeth.
+                  Public price guides commonly list about $2–$5 per inch of stump diameter. Your market sets your prices; the calculator helps you find yours based on your machine, fuel, and target hourly rate.
                 </p>
               </div>
             </div>
@@ -525,7 +614,7 @@ export default function HomePage() {
                     key={tier.id}
                     className={`relative rounded-2xl flex flex-col justify-between transition-all duration-300 ${
                       isHighlight
-                        ? 'bg-bark text-sand border-2 border-orange shadow-2xl lg:-translate-y-2 hover:-translate-y-3 hover:shadow-orange/20'
+                        ? 'bg-bark text-sand border-2 border-orange shadow-2xl lg:-translate-y-2 hover:-translate-y-3 hover:shadow-orange/20 ring-2 ring-orange/30'
                         : 'bg-sand/35 text-bark border border-bark/20 shadow-sm hover:border-wood/60 hover:-translate-y-1 hover:shadow-lg'
                     } p-7 sm:p-8`}
                   >
@@ -540,6 +629,11 @@ export default function HomePage() {
 
                     <div>
                       <div className="border-b border-bark/10 pb-5">
+                        {isHighlight && (
+                          <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-orange block mb-1">
+                            New to stump grinding? Start here.
+                          </span>
+                        )}
                         <h3 className={`font-serif text-2xl font-bold ${isHighlight ? 'text-[#FBF6EC]' : 'text-bark'}`}>
                           {tier.name}
                         </h3>
@@ -614,7 +708,7 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 10: GUARANTEE
+            SECTION 12: GUARANTEE
         ========================================================================= */}
         <section className="py-16 bg-cream border-t border-bark/10">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -626,8 +720,8 @@ export default function HomePage() {
                 <h3 className="font-serif text-2xl font-bold text-bark">
                   14-Day Money-Back Guarantee (Full Kit)
                 </h3>
-                <p className="text-sm text-bark/85 leading-relaxed">
-                  Put The First 10 Stumps Full Kit to work. If you don&apos;t feel the complete package helps you avoid under-bidding or saves you hours of guesswork on job sites, send an email within 14 days of purchase and we will refund 100% of your money. Note: Standalone tiers (Playbook Only and Calculator + Templates) are non-refundable.
+                <p className="text-sm text-bark/85 leading-relaxed font-sans">
+                  Put the Complete Beginner System to work. If you don&apos;t feel the complete package helps you avoid under-bidding or saves you hours of guesswork on job sites, send an email within 14 days of purchase and we will refund 100% of your money. Note: Standalone tiers (Playbook Only and Calculator + Templates) are non-refundable.
                 </p>
                 <div className="pt-1">
                   <Link
@@ -643,15 +737,17 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 11: FAQ
+            SECTION 13: FAQ
         ========================================================================= */}
         <FaqAccordion />
 
-        {/* Email Capture Signup for Free Cheat Sheet */}
+        {/* =========================================================================
+            SECTION 14: FREE CHEAT SHEET OPT-IN (Keep as is)
+        ========================================================================= */}
         <LeadCapture />
 
         {/* =========================================================================
-            SECTION 12: FINAL CALL TO ACTION
+            SECTION 15: FINAL CALL TO ACTION
         ========================================================================= */}
         <section className="py-20 bg-bark text-sand border-t border-wood-dark/40 relative overflow-hidden">
           <div className="absolute right-0 bottom-0 text-wood-dark/20 pointer-events-none select-none">
@@ -661,13 +757,13 @@ export default function HomePage() {
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
             <div className="space-y-3">
               <span className="text-xs font-bold tracking-widest uppercase text-orange font-sans">
-                Ready to Stop Guessing?
+                Ready to Start?
               </span>
               <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#FBF6EC] tracking-tight">
-                Protect your margins on your very next stump job.
+                Get the step-by-step system.
               </h2>
               <p className="text-sand/80 text-base max-w-xl mx-auto leading-relaxed">
-                One accurately quoted job easily pays for the entire kit. Download the playbook and calculator right now.
+                Download the 52-page playbook, pricing calculator spreadsheet, and ready-to-send templates right now.
               </p>
             </div>
 
@@ -676,7 +772,7 @@ export default function HomePage() {
                 href="#pricing"
                 className="w-full sm:w-auto px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-lg transition-transform transform active:scale-95"
               >
-                Choose Your Version &rarr;
+                Get the Beginner System &rarr;
               </a>
               <Link
                 href="/resend-links"
@@ -687,13 +783,19 @@ export default function HomePage() {
             </div>
 
             <div className="pt-2 text-xs text-sand/60">
-              Immediate digital file delivery • 14-day refund guarantee on Full Kit
+              Immediate digital file delivery • 14-day refund guarantee on the Full Kit
             </div>
           </div>
         </section>
       </main>
 
       <Footer />
+
+      {/* Sticky Mobile CTA */}
+      <StickyMobileCta
+        featuredTier={fullKitTier}
+        onSelectProduct={(tier) => handleBuyClick(tier)}
+      />
 
       {/* Checkout Modal */}
       {selectedProduct && (

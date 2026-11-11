@@ -14,20 +14,20 @@ const getSiteUrl = () => {
 };
 
 export const SITE_CONFIG = {
-  name: 'The First 10 Stumps System',
-  shortName: 'First 10 Stumps',
-  title: 'The First 10 Stumps System — Stop Guessing Stump Prices',
+  name: 'The Stump Grinding Playbook: Beginner Edition',
+  shortName: 'Stump Grinding Playbook',
+  title: 'The Stump Grinding Playbook: Beginner Edition — Step-by-Step Starter System',
   description:
-    'Pricing calculator, quote scripts, and outreach templates to help new stump grinders book their first 10 paying jobs in 30 days.',
+    'The beginner step-by-step system for starting a stump grinding business: playbook, pricing calculator, and ready-to-send scripts. Test demand, price accurately, and know what to say.',
   url: getSiteUrl(),
   supportEmail: process.env.SUPPORT_EMAIL || 'support@stumpgrindingplaybook.com',
   guaranteeDays: 14,
   disclaimer:
-    'Educational material. Not legal, tax, insurance, or safety advice. Prices in the calculator are starting points, not market guarantees. Results depend on your market and effort.',
+    'Educational material only, not legal, tax, insurance, or safety advice. No income is guaranteed. Example prices are starting points; laws, insurance, utility-locate rules, and prices vary by location.',
   
-  // Real jobs before/after gallery configuration
+  // Real jobs before/after gallery configuration (Default false per guidelines; enable only if confirmed owner's real jobs)
   beforeAfter: {
-    enabled: true,
+    enabled: false,
     items: [
       {
         id: 'job-1',

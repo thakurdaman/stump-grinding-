@@ -303,7 +303,7 @@ export function VideoWalkthrough() {
             How to Quote a $345 Stump in 16 Seconds on Your Phone
           </h2>
           <p className="text-bark/80 text-sm sm:text-base leading-relaxed">
-            Watch how an 18–24&quot; White Oak with surface root flares and rocky soil gets accurately priced right in the customer&apos;s yard before you unload your machine.
+            Watch how a 24&quot; White Oak with an 18&quot; trunk, 8 feet of surface roots, a tight gate, and rocky soil moves from a $144 raw base rate ($6/inch) to an accurate $345 total quote before you ever touch the machine.
           </p>
 
           {/* Mode Switcher Tabs */}
@@ -624,7 +624,7 @@ export function VideoWalkthrough() {
                   Stop Eyeballing Stumps and Leaving Money in the Dirt
                 </h3>
                 <p className="text-xs sm:text-sm text-bark/80 leading-relaxed font-sans">
-                  The spreadsheet shown here runs directly in Excel on your phone. You check the boxes while standing with the customer and quote them with confidence.
+                  The spreadsheet shown here runs directly in Excel on your phone. In this breakdown, the raw base is $144 (24 inches &times; $6/in). Adding 8 ft of lateral roots (+$65), a tight 34&quot; gate setup (+$35), and a rocky soil carbide tooth reserve (+$56) brings the total quote to $345. You check the boxes while standing with the customer and quote them with confidence.
                 </p>
 
                 <div className="space-y-3 pt-2 text-xs text-bark/85 border-t border-bark/10">

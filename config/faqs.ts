@@ -5,19 +5,29 @@ export interface FaqItem {
 
 export const FAQS: FaqItem[] = [
   {
-    question: 'Do I need experience to use this?',
+    question: 'No experience?',
     answer:
-      'No previous experience is required. The playbook starts from scratch: choosing the right machine (walk-behind, self-propelled, or tow-behind), acquiring necessary liability insurance, calling 811 utility locates, and using the step-by-step formula to quote jobs without leaving money on the table.',
+      'No previous experience is needed. The playbook assumes you know nothing about stump grinding. You read your machine’s manual, follow the safety chapter, practice on a few stumps with permission, and learn the step-by-step pricing formula before touching a paid job.',
   },
   {
-    question: 'Is this for the US?',
+    question: 'Can I keep my job?',
     answer:
-      'Yes. The playbook, legal templates, insurance guides, and utility locate rules (Call 811) are specifically tailored to the United States market, terminology, and legal frameworks. If you operate outside the US, the pricing principles will still apply, but legal and regulatory details are US-specific.',
+      'Yes. Many people start part-time on evenings and weekends and only consider going full-time once their own job tracker shows steady profit.',
+  },
+  {
+    question: 'Do I need a grinder?',
+    answer:
+      'Not to start. Chapter 2 shows how to test demand for under $100 first, and Chapter 4 compares renting, buying used, and buying new. Rental prices vary by store, so check local equipment shops.',
+  },
+  {
+    question: 'Does it work outside the U.S.?',
+    answer:
+      'The business model transfers, but licensing, insurance, 811 utility-locate rules, and tax regulations are U.S.-focused, so verify everything locally if operating elsewhere.',
   },
   {
     question: 'Are the prices in the calculator guaranteed?',
     answer:
-      'No. Stump grinding rates vary by state, fuel prices, competition, and soil geology (e.g., rocky Tennessee soil vs sandy Florida turf). The calculator provides proven baseline formulas and multiplier fields that you calibrate for your specific city and operating costs.',
+      'No. Stump grinding rates vary by area, fuel prices, competition, and soil geology (e.g., rocky terrain vs sandy loam). The calculator provides proven baseline formulas and multiplier fields that you calibrate for your specific town and real operating costs.',
   },
   {
     question: 'Are the legal templates legal advice?',
@@ -27,7 +37,7 @@ export const FAQS: FaqItem[] = [
   {
     question: 'What formats are the files?',
     answer:
-      'The Playbook is an easily readable PDF (30+ pages). The Pricing & Business Calculator is a standard Excel spreadsheet (.xlsx) with no restrictive macros, tested for both Microsoft Excel and Google Sheets. The Templates Pack is delivered as an editable Microsoft Word (.docx) document.',
+      'The Playbook is an easily readable PDF (52 pages). The Pricing & Business Calculator is a standard Excel spreadsheet (.xlsx) with no restrictive macros, tested for both Microsoft Excel and Google Sheets. The Templates Pack is delivered as an editable Microsoft Word (.docx) document.',
   },
   {
     question: 'Can I use the calculator in Google Sheets?',
