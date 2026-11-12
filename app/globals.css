@@ -231,18 +231,20 @@
 
 /* 3D Realistic Book Spine & Page Edges */
 .book-3d {
-  transform: rotateY(-18deg) rotateX(10deg) rotateZ(-3deg);
+  transform: translateZ(10px) rotateY(-14deg) rotateX(8deg) rotateZ(-2deg);
   transform-style: preserve-3d;
   box-shadow: 
-    -25px 35px 50px -10px rgba(22, 13, 8, 0.4),
-    -5px 10px 20px -5px rgba(22, 13, 8, 0.3);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+    -20px 30px 45px -10px rgba(22, 13, 8, 0.42),
+    -4px 8px 18px -4px rgba(22, 13, 8, 0.3);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0.2s ease;
 }
-.book-3d:hover {
-  transform: rotateY(-10deg) rotateX(6deg) rotateZ(-1deg) translateY(-8px);
+.book-3d:hover,
+.book-3d.is-focused {
+  transform: translateZ(75px) rotateY(-6deg) rotateX(4deg) translateY(-8px);
   box-shadow: 
-    -35px 50px 70px -15px rgba(22, 13, 8, 0.5),
-    -10px 15px 30px -5px rgba(22, 13, 8, 0.35);
+    -28px 45px 65px -12px rgba(22, 13, 8, 0.52),
+    -8px 14px 26px -4px rgba(22, 13, 8, 0.38);
+  z-index: 50 !important;
 }
 .book-pages-edge {
   position: absolute;
@@ -264,17 +266,20 @@
 
 /* 3D Floating Tablet / Calculator */
 .tablet-3d {
-  transform: rotateY(16deg) rotateX(12deg) rotateZ(3deg);
+  transform: translateZ(60px) rotateY(12deg) rotateX(8deg) rotateZ(2deg);
   transform-style: preserve-3d;
   box-shadow: 
-    25px 35px 55px -12px rgba(22, 13, 8, 0.35),
+    20px 30px 45px -10px rgba(22, 13, 8, 0.38),
     0 0 0 1px rgba(255, 255, 255, 0.4) inset;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease, z-index 0.2s ease;
 }
-.tablet-3d:hover {
-  transform: rotateY(8deg) rotateX(6deg) rotateZ(1deg) translateY(-8px);
+.tablet-3d:hover,
+.tablet-3d.is-focused {
+  transform: translateZ(95px) rotateY(6deg) rotateX(4deg) translateY(-8px);
   box-shadow: 
-    35px 48px 75px -15px rgba(22, 13, 8, 0.45);
+    30px 45px 70px -12px rgba(22, 13, 8, 0.48),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset;
+  z-index: 50 !important;
 }
 
 /* 3D Ambient Light Cone */
