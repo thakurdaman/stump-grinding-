@@ -6,7 +6,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { TreeRing } from '@/components/TreeRing';
 import { BeforeAfter } from '@/components/BeforeAfter';
-import { PreviewGallery } from '@/components/PreviewGallery';
+import { SystemPartsSection } from '@/components/SystemPartsSection';
 import { FaqAccordion } from '@/components/FaqAccordion';
 import { LeadCapture } from '@/components/LeadCapture';
 import { CheckoutModal } from '@/components/CheckoutModal';
@@ -139,107 +139,9 @@ export default function HomePage() {
         </section>
 
         {/* =========================================================================
-            SECTION 3: "ONE SYSTEM, THREE PARTS" STRIP
+            SECTION 3: "ONE SYSTEM, THREE PARTS" STRIP (Merged with "See Exactly What You Are Getting")
         ========================================================================= */}
-        <section className="py-16 sm:py-20 bg-sand/35 border-b border-bark/10 relative">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="max-w-3xl mx-auto text-center space-y-3 mb-12">
-              <span className="font-mono-code text-xs font-bold uppercase tracking-widest text-orange">
-                Architecture of the Kit
-              </span>
-              <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-bold text-bark tracking-tight">
-                One complete system. Three supporting parts.
-              </h2>
-              <p className="text-sm sm:text-base text-wood-dark max-w-xl mx-auto leading-relaxed">
-                No disconnected advice. Each tool connects directly with the next step in your day.
-              </p>
-            </div>
-
-            {/* 3-Card Grid with Mouse-Driven Tilt & Dynamic Depth Layering */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
-              {/* Part 1: The Playbook Card */}
-              <TiltCard
-                maxTilt={6}
-                className="bg-white/95 rounded-2xl p-7 sm:p-8 border border-bark/15 shadow-[0_10px_25px_-5px_rgba(33,21,15,0.06)] flex flex-col justify-between"
-              >
-                <div className="space-y-4 relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-2xl shadow-inner">
-                    📖
-                  </div>
-                  <span className="font-mono-code text-xs font-bold text-amber-700 uppercase tracking-wider block">
-                    Part 01 • The Strategy
-                  </span>
-                  <h3 className="font-serif-display text-2xl font-bold text-bark">The Playbook</h3>
-                  <p className="text-sm font-semibold text-orange italic">&ldquo;So you know what to do.&rdquo;</p>
-                  <p className="text-sm text-wood-dark leading-relaxed font-sans">
-                    52 comprehensive pages organized in 15 chapters. Step-by-step from testing market demand under $100, insurance, 811 locate safety, through scaling to full-time.
-                  </p>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code text-wood-dark">
-                  <span>15 Chapters</span>
-                  <span className="text-forest font-bold">PDF Format</span>
-                </div>
-              </TiltCard>
-
-              {/* Part 2: Pricing Calculator Card (Elevated Feature Card) */}
-              <TiltCard
-                maxTilt={6}
-                className="bg-gradient-to-b from-[#21150F] to-[#120B07] text-white rounded-2xl p-7 sm:p-8 border-2 border-amber-500/40 shadow-[0_20px_40px_-10px_rgba(232,115,26,0.35)] flex flex-col justify-between transform md:-translate-y-3"
-              >
-                <div className="space-y-4 relative z-10">
-                  <div className="flex items-center justify-between">
-                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-2xl shadow-inner">
-                      🧮
-                    </div>
-                    <span className="px-2.5 py-1 rounded bg-orange text-white font-mono-code text-[10px] font-bold uppercase tracking-wider shadow">
-                      STAR TOOL
-                    </span>
-                  </div>
-
-                  <span className="font-mono-code text-xs font-bold text-emerald-400 uppercase tracking-wider block">
-                    Part 02 • The Numbers
-                  </span>
-                  <h3 className="font-serif-display text-2xl font-bold text-white">Pricing Calculator</h3>
-                  <p className="text-sm font-semibold text-amber-300 italic">&ldquo;So you know what to charge.&rdquo;</p>
-                  <p className="text-sm text-sand/85 leading-relaxed font-sans">
-                    5 specialized tabs: Quote up to 8 stumps with flare &amp; hardness multipliers, configure local overhead in Settings, log job margins, and calculate break-even targets.
-                  </p>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-white/15 relative z-10 flex items-center justify-between text-xs font-mono-code text-sand/70">
-                  <span>5 Smart Tabs</span>
-                  <span className="text-emerald-400 font-bold">Excel &amp; Sheets</span>
-                </div>
-              </TiltCard>
-
-              {/* Part 3: Templates & Scripts Card */}
-              <TiltCard
-                maxTilt={6}
-                className="bg-white/95 rounded-2xl p-7 sm:p-8 border border-bark/15 shadow-[0_10px_25px_-5px_rgba(33,21,15,0.06)] flex flex-col justify-between"
-              >
-                <div className="space-y-4 relative z-10">
-                  <div className="w-14 h-14 rounded-2xl bg-orange/10 border border-orange/25 flex items-center justify-center text-2xl shadow-inner">
-                    📋
-                  </div>
-                  <span className="font-mono-code text-xs font-bold text-amber-700 uppercase tracking-wider block">
-                    Part 03 • The Outreach
-                  </span>
-                  <h3 className="font-serif-display text-2xl font-bold text-bark">Templates &amp; Scripts</h3>
-                  <p className="text-sm font-semibold text-orange italic">&ldquo;So you know what to say.&rdquo;</p>
-                  <p className="text-sm text-wood-dark leading-relaxed font-sans">
-                    12 ready-to-use documents: Commercial tree crew outreach messages, pre-grind walkthrough damage waivers, photo estimate texts, invoices, and review requests.
-                  </p>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code text-wood-dark">
-                  <span>12 Documents</span>
-                  <span className="text-forest font-bold">Word &amp; Docs</span>
-                </div>
-              </TiltCard>
-            </div>
-          </div>
-        </section>
+        <SystemPartsSection onGetSystem={() => handleBuyClick(fullKitTier)} />
 
         {/* =========================================================================
             SECTION 4: "YOUR PATH: DAY 1, DAY 7, DAY 30" (Timeline Stepper)
@@ -473,10 +375,9 @@ export default function HomePage() {
         <InteractiveCalculator />
 
         {/* =========================================================================
-            SECTION 9: SUPPORTING PROOF (Video Walkthrough, 3 Ground Rules, Previews, Field Results Gallery)
+            SECTION 9: SUPPORTING PROOF (Video Walkthrough, 3 Ground Rules, Field Results Gallery)
         ========================================================================= */}
         <VideoWalkthrough />
-        <PreviewGallery />
         <BeforeAfter />
 
         {/* =========================================================================
