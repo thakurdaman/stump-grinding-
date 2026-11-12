@@ -355,23 +355,23 @@ export function VideoWalkthrough() {
               >
                 
                 {/* Field Top Bar */}
-                <div className="bg-[#24170E] px-4 py-2.5 flex items-center justify-between border-b border-sand/15 text-sand/80 text-xs">
+                <div className="bg-[#24170E] px-3.5 sm:px-4 py-2.5 flex flex-wrap items-center justify-between gap-2 border-b border-sand/15 text-sand/80 text-xs">
                   <div className="flex items-center gap-2">
-                    <span className="w-2.5 h-2.5 rounded-full bg-forest inline-block" />
-                    <span className="font-mono text-[11px] text-[#FBF6EC] font-semibold tracking-wide flex items-center gap-1.5">
-                      <Smartphone size={13} className="text-orange" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-forest inline-block shrink-0" />
+                    <span className="font-mono text-[10px] sm:text-[11px] text-[#FBF6EC] font-semibold tracking-wide flex items-center gap-1.5 truncate">
+                      <Smartphone size={13} className="text-orange shrink-0" />
                       STUMP_PRICING_CALCULATOR.XLSX &bull; BACKYARD BID
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <span className="px-2.5 py-0.5 rounded-full bg-orange/20 border border-orange/40 text-orange text-[10px] font-bold uppercase tracking-wider">
+                    <span className="px-2.5 py-0.5 rounded-full bg-orange/20 border border-orange/40 text-orange text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">
                       {currentStep.stage}
                     </span>
                   </div>
                 </div>
 
-                {/* Stage Screen with Wood Grain Texture */}
-                <div className="relative aspect-[16/10] sm:aspect-[16/9.5] bg-[#120B06] p-4 sm:p-6 flex flex-col justify-between overflow-hidden select-none">
+                {/* Stage Screen with Wood Grain Texture - Mobile responsive height */}
+                <div className="relative min-h-[580px] sm:min-h-0 sm:aspect-[16/10] lg:aspect-[16/9.5] bg-[#120B06] p-3.5 sm:p-6 flex flex-col justify-between select-none">
                   
                   {/* Photo Texture Backdrop (Wood Grain) */}
                   <div 
@@ -388,7 +388,7 @@ export function VideoWalkthrough() {
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-4 text-[11px] font-mono text-sand/80">
+                    <div className="flex items-center gap-3 sm:gap-4 text-[10px] sm:text-[11px] font-mono text-sand/80">
                       <div>
                         TERRAIN: <span className="text-amber-300 font-bold">{currentStep.terrainNote}</span>
                       </div>
@@ -398,102 +398,107 @@ export function VideoWalkthrough() {
                     </div>
                   </div>
 
-                  {/* Center Stage: Stump Cross-Section & Cutter Wheel */}
-                  <div className="relative z-10 my-auto py-2 flex flex-col sm:flex-row items-center justify-between gap-4">
+                  {/* Center Stage: Stump Cross-Section, Cutter Wheel & Bid Box */}
+                  <div className="relative z-10 my-auto py-2 flex flex-col lg:flex-row items-center justify-between gap-4">
                     
-                    {/* Visual 1: Stump Cross Section with Ground Measurements */}
-                    <div className="relative flex flex-col items-center justify-center">
-                      <div className="relative w-44 sm:w-52 h-44 sm:h-52 flex items-center justify-center">
-                        
-                        {/* Root Flare Ring */}
-                        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
-                          {/* Underground roots radiating out */}
-                          <path
-                            d="M 100 100 Q 150 160 190 180 M 100 100 Q 50 160 10 185 M 100 100 Q 160 50 185 20 M 100 100 Q 40 50 15 25"
-                            stroke="#8A5A3B"
-                            strokeWidth={currentStep.time >= 4 ? "4" : "2"}
-                            strokeDasharray={currentStep.time >= 4 ? "none" : "3,3"}
-                            fill="none"
-                            className="transition-all duration-500 opacity-80"
-                          />
-                          {/* Outer Stump Wood Cross-Section */}
-                          <circle cx="100" cy="100" r="70" fill="#3D2619" stroke="#E8731A" strokeWidth="3" opacity="0.9" />
-                          {/* Inner growth rings */}
-                          <circle cx="100" cy="100" r="54" fill="#523422" stroke="#8A5A3B" strokeWidth="1.5" strokeDasharray="4,2" />
-                          <circle cx="100" cy="100" r="38" fill="#66412B" stroke="#D9C2B0" strokeWidth="1.2" opacity="0.6" />
-                          <circle cx="100" cy="100" r="22" fill="#7D4F35" stroke="#EFE4CE" strokeWidth="1" opacity="0.8" />
-                          <circle cx="100" cy="100" r="7" fill="#E8731A" />
-                        </svg>
-
-                        {/* Measurement Tape Line across stump */}
-                        <div className="absolute w-36 h-0.5 bg-amber-400/80 shadow-[0_0_6px_#f59e0b] pointer-events-none" />
-
-                        {/* Core Diameter Badge in Center */}
-                        <div className="relative z-10 px-2.5 py-1 rounded bg-black/85 border border-orange text-orange font-mono text-[11px] font-bold shadow-lg">
-                          &Oslash; 24.0&quot; GROUND MEASURE
-                        </div>
-                      </div>
-
-                      <span className="text-[10px] font-mono text-sand/70 mt-1 uppercase">
-                        Trunk Core + 8ft Lateral Roots
-                      </span>
-                    </div>
-
-                    {/* Visual 2: Cutter Wheel with Flying Woodchips */}
-                    <div className="relative flex flex-col items-center justify-center">
-                      <div className="relative w-36 h-36 sm:w-44 sm:h-44 flex items-center justify-center">
-                        
-                        {/* Heavy-duty Cutter Wheel */}
-                        <div 
-                          className={`relative w-28 h-28 sm:w-32 sm:h-32 rounded-full border-4 border-[#4A3222] bg-gradient-to-tr from-[#1A120B] to-[#362013] shadow-2xl flex items-center justify-center ${
-                            currentStep.isGrinding && isPlaying ? 'animate-spin-fast' : 'animate-spin-slow'
-                          }`}
-                        >
-                          {/* 8 Carbide Teeth */}
-                          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                            <div
-                              key={deg}
-                              className="absolute w-3 h-5 bg-amber-400 rounded-sm border border-black shadow-md flex items-center justify-center"
-                              style={{
-                                transform: `rotate(${deg}deg) translate(0, -60px)`,
-                              }}
-                            >
-                              <div className="w-1 h-1 bg-white rounded-full" />
-                            </div>
-                          ))}
+                    {/* Visual Pair: Stump & Cutter Wheel side-by-side on mobile */}
+                    <div className="flex items-center justify-center gap-3 sm:gap-6 w-full lg:w-auto">
+                      
+                      {/* Visual 1: Stump Cross Section with Ground Measurements */}
+                      <div className="relative flex flex-col items-center justify-center">
+                        <div className="relative w-36 sm:w-48 h-36 sm:h-48 flex items-center justify-center">
                           
-                          {/* Wheel center bolt hub */}
-                          <div className="w-10 h-10 rounded-full bg-[#110A05] border-2 border-orange/80 flex items-center justify-center">
-                            <div className="w-3 h-3 rounded-full bg-orange" />
+                          {/* Root Flare Ring */}
+                          <svg className="absolute inset-0 w-full h-full" viewBox="0 0 200 200">
+                            {/* Underground roots radiating out */}
+                            <path
+                              d="M 100 100 Q 150 160 190 180 M 100 100 Q 50 160 10 185 M 100 100 Q 160 50 185 20 M 100 100 Q 40 50 15 25"
+                              stroke="#8A5A3B"
+                              strokeWidth={currentStep.time >= 4 ? "4" : "2"}
+                              strokeDasharray={currentStep.time >= 4 ? "none" : "3,3"}
+                              fill="none"
+                              className="transition-all duration-500 opacity-80"
+                            />
+                            {/* Outer Stump Wood Cross-Section */}
+                            <circle cx="100" cy="100" r="70" fill="#3D2619" stroke="#E8731A" strokeWidth="3" opacity="0.9" />
+                            {/* Inner growth rings */}
+                            <circle cx="100" cy="100" r="54" fill="#523422" stroke="#8A5A3B" strokeWidth="1.5" strokeDasharray="4,2" />
+                            <circle cx="100" cy="100" r="38" fill="#66412B" stroke="#D9C2B0" strokeWidth="1.2" opacity="0.6" />
+                            <circle cx="100" cy="100" r="22" fill="#7D4F35" stroke="#EFE4CE" strokeWidth="1" opacity="0.8" />
+                            <circle cx="100" cy="100" r="7" fill="#E8731A" />
+                          </svg>
+
+                          {/* Measurement Tape Line across stump */}
+                          <div className="absolute w-28 sm:w-36 h-0.5 bg-amber-400/80 shadow-[0_0_6px_#f59e0b] pointer-events-none" />
+
+                          {/* Core Diameter Badge in Center */}
+                          <div className="relative z-10 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded bg-black/85 border border-orange text-orange font-mono text-[9px] sm:text-[11px] font-bold shadow-lg">
+                            &Oslash; 24.0&quot; MEASURE
                           </div>
                         </div>
 
-                        {/* Flying Woodchips during cut */}
-                        {currentStep.isGrinding && (
-                          <div className="absolute inset-0 pointer-events-none">
-                            <span className="absolute left-1/2 top-1/2 w-3 h-2 rounded bg-amber-200 border border-amber-600 animate-chip-1" />
-                            <span className="absolute left-1/2 top-1/2 w-2.5 h-2.5 rounded bg-amber-400 border border-amber-800 animate-chip-2" />
-                            <span className="absolute left-1/2 top-1/2 w-4 h-2 rounded bg-[#C49A6C] border border-[#7D4F35] animate-chip-3" />
-                            <span className="absolute left-1/2 top-1/2 w-2 h-3 rounded bg-amber-300 animate-chip-4" />
-                            
-                            {/* Rock Strike Spark */}
-                            {currentStep.hasRockAlert && (
-                              <div className="absolute left-2/3 top-1/3 w-8 h-8 rounded-full bg-yellow-300 blur-sm animate-spark" />
-                            )}
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex items-center gap-1.5 mt-1">
-                        <span className={`w-2 h-2 rounded-full ${currentStep.isGrinding ? 'bg-orange' : 'bg-sand/30'}`} />
-                        <span className="text-[10px] font-mono text-sand/80 uppercase">
-                          {currentStep.isGrinding ? 'Cutting 10-12" Below Grade' : 'Positioning Grinder'}
+                        <span className="text-[9px] sm:text-[10px] font-mono text-sand/70 mt-1 uppercase text-center">
+                          Trunk Core + 8ft Roots
                         </span>
                       </div>
+
+                      {/* Visual 2: Cutter Wheel with Flying Woodchips */}
+                      <div className="relative flex flex-col items-center justify-center">
+                        <div className="relative w-32 sm:w-40 h-32 sm:h-40 flex items-center justify-center">
+                          
+                          {/* Heavy-duty Cutter Wheel */}
+                          <div 
+                            className={`relative w-24 h-24 sm:w-30 sm:h-30 rounded-full border-4 border-[#4A3222] bg-gradient-to-tr from-[#1A120B] to-[#362013] shadow-2xl flex items-center justify-center ${
+                              currentStep.isGrinding && isPlaying ? 'animate-spin-fast' : 'animate-spin-slow'
+                            }`}
+                          >
+                            {/* 8 Carbide Teeth */}
+                            {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                              <div
+                                key={deg}
+                                className="absolute w-2.5 h-4 sm:w-3 sm:h-5 bg-amber-400 rounded-sm border border-black shadow-md flex items-center justify-center"
+                                style={{
+                                  transform: `rotate(${deg}deg) translate(0, -48px)`,
+                                }}
+                              >
+                                <div className="w-1 h-1 bg-white rounded-full" />
+                              </div>
+                            ))}
+                            
+                            {/* Wheel center bolt hub */}
+                            <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#110A05] border-2 border-orange/80 flex items-center justify-center">
+                              <div className="w-2.5 h-2.5 rounded-full bg-orange" />
+                            </div>
+                          </div>
+
+                          {/* Flying Woodchips during cut */}
+                          {currentStep.isGrinding && (
+                            <div className="absolute inset-0 pointer-events-none">
+                              <span className="absolute left-1/2 top-1/2 w-3 h-2 rounded bg-amber-200 border border-amber-600 animate-chip-1" />
+                              <span className="absolute left-1/2 top-1/2 w-2.5 h-2.5 rounded bg-amber-400 border border-amber-800 animate-chip-2" />
+                              <span className="absolute left-1/2 top-1/2 w-4 h-2 rounded bg-[#C49A6C] border border-[#7D4F35] animate-chip-3" />
+                              <span className="absolute left-1/2 top-1/2 w-2 h-3 rounded bg-amber-300 animate-chip-4" />
+                              
+                              {/* Rock Strike Spark */}
+                              {currentStep.hasRockAlert && (
+                                <div className="absolute left-2/3 top-1/3 w-8 h-8 rounded-full bg-yellow-300 blur-sm animate-spark" />
+                              )}
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 mt-1">
+                          <span className={`w-2 h-2 rounded-full ${currentStep.isGrinding ? 'bg-orange' : 'bg-sand/30'}`} />
+                          <span className="text-[9px] sm:text-[10px] font-mono text-sand/80 uppercase text-center">
+                            {currentStep.isGrinding ? 'Cutting 12" Grade' : 'Positioning'}
+                          </span>
+                        </div>
+                      </div>
+
                     </div>
 
                     {/* Visual 3: Live Bid Calculation Box */}
-                    <div className="bg-[#1C120B]/95 border-2 border-orange/60 rounded-2xl p-4 text-sand shadow-xl min-w-[210px] sm:min-w-[240px]">
+                    <div className="bg-[#1C120B]/95 border-2 border-orange/60 rounded-2xl p-3 sm:p-4 text-sand shadow-xl w-full lg:w-auto min-w-[210px] sm:min-w-[240px]">
                       <div className="flex items-center justify-between mb-1">
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sand/70">
                           INSTANT CALCULATED BID
@@ -503,11 +508,11 @@ export function VideoWalkthrough() {
                         </span>
                       </div>
 
-                      <div className="text-3xl sm:text-4xl font-serif font-bold text-orange tracking-tight my-1">
+                      <div className="text-2xl sm:text-4xl font-serif font-bold text-orange tracking-tight my-1">
                         ${currentStep.totalQuote.toFixed(2)}
                       </div>
 
-                      <div className="space-y-1 text-[11px] font-mono text-sand/80 pt-2 border-t border-sand/15">
+                      <div className="space-y-1 text-[10px] sm:text-[11px] font-mono text-sand/80 pt-2 border-t border-sand/15">
                         <div className="flex justify-between">
                           <span>Base 24&quot; Grind:</span>
                           <span className="text-[#FBF6EC] font-bold">${currentStep.basePrice}</span>
@@ -524,7 +529,7 @@ export function VideoWalkthrough() {
 
                       {/* Rock Alert Badge */}
                       {currentStep.hasRockAlert && (
-                        <div className="mt-2.5 px-2 py-1 rounded bg-amber-950/80 border border-amber-500/60 flex items-center gap-1.5 text-[10px] text-amber-200 font-mono">
+                        <div className="mt-2 px-2 py-1 rounded bg-amber-950/80 border border-amber-500/60 flex items-center gap-1.5 text-[9px] sm:text-[10px] text-amber-200 font-mono">
                           <ShieldAlert size={12} className="text-amber-400 shrink-0" />
                           <span>ROCK BUFFER: +$56 TOOTH FUND</span>
                         </div>
@@ -533,7 +538,7 @@ export function VideoWalkthrough() {
                   </div>
 
                   {/* Stage Explanation */}
-                  <div className="relative z-10 bg-[#1D130B]/90 border border-sand/15 rounded-xl px-3.5 py-2 flex items-center gap-2 text-xs text-[#FBF6EC]">
+                  <div className="relative z-10 bg-[#1D130B]/90 border border-sand/15 rounded-xl px-3.5 py-2.5 flex items-center gap-2 text-xs text-[#FBF6EC] mt-2">
                     <CheckCircle2 size={14} className="text-forest shrink-0" />
                     <span className="font-sans font-medium">{currentStep.note}</span>
                   </div>
@@ -545,22 +550,22 @@ export function VideoWalkthrough() {
                         setIsPlaying(true);
                         playSoundEffect('grind');
                       }}
-                      className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-30 group"
+                      className="absolute inset-0 bg-black/60 backdrop-blur-[2px] flex flex-col items-center justify-center cursor-pointer z-30 group p-4 text-center"
                     >
-                      <div className="w-20 h-20 rounded-full bg-orange text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
-                        <Play size={36} fill="#FFFFFF" className="ml-1" />
+                      <div className="w-18 h-18 sm:w-20 sm:h-20 rounded-full bg-orange text-white flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform">
+                        <Play size={34} fill="#FFFFFF" className="ml-1" />
                       </div>
-                      <span className="mt-4 text-xs sm:text-sm font-bold text-white uppercase tracking-wider bg-bark/90 px-4 py-2 rounded-full border border-sand/20 shadow">
+                      <span className="mt-3 text-xs sm:text-sm font-bold text-white uppercase tracking-wider bg-bark/90 px-4 py-2 rounded-full border border-sand/20 shadow">
                         Click to Play 16-Second Quoting Walkthrough
                       </span>
                     </div>
                   )}
 
-                  {/* Controls */}
-                  <div className="relative z-10 pt-3 border-t border-sand/15 flex items-center gap-3 text-sand text-xs">
+                  {/* Controls Bar */}
+                  <div className="relative z-10 pt-3 mt-3 border-t border-sand/15 flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 text-sand text-xs">
                     <button
                       onClick={() => setIsPlaying(!isPlaying)}
-                      className="w-8 h-8 rounded-lg bg-orange text-white flex items-center justify-center hover:bg-orange-hover transition-colors shrink-0 shadow"
+                      className="w-9 h-9 rounded-lg bg-orange text-white flex items-center justify-center hover:bg-orange-hover transition-colors shrink-0 shadow cursor-pointer"
                       title={isPlaying ? 'Pause' : 'Play'}
                     >
                       {isPlaying ? <Pause size={15} /> : <Play size={15} fill="#FFFFFF" className="ml-0.5" />}
@@ -568,13 +573,13 @@ export function VideoWalkthrough() {
 
                     <button
                       onClick={handleRestart}
-                      className="w-8 h-8 rounded-lg bg-sand/20 text-sand flex items-center justify-center hover:bg-sand/30 transition-colors shrink-0"
+                      className="w-9 h-9 rounded-lg bg-sand/20 text-sand flex items-center justify-center hover:bg-sand/30 transition-colors shrink-0 cursor-pointer"
                       title="Restart walkthrough"
                     >
                       <RotateCcw size={13} />
                     </button>
 
-                    <span className="font-mono text-[11px] shrink-0 text-orange font-bold">
+                    <span className="font-mono text-[10px] sm:text-[11px] shrink-0 text-orange font-bold">
                       {formatTime(currentTime)} / {formatTime(duration)}
                     </span>
 
@@ -585,13 +590,13 @@ export function VideoWalkthrough() {
                       max={duration}
                       value={currentTime}
                       onChange={handleSeek}
-                      className="flex-1 accent-orange h-1.5 bg-sand/20 rounded-lg cursor-pointer"
+                      className="flex-1 accent-orange h-1.5 bg-sand/20 rounded-lg cursor-pointer min-w-[70px]"
                     />
 
                     {/* Speed Toggle */}
                     <button
                       onClick={() => setPlaybackSpeed((s) => (s === 1 ? 1.5 : s === 1.5 ? 2 : 1))}
-                      className="px-2 py-1 rounded bg-sand/15 text-[10px] font-mono font-bold text-sand hover:bg-sand/30 transition-colors"
+                      className="px-2 py-1 rounded bg-sand/15 text-[10px] font-mono font-bold text-sand hover:bg-sand/30 transition-colors shrink-0 cursor-pointer"
                       title="Change playback speed"
                     >
                       {playbackSpeed}x
@@ -603,7 +608,7 @@ export function VideoWalkthrough() {
                         setIsMuted(!isMuted);
                         if (isMuted) playSoundEffect('ding');
                       }}
-                      className="text-sand/70 hover:text-sand transition-colors p-1"
+                      className="text-sand/70 hover:text-sand transition-colors p-1 shrink-0 cursor-pointer"
                       title={isMuted ? 'Turn on sound' : 'Mute'}
                     >
                       {isMuted ? <VolumeX size={16} /> : <Volume2 size={16} className="text-orange" />}
