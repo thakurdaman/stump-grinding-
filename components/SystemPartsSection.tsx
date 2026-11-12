@@ -11,7 +11,6 @@ interface SystemPartsSectionProps {
 
 export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSystem }) => {
   const [activePreview, setActivePreview] = useState<(typeof SITE_CONFIG.previews)[0] | null>(null);
-  const scrollRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
 
   const previews = SITE_CONFIG.previews;
@@ -19,36 +18,61 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
   const calculatorPreview = previews.find((p) => p.id === 'calculator-preview') || previews[1];
   const templatesPreview = previews.find((p) => p.id === 'templates-preview') || previews[2];
 
-  const scrollTo = (index: number) => {
-    if (!scrollRef.current) return;
-    const container = scrollRef.current;
-    const targetChild = container.children[index] as HTMLElement;
-    if (targetChild) {
-      container.scrollTo({
-        left: targetChild.offsetLeft - container.offsetLeft,
-        behavior: 'smooth',
-      });
-      setActiveIndex(index);
+  // Touch tracking exclusively for the middle swipe zone
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const isHorizontalGestureRef = useRef<boolean>(false);
+
+  const handleMiddleTouchStart = (e: React.TouchEvent) => {
+    if (e.touches.length !== 1) return;
+    touchStartRef.current = {
+      x: e.touches[0].clientX,
+      y: e.touches[0].clientY,
+      time: Date.now(),
+    };
+    isHorizontalGestureRef.current = false;
+  };
+
+  const handleMiddleTouchMove = (e: React.TouchEvent) => {
+    if (!touchStartRef.current) return;
+    const diffX = e.touches[0].clientX - touchStartRef.current.x;
+    const diffY = e.touches[0].clientY - touchStartRef.current.y;
+
+    // Detect if this is an intentional horizontal swipe in the middle
+    if (Math.abs(diffX) > 15 && Math.abs(diffX) > Math.abs(diffY)) {
+      isHorizontalGestureRef.current = true;
     }
   };
 
-  const handleScroll = () => {
-    if (!scrollRef.current) return;
-    const container = scrollRef.current;
-    const scrollPos = container.scrollLeft;
-    let closestIndex = 0;
-    let minDiff = Infinity;
+  const handleMiddleTouchEnd = (
+    e: React.TouchEvent,
+    previewItem: (typeof SITE_CONFIG.previews)[0]
+  ) => {
+    if (!touchStartRef.current) return;
+    const diffX = e.changedTouches[0].clientX - touchStartRef.current.x;
+    const diffY = e.changedTouches[0].clientY - touchStartRef.current.y;
+    const duration = Date.now() - touchStartRef.current.time;
 
-    Array.from(container.children).forEach((child, idx) => {
-      const el = child as HTMLElement;
-      const diff = Math.abs(el.offsetLeft - container.offsetLeft - scrollPos);
-      if (diff < minDiff) {
-        minDiff = diff;
-        closestIndex = idx;
+    // Only swipe between rectangular sections if swipe is horizontal in the middle
+    if (Math.abs(diffX) > 35 && Math.abs(diffX) > Math.abs(diffY) * 1.1) {
+      if (diffX < 0) {
+        // Swipe left -> next rectangular section
+        setActiveIndex((prev) => Math.min(2, prev + 1));
+      } else {
+        // Swipe right -> previous rectangular section
+        setActiveIndex((prev) => Math.max(0, prev - 1));
       }
-    });
+    } else if (
+      !isHorizontalGestureRef.current &&
+      Math.abs(diffX) < 12 &&
+      Math.abs(diffY) < 12 &&
+      duration < 350
+    ) {
+      // Tap without swipe -> open the inspection modal
+      setActivePreview(previewItem);
+    }
 
-    setActiveIndex(closestIndex);
+    touchStartRef.current = null;
+    isHorizontalGestureRef.current = false;
   };
 
   const getIcon = (category: string) => {
@@ -58,10 +82,10 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
   };
 
   return (
-    <section id="system-parts" className="py-16 sm:py-24 bg-sand/35 border-b border-bark/10 relative overflow-hidden">
+    <section id="system-parts" className="py-16 sm:py-24 bg-sand/35 border-b border-bark/10 relative overflow-hidden select-none">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         
-        {/* Merged Section Header: Architecture of Kit + See Exactly What You Are Getting */}
+        {/* Merged Section Header */}
         <div className="max-w-3xl mx-auto text-center space-y-3 mb-8 sm:mb-14">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-bark/5 border border-bark/10 text-xs font-mono-code font-bold uppercase tracking-widest text-orange mb-1">
             <span>Architecture of the Kit</span>
@@ -75,31 +99,35 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
             See exactly what you are getting. No disconnected advice or vague theory — clean, formatted tools ready to load onto your phone or print for the truck.
           </p>
 
-          {/* Mobile Swipe Hint (No click buttons, pure touch swipe) */}
-          <div className="flex md:hidden items-center justify-center gap-1.5 text-[11px] font-mono-code text-orange font-bold pt-1">
-            <span>👈 Swipe cards to explore 👉</span>
+          {/* Mobile Swipe Notice (Explains middle swipe zone without blocking page scroll) */}
+          <div className="flex md:hidden items-center justify-center gap-1.5 text-[11px] font-mono-code text-wood-dark font-medium pt-1">
+            <span className="text-orange font-bold">↔ Swipe in the middle</span>
+            <span>to switch rectangular sections ({activeIndex + 1} of 3)</span>
           </div>
         </div>
 
-        {/* Mobile Swipeable Track (Native swipe with snap) / Desktop 3-Col Grid */}
-        <div className="relative">
+        {/* Outer Viewport (Native vertical page scroll is 100% free everywhere) */}
+        <div className="relative w-full overflow-hidden md:overflow-visible" style={{ touchAction: 'pan-y' }}>
+          
+          {/* Animated Slide Track on Mobile / 3-Col Grid on Desktop */}
           <div
-            ref={scrollRef}
-            onScroll={handleScroll}
-            className="flex md:grid md:grid-cols-3 gap-5 md:gap-8 overflow-x-auto md:overflow-x-visible snap-x snap-mandatory md:snap-none scroll-smooth pb-3 md:pb-0 no-scrollbar px-1 sm:px-0 touch-pan-x"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}
+            className="flex transition-transform duration-300 ease-out md:!transform-none md:grid md:grid-cols-3 md:gap-8"
+            style={{
+              transform: `translateX(-${activeIndex * 100}%)`,
+              touchAction: 'pan-y',
+            }}
           >
             
             {/* =========================================================================
                 PART 1: THE PLAYBOOK (Strategy & 811 Safety Manual)
             ========================================================================= */}
-            <div className="w-[86vw] max-w-[360px] flex-shrink-0 snap-center md:w-auto md:flex-shrink flex flex-col">
+            <div className="w-full flex-shrink-0 md:w-auto md:flex-shrink flex flex-col px-1 sm:px-0" style={{ touchAction: 'pan-y' }}>
               <TiltCard
                 maxTilt={6}
                 className="bg-white/95 rounded-2xl p-6 sm:p-7 border border-bark/15 shadow-[0_12px_28px_-6px_rgba(33,21,15,0.08)] flex flex-col justify-between h-full transition-all duration-300 hover:border-orange/60"
               >
-                <div className="space-y-4 relative z-10">
-                  {/* Header Badges */}
+                <div className="space-y-4 relative z-10" style={{ touchAction: 'pan-y' }}>
+                  {/* Top Area: Pure vertical scroll, never blocks */}
                   <div className="flex items-center justify-between">
                     <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-xl shadow-inner">
                       📖
@@ -126,12 +154,21 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     52 comprehensive pages organized in 15 chapters. Step-by-step from testing market demand under $100, insurance, 811 locate safety, through scaling to full-time.
                   </p>
 
-                  {/* Inside Document Preview Mockup Box (See Exactly What You Are Getting) */}
+                  {/* MIDDLE SWIPE ZONE: Swiping horizontally here advances to next section */}
                   <div
+                    onTouchStart={handleMiddleTouchStart}
+                    onTouchMove={handleMiddleTouchMove}
+                    onTouchEnd={(e) => handleMiddleTouchEnd(e, playbookPreview)}
                     onClick={() => setActivePreview(playbookPreview)}
-                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#1E130B] p-2 border border-bark/20 cursor-pointer shadow-md hover:shadow-xl hover:border-orange transition-all duration-300"
+                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#1E130B] p-2 border border-bark/20 cursor-pointer shadow-md hover:shadow-xl hover:border-orange transition-all duration-300 active:scale-[0.99]"
                   >
-                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white">
+                    {/* Middle Swipe Indicator Pill */}
+                    <div className="flex md:hidden items-center justify-between px-1 mb-1 text-[9px] font-mono-code text-amber-200/80">
+                      <span className="font-bold text-orange">↔ SWIPE IN THE MIDDLE</span>
+                      <span>Next Section &rarr;</span>
+                    </div>
+
+                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white pointer-events-none">
                       <img
                         src={playbookPreview.image}
                         alt={playbookPreview.title}
@@ -142,7 +179,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                         Playbook (PDF)
                       </span>
                       
-                      {/* Inspection Hover Overlay */}
+                      {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-bark/60 backdrop-blur-[1px] opacity-0 group-hover/doc:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange text-white text-xs font-bold shadow-lg transform translate-y-1 group-hover/doc:translate-y-0 transition-transform">
                           <Maximize2 size={13} /> Click to Inspect
@@ -151,7 +188,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     </div>
 
                     {/* Subtitle & Caption */}
-                    <div className="pt-2 px-1">
+                    <div className="pt-2 px-1 pointer-events-none">
                       <p className="text-[11px] font-bold text-[#F5EFE6] leading-tight truncate">
                         {playbookPreview.title}
                       </p>
@@ -162,8 +199,8 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                   </div>
                 </div>
 
-                {/* Footer Action & Specs */}
-                <div className="pt-4 mt-5 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code">
+                {/* Bottom Area: Pure vertical scroll, never blocks */}
+                <div className="pt-4 mt-5 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code" style={{ touchAction: 'pan-y' }}>
                   <button
                     type="button"
                     onClick={() => setActivePreview(playbookPreview)}
@@ -180,13 +217,13 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
             {/* =========================================================================
                 PART 2: PRICING CALCULATOR (Elevated 3D Star Tool Card)
             ========================================================================= */}
-            <div className="w-[86vw] max-w-[360px] flex-shrink-0 snap-center md:w-auto md:flex-shrink flex flex-col">
+            <div className="w-full flex-shrink-0 md:w-auto md:flex-shrink flex flex-col px-1 sm:px-0" style={{ touchAction: 'pan-y' }}>
               <TiltCard
                 maxTilt={6}
                 className="bg-gradient-to-b from-[#21150F] to-[#120B07] text-white rounded-2xl p-6 sm:p-7 border-2 border-amber-500/40 shadow-[0_22px_45px_-10px_rgba(232,115,26,0.35)] flex flex-col justify-between h-full transform md:-translate-y-3 transition-all duration-300 hover:border-amber-400"
               >
-                <div className="space-y-4 relative z-10">
-                  {/* Header Badges */}
+                <div className="space-y-4 relative z-10" style={{ touchAction: 'pan-y' }}>
+                  {/* Top Area: Pure vertical scroll, never blocks */}
                   <div className="flex items-center justify-between">
                     <div className="w-12 h-12 rounded-xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-xl shadow-inner">
                       🧮
@@ -213,12 +250,21 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     5 specialized tabs: Quote up to 8 stumps with flare &amp; hardness multipliers, configure local overhead in Settings, log job margins, and calculate break-even targets.
                   </p>
 
-                  {/* Inside Document Preview Mockup Box (See Exactly What You Are Getting) */}
+                  {/* MIDDLE SWIPE ZONE: Swiping horizontally here advances to next/prev section */}
                   <div
+                    onTouchStart={handleMiddleTouchStart}
+                    onTouchMove={handleMiddleTouchMove}
+                    onTouchEnd={(e) => handleMiddleTouchEnd(e, calculatorPreview)}
                     onClick={() => setActivePreview(calculatorPreview)}
-                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#0D0805] p-2 border border-amber-500/30 cursor-pointer shadow-md hover:shadow-xl hover:border-amber-400/70 transition-all duration-300"
+                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#0D0805] p-2 border border-amber-500/30 cursor-pointer shadow-md hover:shadow-xl hover:border-amber-400/70 transition-all duration-300 active:scale-[0.99]"
                   >
-                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white">
+                    {/* Middle Swipe Indicator Pill */}
+                    <div className="flex md:hidden items-center justify-between px-1 mb-1 text-[9px] font-mono-code text-amber-300/80">
+                      <span className="font-bold text-orange">↔ SWIPE IN THE MIDDLE</span>
+                      <span>&larr; Prev / Next &rarr;</span>
+                    </div>
+
+                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white pointer-events-none">
                       <img
                         src={calculatorPreview.image}
                         alt={calculatorPreview.title}
@@ -229,7 +275,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                         Pricing Calculator (XLSX)
                       </span>
 
-                      {/* Inspection Hover Overlay */}
+                      {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-bark/60 backdrop-blur-[1px] opacity-0 group-hover/doc:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange text-white text-xs font-bold shadow-lg transform translate-y-1 group-hover/doc:translate-y-0 transition-transform">
                           <Maximize2 size={13} /> Click to Inspect
@@ -238,7 +284,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     </div>
 
                     {/* Subtitle & Caption */}
-                    <div className="pt-2 px-1">
+                    <div className="pt-2 px-1 pointer-events-none">
                       <p className="text-[11px] font-bold text-amber-200 leading-tight truncate">
                         {calculatorPreview.title}
                       </p>
@@ -249,8 +295,8 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                   </div>
                 </div>
 
-                {/* Footer Action & Specs */}
-                <div className="pt-4 mt-5 border-t border-white/15 relative z-10 flex items-center justify-between text-xs font-mono-code">
+                {/* Bottom Area: Pure vertical scroll, never blocks */}
+                <div className="pt-4 mt-5 border-t border-white/15 relative z-10 flex items-center justify-between text-xs font-mono-code" style={{ touchAction: 'pan-y' }}>
                   <button
                     type="button"
                     onClick={() => setActivePreview(calculatorPreview)}
@@ -267,13 +313,13 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
             {/* =========================================================================
                 PART 3: TEMPLATES & SCRIPTS (Outreach & Contracts)
             ========================================================================= */}
-            <div className="w-[86vw] max-w-[360px] flex-shrink-0 snap-center md:w-auto md:flex-shrink flex flex-col">
+            <div className="w-full flex-shrink-0 md:w-auto md:flex-shrink flex flex-col px-1 sm:px-0" style={{ touchAction: 'pan-y' }}>
               <TiltCard
                 maxTilt={6}
                 className="bg-white/95 rounded-2xl p-6 sm:p-7 border border-bark/15 shadow-[0_12px_28px_-6px_rgba(33,21,15,0.08)] flex flex-col justify-between h-full transition-all duration-300 hover:border-orange/60"
               >
-                <div className="space-y-4 relative z-10">
-                  {/* Header Badges */}
+                <div className="space-y-4 relative z-10" style={{ touchAction: 'pan-y' }}>
+                  {/* Top Area: Pure vertical scroll, never blocks */}
                   <div className="flex items-center justify-between">
                     <div className="w-12 h-12 rounded-xl bg-orange/10 border border-orange/25 flex items-center justify-center text-xl shadow-inner">
                       📋
@@ -300,12 +346,21 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     12 ready-to-use documents: Commercial tree crew outreach messages, pre-grind walkthrough damage waivers, photo estimate texts, invoices, and review requests.
                   </p>
 
-                  {/* Inside Document Preview Mockup Box (See Exactly What You Are Getting) */}
+                  {/* MIDDLE SWIPE ZONE: Swiping horizontally here advances to prev section */}
                   <div
+                    onTouchStart={handleMiddleTouchStart}
+                    onTouchMove={handleMiddleTouchMove}
+                    onTouchEnd={(e) => handleMiddleTouchEnd(e, templatesPreview)}
                     onClick={() => setActivePreview(templatesPreview)}
-                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#1E130B] p-2 border border-bark/20 cursor-pointer shadow-md hover:shadow-xl hover:border-orange transition-all duration-300"
+                    className="group/doc relative mt-4 rounded-xl overflow-hidden bg-[#1E130B] p-2 border border-bark/20 cursor-pointer shadow-md hover:shadow-xl hover:border-orange transition-all duration-300 active:scale-[0.99]"
                   >
-                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white">
+                    {/* Middle Swipe Indicator Pill */}
+                    <div className="flex md:hidden items-center justify-between px-1 mb-1 text-[9px] font-mono-code text-amber-200/80">
+                      <span className="font-bold text-orange">↔ SWIPE IN THE MIDDLE</span>
+                      <span>&larr; Prev Section</span>
+                    </div>
+
+                    <div className="relative aspect-[16/10] w-full rounded-lg overflow-hidden bg-white pointer-events-none">
                       <img
                         src={templatesPreview.image}
                         alt={templatesPreview.title}
@@ -316,7 +371,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                         Templates Pack (DOCX)
                       </span>
 
-                      {/* Inspection Hover Overlay */}
+                      {/* Hover Overlay */}
                       <div className="absolute inset-0 bg-bark/60 backdrop-blur-[1px] opacity-0 group-hover/doc:opacity-100 transition-opacity flex items-center justify-center">
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-orange text-white text-xs font-bold shadow-lg transform translate-y-1 group-hover/doc:translate-y-0 transition-transform">
                           <Maximize2 size={13} /> Click to Inspect
@@ -325,7 +380,7 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                     </div>
 
                     {/* Subtitle & Caption */}
-                    <div className="pt-2 px-1">
+                    <div className="pt-2 px-1 pointer-events-none">
                       <p className="text-[11px] font-bold text-[#F5EFE6] leading-tight truncate">
                         {templatesPreview.title}
                       </p>
@@ -336,8 +391,8 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
                   </div>
                 </div>
 
-                {/* Footer Action & Specs */}
-                <div className="pt-4 mt-5 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code">
+                {/* Bottom Area: Pure vertical scroll, never blocks */}
+                <div className="pt-4 mt-5 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code" style={{ touchAction: 'pan-y' }}>
                   <button
                     type="button"
                     onClick={() => setActivePreview(templatesPreview)}
@@ -353,13 +408,13 @@ export const SystemPartsSection: React.FC<SystemPartsSectionProps> = ({ onGetSys
           </div>
         </div>
 
-        {/* Mobile Pagination Indicator Dots (NO next/prev buttons) */}
+        {/* Mobile Pagination Indicator Dots */}
         <div className="flex md:hidden items-center justify-center gap-2 mt-5">
           {[0, 1, 2].map((idx) => (
             <button
               key={idx}
               type="button"
-              onClick={() => scrollTo(idx)}
+              onClick={() => setActiveIndex(idx)}
               className={`h-2 rounded-full transition-all duration-300 cursor-pointer ${
                 activeIndex === idx
                   ? 'w-7 bg-orange'
