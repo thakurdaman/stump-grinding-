@@ -167,7 +167,7 @@ export default function HomePage() {
                       <div className="absolute bottom-3 left-3 right-3 bg-black/75 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/15 text-white flex items-center justify-between text-xs">
                         <div className="flex items-center gap-2">
                           <BookOpen size={16} className="text-orange" />
-                          <span className="font-bold text-sand text-[11px]">Hardcover Manual + Quoting Engine + Scripts</span>
+                          <span className="font-bold text-sand text-[11px]">Beginner&apos;s Playbook + Quoting Engine + Scripts</span>
                         </div>
                         <span className="text-amber-400 font-mono font-bold text-[10px]">Instant Access</span>
                       </div>
@@ -178,7 +178,7 @@ export default function HomePage() {
                       <div className="grid grid-cols-3 gap-2 text-center">
                         <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                           <span className="block font-bold text-sand text-[11px]">Part 1</span>
-                          <span className="text-[10px] text-sand/70">52-Pg Manual</span>
+                          <span className="text-[10px] text-sand/70">52-Pg Playbook</span>
                         </div>
                         <div className="p-2 rounded-lg bg-white/5 border border-white/10">
                           <span className="block font-bold text-sand text-[11px]">Part 2</span>
