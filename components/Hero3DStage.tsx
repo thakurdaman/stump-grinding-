@@ -8,7 +8,7 @@ interface Hero3DStageProps {
 }
 
 export const Hero3DStage: React.FC<Hero3DStageProps> = ({ onGetSystem }) => {
-  const [viewMode, setViewMode] = useState<'interactive' | 'render'>('interactive');
+  const [viewMode, setViewMode] = useState<'render' | 'interactive'>('render');
   const stageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -43,17 +43,6 @@ export const Hero3DStage: React.FC<Hero3DStageProps> = ({ onGetSystem }) => {
       <div className="mb-4 z-30 bg-white/80 backdrop-blur-md p-1 rounded-xl border border-bark/15 shadow-sm flex items-center gap-1 text-xs">
         <button
           type="button"
-          onClick={() => setViewMode('interactive')}
-          className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer flex items-center gap-1.5 ${
-            viewMode === 'interactive'
-              ? 'bg-bark text-white shadow-sm'
-              : 'text-wood-dark hover:text-bark'
-          }`}
-        >
-          <span>🎮 Interactive 3D Physics</span>
-        </button>
-        <button
-          type="button"
           onClick={() => setViewMode('render')}
           className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer flex items-center gap-1.5 ${
             viewMode === 'render'
@@ -63,25 +52,58 @@ export const Hero3DStage: React.FC<Hero3DStageProps> = ({ onGetSystem }) => {
         >
           <span>📸 Studio 3D Render</span>
         </button>
+        <button
+          type="button"
+          onClick={() => setViewMode('interactive')}
+          className={`px-3 py-1.5 rounded-lg font-bold transition cursor-pointer flex items-center gap-1.5 ${
+            viewMode === 'interactive'
+              ? 'bg-bark text-white shadow-sm'
+              : 'text-wood-dark hover:text-bark'
+          }`}
+        >
+          <span>🎮 Interactive 3D Physics</span>
+        </button>
       </div>
 
       {/* 1. Photorealistic 3D Studio Mockup (Render View) */}
       <div
         className={`${
           viewMode === 'render' ? 'block' : 'hidden'
-        } relative w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/40 bg-[#160D08] transition-all duration-300`}
+        } relative w-full rounded-2xl overflow-hidden shadow-2xl border-2 border-white/30 bg-[#160D08] transition-all duration-300`}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src="/images/hero-3d-bundle.jpg"
-          alt="The Stump Grinding Playbook 3D Hero Mockup"
-          className="w-full h-auto object-cover transform hover:scale-105 transition-transform duration-700"
-          width={1200}
-          height={900}
-        />
-        <div className="absolute bottom-3 left-3 right-3 bg-black/80 backdrop-blur-md p-2.5 rounded-xl border border-white/10 text-white flex items-center justify-between text-xs">
-          <span className="font-mono-code text-[11px] text-amber-300 font-bold">✨ Studio 3D Render</span>
-          <span className="text-[10px] text-white/70">Beginner&apos;s Playbook + Quoting Engine + Scripts</span>
+        {/* Top Status Bar */}
+        <div className="px-4 py-2.5 bg-black/60 border-b border-white/10 flex items-center justify-between text-xs">
+          <div className="flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="font-mono-code text-[11px] font-bold uppercase tracking-wider text-amber-300">
+              Complete 3-Part System
+            </span>
+          </div>
+          <span className="text-[10px] font-mono-code text-sand/70 uppercase">
+            Playbook • Calculator • Scripts
+          </span>
+        </div>
+
+        {/* 3D Render Image */}
+        <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#160D08]">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/images/hero-3d-bundle.jpg"
+            alt="The Stump Grinding Playbook 3-Part System"
+            className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+            width={1200}
+            height={900}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-[#160D08]/85 via-transparent to-transparent pointer-events-none" />
+
+          {/* Floating Glass Pill with generous padding */}
+          <div className="absolute bottom-3 left-3 right-3 bg-black/80 backdrop-blur-md px-3.5 py-2.5 rounded-xl border border-white/15 text-white flex items-center justify-between text-xs">
+            <div className="flex items-center gap-2">
+              <BookOpen size={16} className="text-orange" />
+              <span className="font-bold text-sand text-[11px]">Beginner&apos;s Playbook + Quoting Engine + Scripts</span>
+            </div>
+            <span className="text-amber-400 font-mono-code font-bold text-[10px]">Instant Access</span>
+          </div>
         </div>
       </div>
 
@@ -226,21 +248,36 @@ export const Hero3DStage: React.FC<Hero3DStageProps> = ({ onGetSystem }) => {
         </div>
       </div>
 
-      {/* Bottom Spec Pills Strip */}
-      <div className="mt-3 w-full bg-[#1B110B] p-3 rounded-xl border border-white/10 text-xs">
-        <div className="grid grid-cols-3 gap-2 text-center">
-          <div className="p-1.5 rounded-lg bg-white/5 border border-white/10">
-            <span className="block font-bold text-sand text-[11px]">Part 1</span>
-            <span className="text-[10px] text-sand/70">52-Pg Playbook</span>
+      {/* Bottom Spec Strip & Primary Action with Generous Mobile Spacing */}
+      <div className="mt-4 w-full bg-[#1B110B] p-4 sm:p-5 rounded-2xl border border-white/10 text-xs space-y-4 shadow-xl">
+        <div className="grid grid-cols-3 gap-2.5 text-center">
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <span className="block font-bold text-sand text-[11px] sm:text-xs">Part 1</span>
+            <span className="text-[10px] sm:text-[11px] text-sand/70">52-Pg Playbook</span>
           </div>
-          <div className="p-1.5 rounded-lg bg-white/5 border border-white/10">
-            <span className="block font-bold text-sand text-[11px]">Part 2</span>
-            <span className="text-[10px] text-sand/70">Pricing Sheet</span>
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <span className="block font-bold text-sand text-[11px] sm:text-xs">Part 2</span>
+            <span className="text-[10px] sm:text-[11px] text-sand/70">Pricing Sheet</span>
           </div>
-          <div className="p-1.5 rounded-lg bg-white/5 border border-white/10">
-            <span className="block font-bold text-sand text-[11px]">Part 3</span>
-            <span className="text-[10px] text-sand/70">12 Scripts</span>
+          <div className="p-2 sm:p-2.5 rounded-xl bg-white/5 border border-white/10">
+            <span className="block font-bold text-sand text-[11px] sm:text-xs">Part 3</span>
+            <span className="text-[10px] sm:text-[11px] text-sand/70">12 Scripts</span>
           </div>
+        </div>
+
+        {/* CTA Button with generous breathing room (at least 16px vertical gap) */}
+        <div className="pt-1 pb-1">
+          <a
+            href="#pricing"
+            onClick={onGetSystem}
+            className="w-full min-h-[54px] sm:min-h-[58px] py-4 px-4 sm:px-6 rounded-xl btn-3d-orange text-white font-bold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 text-center leading-normal cursor-pointer shadow-md"
+          >
+            <span>Get the Complete Beginner System</span>
+            <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-black/30 text-amber-200 font-extrabold text-xs sm:text-sm whitespace-nowrap shadow-inner">
+              $121
+            </span>
+            <ArrowRight size={16} className="shrink-0 text-white ml-0.5" />
+          </a>
         </div>
       </div>
     </div>
