@@ -224,9 +224,89 @@
 }
 .card-3d:hover {
   box-shadow: 
-    0 20px 40px -15px rgba(33, 21, 15, 0.16),
+    0 20px 40px -15px rgba(33, 21, 15, 0.18),
     0 0 0 1px rgba(255, 255, 255, 0.6) inset,
     0 2px 0 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+/* 3D Realistic Book Spine & Page Edges */
+.book-3d {
+  transform: rotateY(-18deg) rotateX(10deg) rotateZ(-3deg);
+  transform-style: preserve-3d;
+  box-shadow: 
+    -25px 35px 50px -10px rgba(22, 13, 8, 0.4),
+    -5px 10px 20px -5px rgba(22, 13, 8, 0.3);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.book-3d:hover {
+  transform: rotateY(-10deg) rotateX(6deg) rotateZ(-1deg) translateY(-8px);
+  box-shadow: 
+    -35px 50px 70px -15px rgba(22, 13, 8, 0.5),
+    -10px 15px 30px -5px rgba(22, 13, 8, 0.35);
+}
+.book-pages-edge {
+  position: absolute;
+  right: -14px;
+  top: 6px;
+  bottom: 6px;
+  width: 16px;
+  background: repeating-linear-gradient(
+    to right,
+    #EFE7DA,
+    #EFE7DA 1px,
+    #D8CBB6 2px,
+    #EFE7DA 3px
+  );
+  transform: rotateY(90deg) translateZ(8px);
+  border-radius: 0 3px 3px 0;
+  box-shadow: 2px 0 6px rgba(0,0,0,0.15) inset;
+}
+
+/* 3D Floating Tablet / Calculator */
+.tablet-3d {
+  transform: rotateY(16deg) rotateX(12deg) rotateZ(3deg);
+  transform-style: preserve-3d;
+  box-shadow: 
+    25px 35px 55px -12px rgba(22, 13, 8, 0.35),
+    0 0 0 1px rgba(255, 255, 255, 0.4) inset;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s ease;
+}
+.tablet-3d:hover {
+  transform: rotateY(8deg) rotateX(6deg) rotateZ(1deg) translateY(-8px);
+  box-shadow: 
+    35px 48px 75px -15px rgba(22, 13, 8, 0.45);
+}
+
+/* 3D Ambient Light Cone */
+.ambient-spotlight {
+  background: radial-gradient(circle at 50% 30%, rgba(255, 255, 255, 0.7) 0%, rgba(230, 215, 195, 0.3) 50%, transparent 75%);
+}
+
+/* Glare effect on card mouse move */
+.glare-overlay {
+  background: radial-gradient(circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.4) 0%, transparent 60%);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Embossed Pill Badge */
+.badge-embossed {
+  background: #EFE4D3;
+  box-shadow: 
+    0 2px 4px rgba(46, 32, 22, 0.08),
+    0 1px 0 rgba(255, 255, 255, 0.9) inset,
+    0 -1px 0 rgba(0, 0, 0, 0.06) inset;
+}
+
+.font-serif-display {
+  font-family: var(--font-fraunces), Georgia, serif;
+  font-variation-settings: 'opsz' 72;
+}
+
+.font-mono-code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* High-taste button shimmer sweep on primary CTAs */

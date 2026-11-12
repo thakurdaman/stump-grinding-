@@ -17,6 +17,8 @@ import { ShareWidget } from '@/components/ShareWidget';
 import { TimelineStepper } from '@/components/TimelineStepper';
 import { PlaybookChaptersAccordion } from '@/components/PlaybookChaptersAccordion';
 import { StickyMobileCta } from '@/components/StickyMobileCta';
+import { Hero3DStage } from '@/components/Hero3DStage';
+import { TiltCard } from '@/components/TiltCard';
 import { PRODUCTS, ProductTier } from '@/config/products';
 import { trackEvent } from '@/components/Analytics';
 import {
@@ -66,36 +68,23 @@ export default function HomePage() {
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
               {/* Copy (Left) */}
               <div className="lg:col-span-7 space-y-6">
-                {/* Small line above headline */}
-                <p className="text-xs sm:text-sm font-semibold text-wood-dark tracking-wide uppercase font-sans">
-                  The beginner&apos;s step-by-step system for starting a stump grinding business: playbook, pricing calculator, and ready-to-send scripts.
-                </p>
+                {/* Category Eyebrow Pill */}
+                <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full badge-embossed border border-[#8B5A2B]/20 text-[#21150F]">
+                  <span className="w-2 h-2 rounded-full bg-orange animate-pulse" />
+                  <span className="font-mono-code text-[11px] font-bold uppercase tracking-wider text-[#5C4033]">
+                    3-Part Complete System
+                  </span>
+                </div>
 
-                {/* H1 */}
-                <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.14]">
-                  Start a stump grinding business even if you&apos;ve never touched a grinder.
+                {/* Main Display Headline with Optical Contrast */}
+                <h1 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl xl:text-[3.25rem] font-bold text-bark tracking-tight leading-[1.12]">
+                  Start a stump grinding business <span className="italic font-normal text-orange block sm:inline">even if you&apos;ve never</span> touched a grinder.
                 </h1>
 
                 {/* Subhead */}
                 <p className="text-base sm:text-lg text-bark/85 leading-relaxed font-sans max-w-xl">
-                  Test the demand for under $100, price jobs in minutes, and know exactly what to say to tree companies.
+                  Test the demand for under $100, price jobs in minutes with the root flare formula, and know exactly what to say to local tree companies.
                 </p>
-
-                {/* Badges */}
-                <div className="flex flex-wrap items-center gap-2 pt-1">
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
-                    <Check size={14} className="text-forest" />
-                    No experience needed
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
-                    <Check size={14} className="text-orange" />
-                    Step by step
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-sand border border-wood/25 text-bark text-xs font-bold uppercase tracking-wider">
-                    <Check size={14} className="text-forest" />
-                    Start part-time
-                  </span>
-                </div>
 
                 {/* Primary CTAs */}
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
@@ -114,6 +103,19 @@ export default function HomePage() {
                   </a>
                 </div>
 
+                {/* Physical 3D Feature Chips */}
+                <div className="flex flex-wrap items-center gap-2.5 pt-1 text-xs font-semibold text-wood-dark">
+                  <div className="px-3.5 py-1.5 rounded-lg bg-white/70 backdrop-blur-sm border border-bark/10 shadow-sm flex items-center gap-2">
+                    <span className="text-forest font-bold">✓</span> No experience needed
+                  </div>
+                  <div className="px-3.5 py-1.5 rounded-lg bg-white/70 backdrop-blur-sm border border-bark/10 shadow-sm flex items-center gap-2">
+                    <span className="text-orange font-bold">✓</span> Step by step roadmap
+                  </div>
+                  <div className="px-3.5 py-1.5 rounded-lg bg-white/70 backdrop-blur-sm border border-bark/10 shadow-sm flex items-center gap-2">
+                    <span className="text-forest font-bold">✓</span> Start part-time weekends
+                  </div>
+                </div>
+
                 {/* Fine Print */}
                 <div className="pt-2 flex flex-wrap items-center gap-3 text-xs sm:text-sm text-wood-dark font-medium border-t border-bark/10">
                   <span className="flex items-center gap-1.5 text-forest font-bold">
@@ -128,78 +130,9 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Visual (Right): 3D Mockup Showing All Three Parts Together */}
+              {/* Visual (Right): Interactive 3D Spatial Mockup Cluster */}
               <div className="lg:col-span-5">
-                <div className="relative mx-auto max-w-md lg:max-w-lg group">
-                  {/* Ambient 3D Depth Glow */}
-                  <div className="absolute -inset-3 bg-gradient-to-tr from-orange/20 via-sand/40 to-forest/10 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity pointer-events-none" />
-
-                  {/* 3D Container with Tactile Border and Specular Rim */}
-                  <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-[#251710] to-[#160D08] border-2 border-white/20 shadow-[0_25px_60px_-15px_rgba(33,21,15,0.45)] transition-all duration-300 transform group-hover:-translate-y-1">
-                    
-                    {/* Top Status Bar */}
-                    <div className="px-4 py-3 bg-black/40 border-b border-white/10 flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-300">
-                          Complete 3-Part System
-                        </span>
-                      </div>
-                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sand/70 px-2 py-0.5 rounded bg-white/10 border border-white/10">
-                        Playbook • Calculator • Scripts
-                      </span>
-                    </div>
-
-                    {/* 3D Hero Mockup Render */}
-                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#160D08]">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src="/images/hero-3d-bundle.jpg"
-                        alt="The Stump Grinding Playbook 3-Part System: 52-page manual, quoting engine tablet, and ready-to-send contractor scripts"
-                        className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
-                        width={1200}
-                        height={900}
-                      />
-                      {/* Inset Gradient & Specular Highlight */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#160D08]/85 via-transparent to-transparent pointer-events-none" />
-
-                      {/* Floating Tactile Glass Pill */}
-                      <div className="absolute bottom-3 left-3 right-3 bg-black/75 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/15 text-white flex items-center justify-between text-xs">
-                        <div className="flex items-center gap-2">
-                          <BookOpen size={16} className="text-orange" />
-                          <span className="font-bold text-sand text-[11px]">Beginner&apos;s Playbook + Quoting Engine + Scripts</span>
-                        </div>
-                        <span className="text-amber-400 font-mono font-bold text-[10px]">Instant Access</span>
-                      </div>
-                    </div>
-
-                    {/* 3-Part Spec Strip */}
-                    <div className="p-4 sm:p-5 space-y-3 bg-[#1B110B] border-t border-white/10 text-xs">
-                      <div className="grid grid-cols-3 gap-2 text-center">
-                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                          <span className="block font-bold text-sand text-[11px]">Part 1</span>
-                          <span className="text-[10px] text-sand/70">52-Pg Playbook</span>
-                        </div>
-                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                          <span className="block font-bold text-sand text-[11px]">Part 2</span>
-                          <span className="text-[10px] text-sand/70">Pricing Sheet</span>
-                        </div>
-                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
-                          <span className="block font-bold text-sand text-[11px]">Part 3</span>
-                          <span className="text-[10px] text-sand/70">12 Scripts</span>
-                        </div>
-                      </div>
-
-                      <a
-                        href="#pricing"
-                        className="w-full py-3 rounded-xl btn-3d-orange text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
-                      >
-                        <span>Get the Complete Beginner System ($121)</span>
-                        <ArrowRight size={14} />
-                      </a>
-                    </div>
-                  </div>
-                </div>
+                <Hero3DStage onGetSystem={() => handleBuyClick(fullKitTier)} />
               </div>
             </div>
           </div>
@@ -208,46 +141,102 @@ export default function HomePage() {
         {/* =========================================================================
             SECTION 3: "ONE SYSTEM, THREE PARTS" STRIP
         ========================================================================= */}
-        <section className="py-12 bg-sand/40 border-b border-bark/10">
+        <section className="py-16 sm:py-20 bg-sand/35 border-b border-bark/10 relative">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-6">
-              <span className="text-xs font-bold uppercase tracking-widest text-wood-dark font-sans">
-                One System, Three Parts
+            <div className="max-w-3xl mx-auto text-center space-y-3 mb-12">
+              <span className="font-mono-code text-xs font-bold uppercase tracking-widest text-orange">
+                Architecture of the Kit
               </span>
+              <h2 className="font-serif-display text-3xl sm:text-4xl lg:text-5xl font-bold text-bark tracking-tight">
+                One complete system. Three supporting parts.
+              </h2>
+              <p className="text-sm sm:text-base text-wood-dark max-w-xl mx-auto leading-relaxed">
+                No disconnected advice. Each tool connects directly with the next step in your day.
+              </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {/* Part 1 */}
-              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
-                <div className="w-12 h-12 rounded-xl bg-orange/15 text-orange flex items-center justify-center mx-auto mb-3">
-                  <BookOpen size={24} />
-                </div>
-                <h3 className="font-serif font-bold text-xl text-bark">The Playbook</h3>
-                <p className="text-sm text-bark/80 leading-relaxed font-sans">
-                  So you know exactly <strong>what to do</strong> at every step of starting and operating.
-                </p>
-              </div>
 
-              {/* Part 2 */}
-              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
-                <div className="w-12 h-12 rounded-xl bg-forest/15 text-forest flex items-center justify-center mx-auto mb-3">
-                  <FileSpreadsheet size={24} />
+            {/* 3-Card Grid with Mouse-Driven Tilt & Dynamic Depth Layering */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
+              {/* Part 1: The Playbook Card */}
+              <TiltCard
+                maxTilt={6}
+                className="bg-white/95 rounded-2xl p-7 sm:p-8 border border-bark/15 shadow-[0_10px_25px_-5px_rgba(33,21,15,0.06)] flex flex-col justify-between"
+              >
+                <div className="space-y-4 relative z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-2xl shadow-inner">
+                    📖
+                  </div>
+                  <span className="font-mono-code text-xs font-bold text-amber-700 uppercase tracking-wider block">
+                    Part 01 • The Strategy
+                  </span>
+                  <h3 className="font-serif-display text-2xl font-bold text-bark">The Playbook</h3>
+                  <p className="text-sm font-semibold text-orange italic">&ldquo;So you know what to do.&rdquo;</p>
+                  <p className="text-sm text-wood-dark leading-relaxed font-sans">
+                    52 comprehensive pages organized in 15 chapters. Step-by-step from testing market demand under $100, insurance, 811 locate safety, through scaling to full-time.
+                  </p>
                 </div>
-                <h3 className="font-serif font-bold text-xl text-bark">The Pricing Calculator</h3>
-                <p className="text-sm text-bark/80 leading-relaxed font-sans">
-                  So you know exactly <strong>what to charge</strong> without guessing or leaving money in the dirt.
-                </p>
-              </div>
 
-              {/* Part 3 */}
-              <div className="bg-white/80 border border-bark/15 rounded-2xl p-6 space-y-2 text-center card-hover-lift">
-                <div className="w-12 h-12 rounded-xl bg-wood/20 text-wood-dark flex items-center justify-center mx-auto mb-3">
-                  <FileText size={24} />
+                <div className="pt-6 mt-6 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code text-wood-dark">
+                  <span>15 Chapters</span>
+                  <span className="text-forest font-bold">PDF Format</span>
                 </div>
-                <h3 className="font-serif font-bold text-xl text-bark">Templates &amp; Scripts</h3>
-                <p className="text-sm text-bark/80 leading-relaxed font-sans">
-                  So you know exactly <strong>what to say</strong> to customers and contractor partners.
-                </p>
-              </div>
+              </TiltCard>
+
+              {/* Part 2: Pricing Calculator Card (Elevated Feature Card) */}
+              <TiltCard
+                maxTilt={6}
+                className="bg-gradient-to-b from-[#21150F] to-[#120B07] text-white rounded-2xl p-7 sm:p-8 border-2 border-amber-500/40 shadow-[0_20px_40px_-10px_rgba(232,115,26,0.35)] flex flex-col justify-between transform md:-translate-y-3"
+              >
+                <div className="space-y-4 relative z-10">
+                  <div className="flex items-center justify-between">
+                    <div className="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400/40 flex items-center justify-center text-2xl shadow-inner">
+                      🧮
+                    </div>
+                    <span className="px-2.5 py-1 rounded bg-orange text-white font-mono-code text-[10px] font-bold uppercase tracking-wider shadow">
+                      STAR TOOL
+                    </span>
+                  </div>
+
+                  <span className="font-mono-code text-xs font-bold text-emerald-400 uppercase tracking-wider block">
+                    Part 02 • The Numbers
+                  </span>
+                  <h3 className="font-serif-display text-2xl font-bold text-white">Pricing Calculator</h3>
+                  <p className="text-sm font-semibold text-amber-300 italic">&ldquo;So you know what to charge.&rdquo;</p>
+                  <p className="text-sm text-sand/85 leading-relaxed font-sans">
+                    5 specialized tabs: Quote up to 8 stumps with flare &amp; hardness multipliers, configure local overhead in Settings, log job margins, and calculate break-even targets.
+                  </p>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-white/15 relative z-10 flex items-center justify-between text-xs font-mono-code text-sand/70">
+                  <span>5 Smart Tabs</span>
+                  <span className="text-emerald-400 font-bold">Excel &amp; Sheets</span>
+                </div>
+              </TiltCard>
+
+              {/* Part 3: Templates & Scripts Card */}
+              <TiltCard
+                maxTilt={6}
+                className="bg-white/95 rounded-2xl p-7 sm:p-8 border border-bark/15 shadow-[0_10px_25px_-5px_rgba(33,21,15,0.06)] flex flex-col justify-between"
+              >
+                <div className="space-y-4 relative z-10">
+                  <div className="w-14 h-14 rounded-2xl bg-orange/10 border border-orange/25 flex items-center justify-center text-2xl shadow-inner">
+                    📋
+                  </div>
+                  <span className="font-mono-code text-xs font-bold text-amber-700 uppercase tracking-wider block">
+                    Part 03 • The Outreach
+                  </span>
+                  <h3 className="font-serif-display text-2xl font-bold text-bark">Templates &amp; Scripts</h3>
+                  <p className="text-sm font-semibold text-orange italic">&ldquo;So you know what to say.&rdquo;</p>
+                  <p className="text-sm text-wood-dark leading-relaxed font-sans">
+                    12 ready-to-use documents: Commercial tree crew outreach messages, pre-grind walkthrough damage waivers, photo estimate texts, invoices, and review requests.
+                  </p>
+                </div>
+
+                <div className="pt-6 mt-6 border-t border-bark/10 relative z-10 flex items-center justify-between text-xs font-mono-code text-wood-dark">
+                  <span>12 Documents</span>
+                  <span className="text-forest font-bold">Word &amp; Docs</span>
+                </div>
+              </TiltCard>
             </div>
           </div>
         </section>
@@ -620,11 +609,12 @@ export default function HomePage() {
                 const isHighlight = tier.isPopular;
 
                 return (
-                  <div
+                  <TiltCard
                     key={tier.id}
-                    className={`relative rounded-2xl flex flex-col justify-between transition-all duration-300 ${
+                    maxTilt={5}
+                    className={`relative rounded-3xl flex flex-col justify-between transition-all duration-300 ${
                       isHighlight
-                        ? 'bg-bark text-sand border-2 border-orange shadow-2xl lg:-translate-y-2 hover:-translate-y-3 hover:shadow-orange/20 ring-2 ring-orange/30'
+                        ? 'bg-bark text-sand border-2 border-orange shadow-[0_25px_60px_-15px_rgba(232,115,26,0.35)] lg:-translate-y-2 hover:-translate-y-3 ring-2 ring-orange/30'
                         : 'bg-sand/35 text-bark border border-bark/20 shadow-sm hover:border-wood/60 hover:-translate-y-1 hover:shadow-lg'
                     } p-7 sm:p-8`}
                   >
@@ -709,7 +699,7 @@ export default function HomePage() {
                         Instant access
                       </p>
                     </div>
-                  </div>
+                  </TiltCard>
                 );
               })}
             </div>
