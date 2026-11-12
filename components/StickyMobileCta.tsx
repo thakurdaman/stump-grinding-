@@ -39,7 +39,7 @@ export const StickyMobileCta: React.FC<StickyMobileCtaProps> = ({
         <button
           type="button"
           onClick={() => onSelectProduct(featuredTier)}
-          className="flex-1 py-3 px-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-sm text-center shadow-md active:scale-95 transition-transform btn-shimmer"
+          className="flex-1 py-3 px-4 rounded-xl btn-3d-orange text-white font-bold text-sm text-center active:scale-95 transition-transform cursor-pointer"
         >
           Get the Beginner System &rarr;
         </button>

@@ -102,13 +102,13 @@ export default function HomePage() {
                   <a
                     href="#pricing"
                     onClick={() => trackEvent('view_versions')}
-                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 btn-shimmer"
+                    className="inline-flex items-center justify-center px-8 py-4 rounded-xl btn-3d-orange text-white font-bold text-base cursor-pointer"
                   >
                     <span>Get the Beginner System &rarr;</span>
                   </a>
                   <a
                     href="#path"
-                    className="inline-flex items-center justify-center px-6 py-4 rounded-xl bg-sand/60 hover:bg-sand border border-bark/15 text-bark font-bold text-base hover:-translate-y-0.5 hover:border-bark/30 active:scale-95 transition-all"
+                    className="inline-flex items-center justify-center px-6 py-4 rounded-xl btn-3d-secondary text-bark font-bold text-base cursor-pointer"
                   >
                     <span>See your first 30 days</span>
                   </a>
@@ -128,65 +128,76 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Visual (Right): One Mockup Showing All Three Parts Together */}
+              {/* Visual (Right): 3D Mockup Showing All Three Parts Together */}
               <div className="lg:col-span-5">
-                <div className="relative mx-auto max-w-md lg:max-w-none">
-                  {/* Decorative backdrop */}
-                  <div className="absolute -inset-2 bg-sand rounded-2xl rotate-1 border border-wood/30 shadow-sm" />
+                <div className="relative mx-auto max-w-md lg:max-w-lg group">
+                  {/* Ambient 3D Depth Glow */}
+                  <div className="absolute -inset-3 bg-gradient-to-tr from-orange/20 via-sand/40 to-forest/10 rounded-3xl blur-xl opacity-75 group-hover:opacity-100 transition-opacity pointer-events-none" />
 
-                  <div className="relative bg-bark text-sand rounded-2xl p-6 sm:p-8 shadow-xl border border-wood-dark/60 space-y-6 card-hover-lift">
-                    <div className="flex items-start justify-between border-b border-wood-dark/40 pb-5">
-                      <div>
-                        <span className="text-[11px] font-bold uppercase tracking-widest text-orange font-sans">
-                          Complete 3-Part Beginner System
+                  {/* 3D Container with Tactile Border and Specular Rim */}
+                  <div className="relative rounded-2xl overflow-hidden bg-gradient-to-b from-[#251710] to-[#160D08] border-2 border-white/20 shadow-[0_25px_60px_-15px_rgba(33,21,15,0.45)] transition-all duration-300 transform group-hover:-translate-y-1">
+                    
+                    {/* Top Status Bar */}
+                    <div className="px-4 py-3 bg-black/40 border-b border-white/10 flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                        <span className="text-[11px] font-mono font-bold uppercase tracking-wider text-amber-300">
+                          Complete 3-Part System
                         </span>
-                        <h2 className="font-serif text-2xl font-bold text-[#FBF6EC] mt-1">
-                          The Stump Grinding Playbook
-                        </h2>
                       </div>
-                      <TreeRing size={42} strokeColor="#E8731A" />
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-sand/70 px-2 py-0.5 rounded bg-white/10 border border-white/10">
+                        Playbook • Calculator • Scripts
+                      </span>
                     </div>
 
-                    <div className="space-y-3.5 text-sm text-sand/85">
-                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
-                        <BookOpen size={20} className="text-orange shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-bold text-[#FBF6EC] text-xs">Part 1: The Playbook (52 Pages)</p>
-                          <p className="text-[11px] text-sand/70">So you know what to do on Day 1, Day 7 &amp; Day 30.</p>
-                        </div>
-                      </div>
+                    {/* 3D Hero Mockup Render */}
+                    <div className="relative aspect-[4/3] w-full overflow-hidden bg-[#160D08]">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src="/images/hero-3d-bundle.jpg"
+                        alt="The Stump Grinding Playbook 3-Part System: 52-page manual, quoting engine tablet, and ready-to-send contractor scripts"
+                        className="w-full h-full object-cover object-center transform transition-transform duration-700 ease-out group-hover:scale-105"
+                        width={1200}
+                        height={900}
+                      />
+                      {/* Inset Gradient & Specular Highlight */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-[#160D08]/85 via-transparent to-transparent pointer-events-none" />
 
-                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
-                        <FileSpreadsheet size={20} className="text-forest-light shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-bold text-[#FBF6EC] text-xs">Part 2: The Pricing Calculator</p>
-                          <p className="text-[11px] text-sand/70">So you know what to charge for diameter, root flares &amp; obstacles.</p>
+                      {/* Floating Tactile Glass Pill */}
+                      <div className="absolute bottom-3 left-3 right-3 bg-black/75 backdrop-blur-md px-3.5 py-2 rounded-xl border border-white/15 text-white flex items-center justify-between text-xs">
+                        <div className="flex items-center gap-2">
+                          <BookOpen size={16} className="text-orange" />
+                          <span className="font-bold text-sand text-[11px]">Hardcover Manual + Quoting Engine + Scripts</span>
                         </div>
-                      </div>
-
-                      <div className="flex items-start gap-3 bg-wood-dark/30 p-2.5 rounded-lg border border-sand/10">
-                        <FileText size={20} className="text-sand shrink-0 mt-0.5" />
-                        <div>
-                          <p className="font-bold text-[#FBF6EC] text-xs">Part 3: 12 Templates &amp; Scripts</p>
-                          <p className="text-[11px] text-sand/70">So you know what to say to homeowners and tree services.</p>
-                        </div>
+                        <span className="text-amber-400 font-mono font-bold text-[10px]">Instant Access</span>
                       </div>
                     </div>
 
-                    <div className="bg-wood-dark/40 rounded-xl p-3.5 border border-sand/10 text-xs space-y-1">
-                      <p className="font-bold text-[#FBF6EC]">Instant Digital Access</p>
-                      <p className="text-sand/70">
-                        PDF handbook, Excel/Google Sheets calculator, and Word templates sent to your email immediately.
-                      </p>
-                    </div>
+                    {/* 3-Part Spec Strip */}
+                    <div className="p-4 sm:p-5 space-y-3 bg-[#1B110B] border-t border-white/10 text-xs">
+                      <div className="grid grid-cols-3 gap-2 text-center">
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                          <span className="block font-bold text-sand text-[11px]">Part 1</span>
+                          <span className="text-[10px] text-sand/70">52-Pg Manual</span>
+                        </div>
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                          <span className="block font-bold text-sand text-[11px]">Part 2</span>
+                          <span className="text-[10px] text-sand/70">Pricing Sheet</span>
+                        </div>
+                        <div className="p-2 rounded-lg bg-white/5 border border-white/10">
+                          <span className="block font-bold text-sand text-[11px]">Part 3</span>
+                          <span className="text-[10px] text-sand/70">12 Scripts</span>
+                        </div>
+                      </div>
 
-                    <a
-                      href="#pricing"
-                      className="w-full py-3.5 rounded-lg bg-orange hover:bg-orange-hover text-white font-bold text-sm flex items-center justify-center gap-2 transition-colors"
-                    >
-                      <span>Get the Beginner System</span>
-                      <ArrowRight size={16} />
-                    </a>
+                      <a
+                        href="#pricing"
+                        className="w-full py-3 rounded-xl btn-3d-orange text-white font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <span>Get the Complete Beginner System ($121)</span>
+                        <ArrowRight size={14} />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -617,12 +628,16 @@ export default function HomePage() {
                         : 'bg-sand/35 text-bark border border-bark/20 shadow-sm hover:border-wood/60 hover:-translate-y-1 hover:shadow-lg'
                     } p-7 sm:p-8`}
                   >
-                    {/* Badge */}
+                    {/* 3D Slanting Animated E-Commerce Badge */}
                     {tier.badge && (
-                      <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10 pointer-events-none">
-                        <span className="animate-offer-slant whitespace-nowrap px-4 py-1.5 rounded-md bg-gradient-to-r from-orange to-orange-hover text-white text-[11px] sm:text-xs font-black uppercase tracking-wider border border-white/30 shadow-lg">
-                          {tier.badge}
-                        </span>
+                      <div className="absolute -top-5 right-4 sm:right-6 z-20 pointer-events-none">
+                        <div className="animate-ecommerce-badge px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-[#FA8A32] via-[#E8731A] to-[#D4620B] text-white text-[11px] sm:text-xs font-black uppercase tracking-wider border-2 border-white/50 shadow-xl flex items-center gap-1.5 backdrop-blur-sm">
+                          <span className="tracking-tight">★ BEST VALUE</span>
+                          <span className="opacity-60">•</span>
+                          <span className="bg-black/30 px-1.5 py-0.5 rounded-md text-[10px] tracking-normal font-bold">
+                            SAVE $33
+                          </span>
+                        </div>
                       </div>
                     )}
 
@@ -682,10 +697,10 @@ export default function HomePage() {
                     <div className="pt-8">
                       <button
                         onClick={() => handleBuyClick(tier)}
-                        className={`w-full py-4 px-6 rounded-xl font-bold text-base shadow-sm focus:outline-none focus:ring-2 focus:ring-orange focus:ring-offset-2 transition-all transform hover:-translate-y-0.5 hover:shadow-lg active:scale-95 cursor-pointer ${
+                        className={`w-full py-4 px-6 rounded-xl font-bold text-base cursor-pointer ${
                           isHighlight
-                            ? 'bg-orange hover:bg-orange-hover text-white btn-shimmer'
-                            : 'bg-orange hover:bg-orange-hover text-white'
+                            ? 'btn-3d-orange text-white'
+                            : 'btn-3d-secondary text-bark font-bold'
                         }`}
                       >
                         {tier.buttonText}
@@ -769,7 +784,7 @@ export default function HomePage() {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <a
                 href="#pricing"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-orange hover:bg-orange-hover text-white font-bold text-base shadow-lg transition-transform transform active:scale-95"
+                className="w-full sm:w-auto px-8 py-4 rounded-xl btn-3d-orange text-white font-bold text-base cursor-pointer"
               >
                 Get the Beginner System &rarr;
               </a>

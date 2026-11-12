@@ -150,6 +150,85 @@
   animation: offerSlantFloat 3s ease-in-out infinite;
 }
 
+/* Slanted 3D E-Commerce Promotional Badge */
+@keyframes ecommerceBadgeTilt {
+  0%, 100% {
+    transform: rotate(-6deg) translateY(0) scale(1);
+    box-shadow: 0 6px 16px -2px rgba(232, 115, 26, 0.5), 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  50% {
+    transform: rotate(-7.5deg) translateY(-3px) scale(1.05);
+    box-shadow: 0 10px 24px -2px rgba(232, 115, 26, 0.75), 0 4px 8px rgba(0, 0, 0, 0.15);
+  }
+}
+.animate-ecommerce-badge {
+  display: inline-flex;
+  transform-origin: center;
+  animation: ecommerceBadgeTilt 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}
+
+/* Tactile 3D Physical Primary Push-Button */
+.btn-3d-orange {
+  background: linear-gradient(180deg, #FA8A32 0%, #E8731A 50%, #D4620B 100%);
+  box-shadow: 
+    0 5px 0 #9E4504,
+    0 12px 22px -4px rgba(232, 115, 26, 0.45),
+    0 1px 1px 0 rgba(255, 255, 255, 0.4) inset;
+  transition: all 0.12s ease-out;
+  transform: translateY(0);
+}
+.btn-3d-orange:hover {
+  background: linear-gradient(180deg, #FF9542 0%, #F07A20 50%, #DB670E 100%);
+  transform: translateY(-2px);
+  box-shadow: 
+    0 7px 0 #9E4504,
+    0 16px 26px -4px rgba(232, 115, 26, 0.5),
+    0 1px 1px 0 rgba(255, 255, 255, 0.5) inset;
+}
+.btn-3d-orange:active {
+  transform: translateY(3px);
+  box-shadow: 
+    0 2px 0 #9E4504,
+    0 5px 12px -2px rgba(232, 115, 26, 0.4),
+    0 1px 1px 0 rgba(255, 255, 255, 0.2) inset;
+}
+
+/* Tactile 3D Physical Secondary Button */
+.btn-3d-secondary {
+  background: linear-gradient(180deg, #FFFFFF 0%, #F5EFE6 100%);
+  box-shadow: 
+    0 4px 0 #C9BAA7,
+    0 10px 18px -5px rgba(46, 32, 22, 0.15),
+    0 1px 1px 0 rgba(255, 255, 255, 0.9) inset;
+  transition: all 0.12s ease-out;
+}
+.btn-3d-secondary:hover {
+  background: #FFFFFF;
+  transform: translateY(-2px);
+  box-shadow: 
+    0 6px 0 #C9BAA7,
+    0 14px 22px -5px rgba(46, 32, 22, 0.2);
+}
+.btn-3d-secondary:active {
+  transform: translateY(2px);
+  box-shadow: 
+    0 2px 0 #C9BAA7,
+    0 5px 10px -2px rgba(46, 32, 22, 0.15);
+}
+
+/* 3D Depth Card with Specular Sheen */
+.card-3d {
+  transform-style: preserve-3d;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease;
+  position: relative;
+}
+.card-3d:hover {
+  box-shadow: 
+    0 20px 40px -15px rgba(33, 21, 15, 0.16),
+    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
+    0 2px 0 0 rgba(255, 255, 255, 0.8) inset;
+}
+
 /* High-taste button shimmer sweep on primary CTAs */
 .btn-shimmer {
   position: relative;
