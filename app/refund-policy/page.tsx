@@ -1,9 +1,18 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SITE_CONFIG } from '@/config/site';
 import { ShieldCheck, Mail, ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: '14-Day Refund Policy',
+  description: '14-day money-back guarantee terms for The Stump Grinding Playbook: Beginner Edition.',
+  alternates: {
+    canonical: '/refund-policy',
+  },
+};
 
 export default function RefundPolicyPage() {
   return (
@@ -35,7 +44,7 @@ export default function RefundPolicyPage() {
 
             <div className="prose prose-sm text-bark/85 leading-relaxed space-y-4 pt-2">
               <p>
-                We stand behind the quality and practical field usefulness of <strong>The First 10 Stumps System</strong>.
+                We stand behind the quality and practical field usefulness of <strong>{SITE_CONFIG.name}</strong>.
               </p>
 
               <h3 className="font-serif font-bold text-xl text-bark pt-2">

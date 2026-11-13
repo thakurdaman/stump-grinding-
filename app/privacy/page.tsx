@@ -1,9 +1,18 @@
 import React from 'react';
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { SITE_CONFIG } from '@/config/site';
 import { AlertTriangle, ArrowLeft } from 'lucide-react';
+
+export const metadata: Metadata = {
+  title: 'Privacy Policy',
+  description: 'Privacy policy and customer data handling for The Stump Grinding Playbook.',
+  alternates: {
+    canonical: '/privacy',
+  },
+};
 
 export default function PrivacyPage() {
   return (
