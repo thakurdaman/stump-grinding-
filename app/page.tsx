@@ -27,16 +27,10 @@ import {
   Download,
   AlertTriangle,
   ArrowRight,
-  TrendingUp,
   FileSpreadsheet,
   BookOpen,
   FileText,
   DollarSign,
-  Fuel,
-  Wrench,
-  Clock,
-  Sparkles,
-  PhoneCall,
   CheckCircle2,
 } from 'lucide-react';
 
