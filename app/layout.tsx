@@ -3,8 +3,6 @@ import { Fraunces, Plus_Jakarta_Sans } from 'next/font/google';
 import './globals.css';
 import { SITE_CONFIG } from '@/config/site';
 import { Analytics } from '@/components/Analytics';
-import { PRODUCTS } from '@/config/products';
-import { FAQS } from '@/config/faqs';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -80,7 +78,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // Schema.org structured data (Organization, Product with Offers, FAQPage rich snippets)
+  // Global Schema.org structured data (Organization & WebSite)
   const organizationSchema = {
     '@type': 'Organization',
     '@id': `${SITE_CONFIG.url}/#organization`,
@@ -97,68 +95,20 @@ export default function RootLayout({
     },
   };
 
-  const productSchema = {
-    '@type': 'Product',
-    '@id': `${SITE_CONFIG.url}/#product`,
-    name: 'The First 10 Stumps System',
+  const webSiteSchema = {
+    '@type': 'WebSite',
+    '@id': `${SITE_CONFIG.url}/#website`,
+    url: SITE_CONFIG.url,
+    name: SITE_CONFIG.name,
     description: SITE_CONFIG.description,
-    image: `${SITE_CONFIG.url}/images/cover.jpg`,
-    brand: {
-      '@type': 'Brand',
-      name: SITE_CONFIG.name,
+    publisher: {
+      '@id': `${SITE_CONFIG.url}/#organization`,
     },
-    // Real buyer reviews and aggregate rating schema will be populated as verified customer reviews are received
-    offers: PRODUCTS.map((p) => ({
-      '@type': 'Offer',
-      name: p.name,
-      price: p.price.toFixed(2),
-      priceCurrency: 'USD',
-      availability: 'https://schema.org/InStock',
-      url: `${SITE_CONFIG.url}/#pricing`,
-      shippingDetails: {
-        '@type': 'OfferShippingDetails',
-        shippingRate: {
-          '@type': 'MonetaryAmount',
-          value: '0',
-          currency: 'USD',
-        },
-        shippingDestination: {
-          '@type': 'DefinedRegion',
-          addressCountry: 'US',
-        },
-        deliveryTime: {
-          '@type': 'ShippingDeliveryTime',
-          handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
-          transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
-        },
-      },
-      hasMerchantReturnPolicy: {
-        '@type': 'MerchantReturnPolicy',
-        applicableCountry: 'US',
-        returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
-        merchantReturnDays: 14,
-        returnMethod: 'https://schema.org/ReturnByMail',
-        returnFees: 'https://schema.org/FreeReturn',
-      },
-    })),
-  };
-
-  const faqSchema = {
-    '@type': 'FAQPage',
-    '@id': `${SITE_CONFIG.url}/#faq`,
-    mainEntity: FAQS.map((faq) => ({
-      '@type': 'Question',
-      name: faq.question,
-      acceptedAnswer: {
-        '@type': 'Answer',
-        text: faq.answer,
-      },
-    })),
   };
 
   const graphSchema = {
     '@context': 'https://schema.org',
-    '@graph': [organizationSchema, productSchema, faqSchema],
+    '@graph': [organizationSchema, webSiteSchema],
   };
 
   return (

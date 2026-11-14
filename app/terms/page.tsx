@@ -15,8 +15,25 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
+  const webPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Terms of Service',
+    url: `${SITE_CONFIG.url}/terms`,
+    description: 'Terms of service, licensing, liability limitation, and legal disclaimers for The Stump Grinding Playbook under US law.',
+    isPartOf: {
+      '@type': 'WebSite',
+      url: SITE_CONFIG.url,
+      name: SITE_CONFIG.name,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
       <Header />
       <main className="flex-1 py-16 bg-[#FBF6EC]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">

@@ -15,8 +15,25 @@ export const metadata: Metadata = {
 };
 
 export default function RefundPolicyPage() {
+  const webPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: '14-Day Refund Policy',
+    url: `${SITE_CONFIG.url}/refund-policy`,
+    description: '14-day money-back guarantee terms and final sale disclosures for The Stump Grinding Playbook under US consumer law.',
+    isPartOf: {
+      '@type': 'WebSite',
+      url: SITE_CONFIG.url,
+      name: SITE_CONFIG.name,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(webPageSchema) }}
+      />
       <Header />
       <main className="flex-1 py-16 bg-[#FBF6EC]">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 space-y-8">

@@ -40,8 +40,25 @@ export default function ContactPage() {
     }
   };
 
+  const contactPageSchema = {
+    '@context': 'https://schema.org',
+    '@type': 'ContactPage',
+    name: 'Contact Support',
+    url: `${SITE_CONFIG.url}/contact`,
+    description: 'Contact and support desk for The Stump Grinding Playbook.',
+    isPartOf: {
+      '@type': 'WebSite',
+      url: SITE_CONFIG.url,
+      name: SITE_CONFIG.name,
+    },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageSchema) }}
+      />
       <Header />
       <main className="flex-1 py-16 bg-[#FBF6EC]">
         <div className="max-w-2xl mx-auto px-4 sm:px-6 space-y-8">

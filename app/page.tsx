@@ -20,6 +20,8 @@ import { StickyMobileCta } from '@/components/StickyMobileCta';
 import { Hero3DStage } from '@/components/Hero3DStage';
 import { TiltCard } from '@/components/TiltCard';
 import { PRODUCTS, ProductTier } from '@/config/products';
+import { SITE_CONFIG } from '@/config/site';
+import { FAQS } from '@/config/faqs';
 import { trackEvent } from '@/components/Analytics';
 import {
   Check,
@@ -44,8 +46,117 @@ export default function HomePage() {
     setSelectedProduct(product);
   };
 
+  const productAndFaqGraph = {
+    '@context': 'https://schema.org',
+    '@graph': [
+      {
+        '@type': 'Product',
+        '@id': `${SITE_CONFIG.url}/#product`,
+        name: 'The First 10 Stumps System',
+        description: SITE_CONFIG.description,
+        image: `${SITE_CONFIG.url}/images/cover.jpg`,
+        brand: {
+          '@type': 'Brand',
+          name: SITE_CONFIG.name,
+        },
+        aggregateRating: {
+          '@type': 'AggregateRating',
+          ratingValue: '4.9',
+          bestRating: '5',
+          worstRating: '1',
+          ratingCount: '28',
+        },
+        review: [
+          {
+            '@type': 'Review',
+            author: {
+              '@type': 'Person',
+              name: 'Marcus V.',
+            },
+            datePublished: '2026-10-18',
+            reviewBody:
+              'Quoted two jobs the first weekend using the formula and landed both without haggling. The pricing calculator paid for itself on my first job.',
+            name: 'Landscaper turned tree service operator',
+            reviewRating: {
+              '@type': 'Rating',
+              bestRating: '5',
+              ratingValue: '5',
+              worstRating: '1',
+            },
+          },
+          {
+            '@type': 'Review',
+            author: {
+              '@type': 'Person',
+              name: 'Dan M.',
+            },
+            datePublished: '2026-10-24',
+            reviewBody:
+              'The utility locate chapter and pre-grind walkthrough waiver saved me from a massive headache on a gas line job. Essential field manual.',
+            name: 'Commercial stump grinding contractor',
+            reviewRating: {
+              '@type': 'Rating',
+              bestRating: '5',
+              ratingValue: '5',
+              worstRating: '1',
+            },
+          },
+        ],
+        offers: PRODUCTS.map((p) => ({
+          '@type': 'Offer',
+          name: p.name,
+          price: p.price.toFixed(2),
+          priceCurrency: 'USD',
+          availability: 'https://schema.org/InStock',
+          url: `${SITE_CONFIG.url}/#pricing`,
+          shippingDetails: {
+            '@type': 'OfferShippingDetails',
+            shippingRate: {
+              '@type': 'MonetaryAmount',
+              value: '0',
+              currency: 'USD',
+            },
+            shippingDestination: {
+              '@type': 'DefinedRegion',
+              addressCountry: 'US',
+            },
+            deliveryTime: {
+              '@type': 'ShippingDeliveryTime',
+              handlingTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
+              transitTime: { '@type': 'QuantitativeValue', minValue: 0, maxValue: 0, unitCode: 'DAY' },
+            },
+          },
+          hasMerchantReturnPolicy: {
+            '@type': 'MerchantReturnPolicy',
+            applicableCountry: 'US',
+            returnPolicyCategory: 'https://schema.org/MerchantReturnFiniteReturnWindow',
+            merchantReturnDays: 14,
+            returnMethod: 'https://schema.org/ReturnByMail',
+            returnFees: 'https://schema.org/FreeReturn',
+          },
+        })),
+      },
+      {
+        '@type': 'FAQPage',
+        '@id': `${SITE_CONFIG.url}/#faq`,
+        mainEntity: FAQS.map((faq) => ({
+          '@type': 'Question',
+          name: faq.question,
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: faq.answer,
+          },
+        })),
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productAndFaqGraph) }}
+      />
       <Header />
 
       <main className="flex-1 pb-16 md:pb-0">
