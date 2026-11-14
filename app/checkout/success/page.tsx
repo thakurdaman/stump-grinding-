@@ -55,7 +55,12 @@ export default async function CheckoutSuccessPage({ searchParams }: SuccessPageP
             const customIdStr =
               capture?.purchase_units?.[0]?.custom_id ||
               capture?.purchase_units?.[0]?.payments?.captures?.[0]?.custom_id;
-            const custom = customIdStr ? JSON.parse(customIdStr) : {};
+            let custom: any = {};
+            try {
+              if (customIdStr) custom = JSON.parse(customIdStr);
+            } catch {
+              // Fall back to empty object if custom_id is not JSON
+            }
             const payerEmail = custom.email || capture?.payer?.email_address;
             const versionId = custom.version_id;
             const amount = parseFloat(

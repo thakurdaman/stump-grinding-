@@ -167,7 +167,12 @@ export class PayPalProvider implements PaymentProvider {
     const resource = event.resource;
 
     if (event.event_type === 'PAYMENT.CAPTURE.COMPLETED') {
-      const custom = resource?.custom_id ? JSON.parse(resource.custom_id) : {};
+      let custom: any = {};
+      try {
+        if (resource?.custom_id) custom = JSON.parse(resource.custom_id);
+      } catch {
+        // Fall back to empty object if custom_id is not JSON
+      }
       return {
         valid: true,
         eventType: event.event_type,

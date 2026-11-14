@@ -59,7 +59,9 @@ export class StripeProvider implements PaymentProvider {
     const rawBody = await req.text();
     const parts = sigHeader.split(',').reduce((acc: Record<string, string>, item) => {
       const [k, v] = item.split('=');
-      acc[k] = v;
+      if (k && v) {
+        acc[k.trim()] = v.trim();
+      }
       return acc;
     }, {});
 

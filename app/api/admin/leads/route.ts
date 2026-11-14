@@ -29,9 +29,15 @@ export async function GET(req: Request) {
   });
 
   if (format === 'csv') {
+    const sanitizeCsvField = (val: string) => {
+      let clean = String(val ?? '').replace(/"/g, '""');
+      if (/^[=+\-@]/.test(clean)) clean = `'${clean}`;
+      return `"${clean}"`;
+    };
+
     let csv = 'Email,Source,Created At\n';
     for (const lead of leads) {
-      csv += `"${lead.email}","${lead.source}","${lead.createdAt.toISOString()}"\n`;
+      csv += `${sanitizeCsvField(lead.email)},${sanitizeCsvField(lead.source)},${sanitizeCsvField(lead.createdAt.toISOString())}\n`;
     }
     return new NextResponse(csv, {
       status: 200,
