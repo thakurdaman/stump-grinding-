@@ -13,7 +13,7 @@ export const PRODUCT_FILES: Record<string, ProductFile> = {
     name: 'The Stump Grinding Playbook',
     filename: 'The-Stump-Grinding-Playbook.pdf',
     format: 'PDF',
-    sizeApprox: '4.2 MB',
+    sizeApprox: '1.4 MB',
     description: '52-page operational guide covering market validation, insurance, equipment, utility locates, quoting, job execution, and safety.',
   },
   calculator: {

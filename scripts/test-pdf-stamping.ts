@@ -17,8 +17,10 @@ async function runTests() {
 
   // 1. Calculate original file hash to guarantee original is NEVER modified
   const originalBytes = fs.readFileSync(playbookPath);
+  const origDoc = await PDFDocument.load(originalBytes);
+  const origPageCount = origDoc.getPageCount();
   const originalHash = crypto.createHash('sha256').update(originalBytes).digest('hex');
-  console.log(`[PASS 1] Original PDF located: 34 pages, SHA256: ${originalHash.slice(0, 16)}...`);
+  console.log(`[PASS 1] Original PDF located: ${origPageCount} pages, SHA256: ${originalHash.slice(0, 16)}...`);
 
   // 2. Unit Test: Standard Stamping
   console.log('\n--- Test 1: Standard License Stamping ---');
@@ -39,9 +41,9 @@ async function runTests() {
   // Verify stamped PDF integrity
   const stampedDoc = await PDFDocument.load(stampedBytes);
   const pageCount = stampedDoc.getPageCount();
-  console.log(`✓ Stamped document generated: ${pageCount} pages (matches 34)`);
-  if (pageCount !== 34) {
-    throw new Error(`Expected 34 pages, got ${pageCount}`);
+  console.log(`✓ Stamped document generated: ${pageCount} pages (matches ${origPageCount})`);
+  if (pageCount !== origPageCount) {
+    throw new Error(`Expected ${origPageCount} pages, got ${pageCount}`);
   }
 
   // Verify original file is still 100% untouched
